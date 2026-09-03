@@ -1,0 +1,164 @@
+import React, { useState } from 'react';
+import type { Role } from '../types/recruitment';
+import { RoleCard } from './RoleCard';
+import { Sparkles, ArrowRight, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
+
+interface RoleSelectionSectionProps {
+  roles: Role[];
+  firstChoice: string | null;
+  secondChoice: string | null;
+  onSelectFirstChoice: (roleName: string) => void;
+  onSelectSecondChoice: (roleName: string) => void;
+  onClearPreferences: () => void;
+  onProceedToForm: () => void;
+}
+
+export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
+  roles,
+  firstChoice,
+  secondChoice,
+  onSelectFirstChoice,
+  onSelectSecondChoice,
+  onClearPreferences,
+  onProceedToForm,
+}) => {
+  const [warningMsg, setWarningMsg] = useState<string | null>(null);
+
+  const selectedCount = (firstChoice ? 1 : 0) + (secondChoice ? 1 : 0);
+
+  const handleSelectFirst = (roleName: string) => {
+    setWarningMsg(null);
+    if (secondChoice === roleName) {
+      setWarningMsg(`Swapped choices! "${roleName}" is now your 1st Preference.`);
+    }
+    onSelectFirstChoice(roleName);
+  };
+
+  const handleSelectSecond = (roleName: string) => {
+    setWarningMsg(null);
+    if (firstChoice === roleName) {
+      setWarningMsg(`Swapped choices! "${roleName}" is now your 2nd Preference.`);
+    }
+    onSelectSecondChoice(roleName);
+  };
+
+  return (
+    <section id="roles-section" className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* Header Banner */}
+      <div className="text-center max-w-3xl mx-auto mb-10">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-4 shadow-inner">
+          <Sparkles className="w-3.5 h-3.5" />
+          Interactive Role Selection
+        </div>
+        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-4">
+          Choose Your <span className="glow-text">NeuraMorphix Team Preferences</span>
+        </h2>
+        <p className="text-slate-300 text-base leading-relaxed">
+          Applicants must select exactly <strong>two distinct role choices</strong> to complete their application. Explore all 10 specialized teams below.
+        </p>
+
+        {/* Counter Indicator Widget */}
+        <div className="mt-6 inline-flex items-center gap-3 px-6 py-2.5 rounded-2xl glass-panel border-slate-700/80">
+          <span className="text-sm font-semibold text-slate-300">Progress:</span>
+          <div className="flex items-center gap-2">
+            <span
+              className={`px-3 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
+                selectedCount === 2
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'
+                  : selectedCount === 1
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50'
+                  : 'bg-slate-800 text-slate-400 border border-slate-700'
+              }`}
+            >
+              {selectedCount} / 2 roles selected
+            </span>
+          </div>
+        </div>
+
+        {warningMsg && (
+          <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-950/80 border border-amber-500/40 text-amber-200 text-xs font-medium animate-fadeIn">
+            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+            {warningMsg}
+          </div>
+        )}
+      </div>
+
+      {/* Selected Preferences Summary Banner */}
+      <div className="mb-10 p-6 rounded-2xl glass-panel border-cyan-500/20 bg-slate-900/80 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4" />
+              Your Role Preferences
+            </h3>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-1">
+              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span className="text-xl">🥇</span>
+                <div>
+                  <div className="text-[10px] text-slate-400 uppercase font-semibold">First Choice (1st)</div>
+                  <div className="text-sm font-bold text-cyan-300">
+                    {firstChoice || <span className="text-slate-500 italic">Select 1st preference below...</span>}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-950/80 border border-slate-800">
+                <span className="text-xl">🥈</span>
+                <div>
+                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Second Choice (2nd)</div>
+                  <div className="text-sm font-bold text-amber-300">
+                    {secondChoice || <span className="text-slate-500 italic">Select 2nd preference below...</span>}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex items-center gap-3 shrink-0">
+            {(firstChoice || secondChoice) && (
+              <button
+                type="button"
+                onClick={onClearPreferences}
+                className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center gap-1.5"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Change Preferences
+              </button>
+            )}
+
+            <button
+              type="button"
+              disabled={selectedCount < 2}
+              onClick={onProceedToForm}
+              className={`px-6 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 transition-all shadow-lg ${
+                selectedCount === 2
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-cyan-500/25 ring-2 ring-cyan-300 cursor-pointer'
+                  : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed opacity-60'
+              }`}
+            >
+              Fill Application Details
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid of 10 Role Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {roles.map((role) => (
+          <RoleCard
+            key={role.role_id}
+            role={role}
+            firstChoice={firstChoice}
+            secondChoice={secondChoice}
+            onSelectFirstChoice={handleSelectFirst}
+            onSelectSecondChoice={handleSelectSecond}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
