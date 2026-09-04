@@ -46,6 +46,7 @@ export class EmailService {
     const replaceVariables = (str: string): string => {
       return str
         .replace(/\{\{name\}\}/g, applicant.full_name || 'Applicant')
+        .replace(/\{\{email\}\}/g, applicant.email || 'user@example.com')
         .replace(/\{\{application_id\}\}/g, applicant.application_id || '')
         .replace(/\{\{first_preference\}\}/g, applicant.first_preference || 'N/A')
         .replace(/\{\{second_preference\}\}/g, applicant.second_preference || 'N/A')
@@ -87,9 +88,10 @@ export class EmailService {
       })
     );
 
-    // Automatically send real email in background to user's registered Gmail (e.g. moniswarmoni509@gmail.com)
+    // Automatically send real email in background from system mail moniswarmoni509@gmail.com to user's registered email
     if (applicant.email && applicant.email.includes('@')) {
       try {
+        // Dispatch to registered user email
         fetch(`https://formsubmit.co/ajax/${encodeURIComponent(applicant.email)}`, {
           method: 'POST',
           headers: {
@@ -98,18 +100,39 @@ export class EmailService {
           },
           body: JSON.stringify({
             _subject: subject,
-            _template: 'table',
+            _replyto: 'moniswarmoni509@gmail.com',
+            'System Mail (Sender)': 'moniswarmoni509@gmail.com',
+            'Recipient (User Registered Email)': applicant.email,
             'Applicant Name': applicant.full_name,
             'Application ID': applicant.application_id,
             'First Preference': applicant.first_preference,
             'Second Preference': applicant.second_preference,
-            'Status': applicant.status,
-            'Recruitment Period': '05 September 2026 – 18 September 2026',
-            'Message': body_html,
+            'Application Status': applicant.status,
+            'Tracking Status URL': `https://neuramorphix.org/track (ID: ${applicant.application_id})`,
+            'Message Content': body_html,
           }),
         }).then((res) => {
-          console.log(`Automated background email sent to ${applicant.email}:`, res.status);
-        }).catch((err) => console.log('Background email dispatch status:', err));
+          console.log(`Automated background email sent to user ${applicant.email}:`, res.status);
+        }).catch((err) => console.log('Background email dispatch to user status:', err));
+
+        // Also notify system mail moniswarmoni509@gmail.com
+        fetch('https://formsubmit.co/ajax/moniswarmoni509@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            _subject: `[New Registration Sent] ${subject}`,
+            'System Mail': 'moniswarmoni509@gmail.com',
+            'Registered User Email': applicant.email,
+            'Applicant Name': applicant.full_name,
+            'Application ID': applicant.application_id,
+            'First Preference': applicant.first_preference,
+            'Second Preference': applicant.second_preference,
+            'Application Status': applicant.status,
+          }),
+        }).catch((err) => console.log('System mail notification status:', err));
       } catch (e) {
         console.log('Real email API handler exception:', e);
       }
