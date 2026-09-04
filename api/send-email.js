@@ -1,34 +1,4 @@
-import express from 'express';
-import cors from 'cors';
 import nodemailer from 'nodemailer';
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-const PORT = process.env.PORT || 3001;
-
-const systemEmail = process.env.SMTP_USER || 'moniswarmoni509@gmail.com';
-const systemPass = process.env.SMTP_PASS || 'rzlcebjxhpgbumqb';
-
-let transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: { user: systemEmail, pass: systemPass },
-});
-
-let testTransporter = null;
-async function getTestTransporter() {
-  if (!testTransporter) {
-    const testAccount = await nodemailer.createTestAccount();
-    testTransporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
-      auth: { user: testAccount.user, pass: testAccount.pass },
-    });
-  }
-  return testTransporter;
-}
 
 function buildHtml({ applicantName, applicationId, phone, firstPreference, secondPreference, emailType }) {
   const typeLabel = {
@@ -40,8 +10,7 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
     declined: 'Application Update',
   }[emailType] || 'Recruitment Update';
 
-  return `
-<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -53,8 +22,6 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
     <tr>
       <td align="center">
         <table width="100%" style="max-width:560px;background:#1e293b;border-radius:16px;overflow:hidden;border:1px solid #334155;">
-
-          <!-- Header -->
           <tr>
             <td style="background:linear-gradient(135deg,#0e7490,#1d4ed8);padding:32px 24px;text-align:center;">
               <p style="margin:0 0 6px 0;color:#bae6fd;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">NeuraMorphix · Recruitment 2026</p>
@@ -62,8 +29,6 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
               <p style="margin:10px 0 0 0;color:#bae6fd;font-size:13px;">${typeLabel}</p>
             </td>
           </tr>
-
-          <!-- Body -->
           <tr>
             <td style="padding:32px 24px;">
               <p style="margin:0 0 16px 0;color:#e2e8f0;font-size:16px;font-weight:600;">Hello ${applicantName || 'Applicant'},</p>
@@ -72,8 +37,6 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
                 <strong style="color:#f8fafc;">NeuraMorphix 2026 Team Recruitment</strong>. Your application has been successfully
                 registered in our system and is now under review by our recruitment team.
               </p>
-
-              <!-- Application Details Box -->
               <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;border-radius:12px;border:1px solid #334155;margin-bottom:24px;">
                 <tr>
                   <td style="padding:20px 24px;">
@@ -104,14 +67,12 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
                   </td>
                 </tr>
               </table>
-
               <p style="margin:0 0 10px 0;color:#94a3b8;font-size:13px;line-height:1.7;">
                 Please <strong style="color:#f8fafc;">save your Application ID</strong> — you will need it to track your recruitment status on our portal at any time.
               </p>
               <p style="margin:0 0 24px 0;color:#94a3b8;font-size:13px;line-height:1.7;">
-                Our recruitment team will review all applications and update your status accordingly. You will receive further communications at this email address.
+                Our recruitment team will review all applications and update your status accordingly. You will receive further updates at this email address.
               </p>
-
               <p style="margin:0;color:#64748b;font-size:12px;border-top:1px solid #334155;padding-top:20px;line-height:1.7;">
                 Thank you for applying and for your interest in joining NeuraMorphix.<br/>
                 We look forward to reviewing your application!<br/><br/>
@@ -120,14 +81,11 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
               </p>
             </td>
           </tr>
-
-          <!-- Footer -->
           <tr>
             <td style="background:#0f172a;padding:16px 24px;text-align:center;border-top:1px solid #1e293b;">
               <p style="margin:0;color:#334155;font-size:11px;">© 2026 NeuraMorphix · All rights reserved</p>
             </td>
           </tr>
-
         </table>
       </td>
     </tr>
@@ -136,9 +94,41 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
 </html>`;
 }
 
-app.post('/api/send-email', async (req, res) => {
+export default async function handler(req, res) {
+  // CORS Headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const systemEmail = process.env.SMTP_USER || 'moniswarmoni509@gmail.com';
+  const systemPass = process.env.SMTP_PASS || 'rzlcebjxhpgbumqb';
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: systemEmail,
+      pass: systemPass,
+    },
+    tls: { rejectUnauthorized: false },
+  });
+
   try {
-    const { to, subject, applicantName, applicationId, phone, firstPreference, secondPreference, emailType } = req.body;
+    const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    const { to, subject, applicantName, applicationId, phone, firstPreference, secondPreference, emailType } = body;
+
     const recipientEmail = to || systemEmail;
     const emailSubject = subject || `NeuraMorphix Recruitment — Application Received (${applicationId || 'N/A'})`;
     const htmlContent = buildHtml({ applicantName, applicationId, phone, firstPreference, secondPreference, emailType });
@@ -150,24 +140,12 @@ app.post('/api/send-email', async (req, res) => {
       html: htmlContent,
     };
 
-    let info;
-    try {
-      info = await transporter.sendMail(mailOptions);
-      console.log(`[Nodemailer] Sent to ${recipientEmail}:`, info.messageId);
-    } catch {
-      const fallback = await getTestTransporter();
-      info = await fallback.sendMail(mailOptions);
-      console.log(`[Nodemailer Fallback] Sent to ${recipientEmail}:`, info.messageId);
-      console.log('[Preview URL]:', nodemailer.getTestMessageUrl(info));
-    }
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[Vercel Serverless Nodemailer] Sent to ${recipientEmail}:`, info.messageId);
 
-    return res.status(200).json({ success: true, messageId: info.messageId });
+    return res.status(200).json({ success: true, messageId: info.messageId, via: 'Gmail' });
   } catch (error) {
-    console.error('[Nodemailer Error]:', error);
+    console.error('[Vercel Serverless Nodemailer Error]:', error);
     return res.status(500).json({ success: false, error: error.message });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`[Nodemailer Server] Listening on http://localhost:${PORT}`);
-});
+}

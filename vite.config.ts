@@ -128,9 +128,9 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
 function nodemailerPlugin() {
   const env = loadDotEnv();
   const systemEmail = env.SMTP_USER || process.env.SMTP_USER || 'moniswarmoni509@gmail.com';
-  const systemPass = env.SMTP_PASS || process.env.SMTP_PASS || '';
+  const systemPass = env.SMTP_PASS || process.env.SMTP_PASS || 'rzlcebjxhpgbumqb';
 
-  const isRealPassword = systemPass.length >= 16;
+  const isRealPassword = systemPass.length > 0 && !systemPass.includes('your_gmail_app_password');
 
   // Primary Gmail transporter
   const gmailTransporter = nodemailer.createTransport({
@@ -168,6 +168,17 @@ function nodemailerPlugin() {
     name: 'vite-plugin-nodemailer',
     configureServer(server: any) {
       server.middlewares.use('/api/send-email', async (req: any, res: any) => {
+        // CORS Headers for mobile devices connecting over WiFi / Network IP
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+
+        if (req.method === 'OPTIONS') {
+          res.statusCode = 200;
+          res.end();
+          return;
+        }
+
         if (req.method !== 'POST') {
           res.statusCode = 405;
           res.end('Method Not Allowed');
@@ -235,4 +246,12 @@ function nodemailerPlugin() {
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), nodemailerPlugin()],
+  server: {
+    host: true, // Listen on all network addresses (0.0.0.0) for mobile access
+    cors: true,
+  },
+  preview: {
+    host: true,
+    cors: true,
+  },
 });
