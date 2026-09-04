@@ -5,7 +5,7 @@ import { Mail, X, CheckCircle2, ChevronRight } from 'lucide-react';
 
 export const EmailInboxDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
+  const [emailLogs, setEmailLogs] = useState<EmailLog[]>(() => DatabaseService.getEmailLogs());
   const [selectedEmail, setSelectedEmail] = useState<EmailLog | null>(null);
   const [newUnreadCount, setNewUnreadCount] = useState(0);
 
@@ -15,8 +15,6 @@ export const EmailInboxDrawer: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchLogs();
-
     const handleEmailSent = (e: Event) => {
       fetchLogs();
       setNewUnreadCount((prev) => prev + 1);

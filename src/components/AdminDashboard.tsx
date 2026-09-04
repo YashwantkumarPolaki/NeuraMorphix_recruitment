@@ -114,10 +114,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   const [activeTab, setActiveTab] = useState<'analytics' | 'applicants' | 'email_settings' | 'config'>('analytics');
 
   // State data from DB
-  const [applicants, setApplicants] = useState<Applicant[]>([]);
-  const [roles, setRoles] = useState<Role[]>([]);
-  const [emailSettings, setEmailSettings] = useState<EmailSettings>(DatabaseService.getEmailSettings());
-  const [config, setConfig] = useState<RecruitmentConfig>(DatabaseService.getConfig());
+  const [applicants, setApplicants] = useState<Applicant[]>(() => DatabaseService.getApplicants());
+  const [roles, setRoles] = useState<Role[]>(() => DatabaseService.getRoles());
+  const [emailSettings, setEmailSettings] = useState<EmailSettings>(() => DatabaseService.getEmailSettings());
+  const [config, setConfig] = useState<RecruitmentConfig>(() => DatabaseService.getConfig());
 
   // Search & Filters for Applicants Table
   const [searchQuery, setSearchQuery] = useState('');
@@ -147,8 +147,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
   // Email Template Editing tab state
   const [editingTemplateType, setEditingTemplateType] = useState<EmailType>('application_received');
-  const [templateSubject, setTemplateSubject] = useState('');
-  const [templateBody, setTemplateBody] = useState('');
+  const [templateSubject, setTemplateSubject] = useState(() => {
+    const settings = DatabaseService.getEmailSettings();
+    return settings.templates['application_received']?.subject || '';
+  });
+  const [templateBody, setTemplateBody] = useState(() => {
+    const settings = DatabaseService.getEmailSettings();
+    return settings.templates['application_received']?.body_template || '';
+  });
 
   const refreshData = () => {
     const apps = DatabaseService.getApplicants();
@@ -160,15 +166,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   };
 
   useEffect(() => {
-    refreshData();
-  }, []);
-
-  useEffect(() => {
     if (selectedApplicant) {
       const current = applicants.find((a) => a.id === selectedApplicant.id);
-      if (current) setSelectedApplicant(current);
+      if (current && current !== selectedApplicant) {
+        setSelectedApplicant(current);
+      }
     }
-  }, [applicants]);
+  }, [applicants, selectedApplicant]);
 
   useEffect(() => {
     if (emailSettings.templates[editingTemplateType]) {

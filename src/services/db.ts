@@ -603,6 +603,10 @@ export class DatabaseService {
     this.setItem(STORAGE_KEYS.EMAIL_LOGS, logs);
   }
 
+  static saveEmailLog(log: EmailLog): void {
+    this.addEmailLog(log);
+  }
+
   static getEmailSettings(): EmailSettings {
     return this.getItem<EmailSettings>(STORAGE_KEYS.EMAIL_SETTINGS, INITIAL_EMAIL_SETTINGS);
   }

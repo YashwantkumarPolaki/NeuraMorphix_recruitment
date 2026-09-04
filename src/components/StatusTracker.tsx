@@ -20,7 +20,9 @@ interface StatusTrackerProps {
 
 export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) => {
   const [appIdInput, setAppIdInput] = useState(initialAppId || '');
-  const [searchedApplicant, setSearchedApplicant] = useState<Applicant | null>(null);
+  const [searchedApplicant, setSearchedApplicant] = useState<Applicant | null>(() => {
+    return initialAppId ? DatabaseService.getApplicantById(initialAppId) || null : null;
+  });
   const [notFound, setNotFound] = useState(false);
 
   // Response field for Information Requested status
