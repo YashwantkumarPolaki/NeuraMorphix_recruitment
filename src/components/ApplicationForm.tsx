@@ -17,6 +17,7 @@ import {
   AlertTriangle,
   RotateCcw,
   Search,
+  Camera,
 } from 'lucide-react';
 
 interface ApplicationFormProps {
@@ -660,13 +661,18 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
           </div>
 
           {/* Unique Application ID Box */}
-          <div className="p-6 rounded-2xl bg-slate-950 border border-cyan-500/30 max-w-md mx-auto shadow-2xl">
-            <div className="text-xs text-slate-400 uppercase font-semibold mb-1">Application Number</div>
+          <div className="p-6 rounded-2xl bg-slate-950 border border-cyan-500/30 max-w-md mx-auto shadow-2xl space-y-3">
+            <div className="text-xs text-slate-400 uppercase font-semibold">Application Number</div>
             <div className="text-2xl font-mono font-black text-cyan-300 tracking-wider">
               {submittedApplicant.application_id}
             </div>
-            <div className="text-[11px] text-slate-400 mt-2">
+            <div className="text-[11px] text-slate-400">
               Registered Name: <strong className="text-slate-200">{submittedApplicant.full_name}</strong>
+            </div>
+
+            <div className="pt-2.5 border-t border-slate-800 text-amber-300 text-xs font-semibold flex items-center justify-center gap-2 bg-amber-950/40 py-2.5 px-4 rounded-xl border border-amber-500/30">
+              <Camera className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>Note: Remember your application ID or take a screenshot</span>
             </div>
           </div>
 
