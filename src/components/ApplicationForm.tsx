@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { Applicant, Role } from '../types/recruitment';
 import { DatabaseService } from '../services/db';
 import { EmailService } from '../services/email';
+import { INDIAN_COLLEGES } from '../data/indianColleges';
 import confetti from 'canvas-confetti';
 import {
   User,
@@ -13,11 +14,13 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle,
+  CheckCircle2,
   ShieldCheck,
   AlertTriangle,
   RotateCcw,
   Search,
   Camera,
+  XCircle,
 } from 'lucide-react';
 
 interface ApplicationFormProps {
@@ -50,6 +53,41 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const [githubUrl, setGithubUrl] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [portfolioUrl, setPortfolioUrl] = useState('');
+
+  // Phone validation: must be exactly 10 digits
+  const phoneDigits = phone.replace(/\D/g, '');
+  const isPhoneValid = phoneDigits.length === 10;
+  const phoneHasInput = phone.trim().length > 0;
+
+  // College autocomplete
+  const [collegeQuery, setCollegeQuery] = useState('');
+  const [showCollegeSuggestions, setShowCollegeSuggestions] = useState(false);
+  const collegeRef = useRef<HTMLDivElement>(null);
+
+  const collegeSuggestions = collegeQuery.trim().length >= 2
+    ? INDIAN_COLLEGES.filter(c =>
+        c.toLowerCase().includes(collegeQuery.toLowerCase())
+      ).slice(0, 8)
+    : [];
+
+  const isCollegeVerified = INDIAN_COLLEGES.includes(college) && college.trim().length > 0;
+
+  // Close college dropdown on outside click
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent) => {
+      if (collegeRef.current && !collegeRef.current.contains(e.target as Node)) {
+        setShowCollegeSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, []);
+
+  const handleCollegeSelect = (name: string) => {
+    setCollege(name);
+    setCollegeQuery(name);
+    setShowCollegeSuggestions(false);
+  };
 
   // Skills & Experience
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -89,6 +127,10 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
     setErrorMsg(null);
     if (!fullName || !email || !phone || !college || !department) {
       setErrorMsg('Please fill in all required personal information fields.');
+      return;
+    }
+    if (!isPhoneValid) {
+      setErrorMsg('Please enter a valid 10-digit phone number.');
       return;
     }
 
@@ -274,6 +316,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
               </div>
             </div>
 
+            {/* Phone Number with 10-digit validation */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
                 Phone Number <span className="text-rose-400">*</span>
@@ -283,29 +326,104 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 <input
                   type="tel"
                   required
-                  placeholder="e.g. +91 98765 43210"
+                  maxLength={13}
+                  placeholder="10-digit number e.g. 9876543210"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-sm"
+                  onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+                  className={`w-full pl-10 py-2.5 rounded-xl glass-input text-sm transition-all ${
+                    phoneHasInput
+                      ? isPhoneValid
+                        ? 'pr-10 border border-emerald-500/60'
+                        : 'pr-10 border border-rose-500/60'
+                      : 'pr-4'
+                  }`}
                 />
+                {/* Validation icon on right */}
+                {phoneHasInput && (
+                  <div className="absolute right-3 top-3">
+                    {isPhoneValid ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-rose-400" />
+                    )}
+                  </div>
+                )}
+              </div>
+              {/* Digit counter */}
+              <div className={`mt-1 text-[11px] font-medium ${
+                phoneHasInput
+                  ? isPhoneValid ? 'text-emerald-400' : 'text-rose-400'
+                  : 'text-slate-500'
+              }`}>
+                {phoneHasInput
+                  ? isPhoneValid
+                    ? '✓ Valid 10-digit phone number'
+                    : `${phoneDigits.length}/10 digits entered`
+                  : 'Enter 10-digit mobile number'}
               </div>
             </div>
 
-            <div>
+            {/* College with Autocomplete */}
+            <div ref={collegeRef}>
               <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
                 College / Institution <span className="text-rose-400">*</span>
               </label>
               <div className="relative">
-                <GraduationCap className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+                <GraduationCap className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5 z-10" />
                 <input
                   type="text"
                   required
-                  placeholder="e.g. IIT Delhi / BITS Pilani"
-                  value={college}
-                  onChange={(e) => setCollege(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-sm"
+                  autoComplete="off"
+                  placeholder="Type to search college..."
+                  value={collegeQuery}
+                  onFocus={() => setShowCollegeSuggestions(true)}
+                  onChange={(e) => {
+                    setCollegeQuery(e.target.value);
+                    setCollege(e.target.value);
+                    setShowCollegeSuggestions(true);
+                  }}
+                  className={`w-full pl-10 py-2.5 rounded-xl glass-input text-sm transition-all ${
+                    college.trim().length > 0
+                      ? isCollegeVerified
+                        ? 'pr-10 border border-emerald-500/60'
+                        : 'pr-4'
+                      : 'pr-4'
+                  }`}
                 />
+                {/* Verified tick for known colleges */}
+                {isCollegeVerified && (
+                  <div className="absolute right-3 top-3">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  </div>
+                )}
+
+                {/* Dropdown suggestions */}
+                {showCollegeSuggestions && collegeSuggestions.length > 0 && (
+                  <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden max-h-56 overflow-y-auto">
+                    {collegeSuggestions.map((name, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onMouseDown={() => handleCollegeSelect(name)}
+                        className="w-full text-left px-4 py-2.5 text-xs text-slate-200 hover:bg-cyan-900/60 hover:text-cyan-300 flex items-center gap-2 border-b border-slate-800 last:border-0 transition-colors"
+                      >
+                        <GraduationCap className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                        {name}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
+              {/* College verification label */}
+              {college.trim().length > 0 && (
+                <div className={`mt-1 text-[11px] font-medium ${
+                  isCollegeVerified ? 'text-emerald-400' : 'text-slate-400'
+                }`}>
+                  {isCollegeVerified
+                    ? '✓ College verified from list'
+                    : 'Not from list — you can still type your college name'}
+                </div>
+              )}
             </div>
 
             <div>
