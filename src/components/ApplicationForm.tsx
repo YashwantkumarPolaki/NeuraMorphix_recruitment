@@ -667,50 +667,12 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
             </div>
           </div>
 
-          {/* Rendered Email Notification Box */}
-          <div className="p-6 rounded-2xl bg-slate-950/90 border border-cyan-500/40 max-w-xl mx-auto text-left space-y-3 shadow-xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-cyan-400" />
-                <span className="text-xs font-bold text-white uppercase tracking-wider">Automated Email Notification Sent</span>
-              </div>
-              <span className="px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px] font-bold uppercase border border-emerald-500/30">
-                Status: Sent & Dispatched
-              </span>
-            </div>
-
-            <div className="text-xs text-slate-300 space-y-1.5 font-sans bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-              <div><strong className="text-slate-400">System Sender Mail:</strong> <span className="text-cyan-300 font-mono font-bold">moniswarmoni509@gmail.com</span></div>
-              <div><strong className="text-slate-400">Recipient (Registered User):</strong> <span className="text-emerald-300 font-mono font-bold">{submittedApplicant.email}</span></div>
-              <div><strong className="text-slate-400">Subject:</strong> NeuraMorphix Recruitment — Application Generated & Submitted (ID: {submittedApplicant.application_id})</div>
-            </div>
-
-            <div className="text-xs text-slate-200 font-mono whitespace-pre-wrap leading-relaxed bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-{`From: moniswarmoni509@gmail.com
-To: ${submittedApplicant.email}
-Subject: NeuraMorphix Recruitment — Application Generated & Submitted
-
-Hello ${submittedApplicant.full_name},
-
-Your application has been successfully generated and submitted to NeuraMorphix!
-
-Application & Tracking Details:
-• Application ID: ${submittedApplicant.application_id}
-• Registered Name: ${submittedApplicant.full_name}
-• First Preference (Compulsory): ${submittedApplicant.first_preference}
-• Second Preference (Optional): ${submittedApplicant.second_preference}
-• Application Status: Application Received
-
-Tracking Status:
-You can track your live recruitment evaluation progress anytime on our portal using Application ID: ${submittedApplicant.application_id}.
-
-Recruitment Period: 05 September 2026 – 18 September 2026
-
-Thank you for registering for the Neuramorphix 2026 Team Recruitment.
-
-Best regards,
-Neuramorphix System (moniswarmoni509@gmail.com)`}
-            </div>
+          {/* Sent Email Confirmation Badge */}
+          <div className="flex justify-center pt-2">
+            <span className="px-5 py-2.5 rounded-2xl bg-emerald-950/90 text-emerald-300 border border-emerald-500/40 text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-500/10">
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+              Sent Email
+            </span>
           </div>
 
           <div className="pt-4 flex flex-wrap justify-center gap-4">
