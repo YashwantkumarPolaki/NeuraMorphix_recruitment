@@ -10,6 +10,7 @@ import type {
 } from '../types/recruitment';
 import { DatabaseService } from '../services/db';
 import { EmailService } from '../services/email';
+import { BackendApiService } from '../services/api';
 import { NeuraMorphixLogo } from './NeuraMorphixLogo';
 import {
   Users,
@@ -65,7 +66,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     ? `${sessionUser.name} (${sessionUser.role})`
     : 'Admin Recruiter';
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
 
@@ -80,8 +81,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
     setIsLoggingIn(true);
 
-    setTimeout(() => {
-      const matchedAdmin = DatabaseService.authenticateAdmin(loginEmail, loginPassword);
+    try {
+      const matchedAdmin = await BackendApiService.loginUser(loginEmail, loginPassword);
       if (matchedAdmin) {
         setSessionUser(matchedAdmin);
         setIsAuthenticated(true);
@@ -94,8 +95,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       } else {
         setAuthError('Invalid credentials. Check email & password (e.g. moni@neuramophrix.com / admin123).');
       }
+    } catch {
+      setAuthError('Authentication error. Please try again.');
+    } finally {
       setIsLoggingIn(false);
-    }, 450);
+    }
   };
 
   const handleLogout = () => {

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { Applicant, Role } from '../types/recruitment';
 import { DatabaseService } from '../services/db';
 import { EmailService } from '../services/email';
+import { BackendApiService } from '../services/api';
 import { INDIAN_COLLEGES } from '../data/indianColleges';
 import confetti from 'canvas-confetti';
 
@@ -405,6 +406,11 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
         // ---------------------------------------------------
 
         DatabaseService.addApplicant(
+          newApplicant
+        );
+
+        // Sync to Spring Boot MySQL backend asynchronously
+        BackendApiService.syncApplicant(
           newApplicant
         );
 
