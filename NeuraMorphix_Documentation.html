@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuraMorphix - Complete Frontend & Backend Technical Documentation</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      background: #ffffff;
+      line-height: 1.6;
+      font-size: 13px;
+      margin: 0;
+      padding: 0;
+    }
+    .cover-page {
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 85vh;
+      text-align: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .cover-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid #38bdf8;
+      border-radius: 20px;
+      color: #38bdf8;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .cover-title {
+      font-size: 34px;
+      font-weight: 900;
+      margin: 0 0 10px 0;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+    }
+    .cover-subtitle {
+      font-size: 18px;
+      color: #94a3b8;
+      margin: 0 0 30px 0;
+      max-width: 500px;
+    }
+    .cover-meta {
+      border-top: 1px solid #334155;
+      padding-top: 20px;
+      margin-top: 30px;
+      font-size: 12px;
+      color: #cbd5e1;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      justify-content: space-between;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 6px;
+      margin-top: 28px;
+      margin-bottom: 12px;
+      page-break-after: avoid;
+    }
+    h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0369a1;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      page-break-after: avoid;
+    }
+    p {
+      margin: 0 0 10px 0;
+    }
+    ul, ol {
+      margin: 0 0 12px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px 0;
+      font-size: 12px;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 7px 10px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    code {
+      font-family: 'Consolas', 'Courier New', monospace;
+      background: #f1f5f9;
+      color: #0284c7;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'Consolas', monospace;
+      font-size: 11px;
+      overflow-x: auto;
+      margin: 10px 0 14px 0;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-blue { background: #e0f2fe; color: #0284c7; }
+    .badge-green { background: #dcfce7; color: #16a34a; }
+    .badge-purple { background: #f3e8ff; color: #9333ea; }
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #0284c7;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="cover-page">
+    <div class="cover-badge">Architecture & System Manual</div>
+    <div class="cover-title">NeuraMorphix Recruitment 2026</div>
+    <div class="cover-subtitle">Complete Technical Documentation for Frontend, Backend, Database & Email Integration</div>
+    <div class="cover-meta">
+      <div><strong>Author:</strong> NeuraMorphix Team</div>
+      <div><strong>Version:</strong> 1.0.0</div>
+      <div><strong>Date:</strong> September 2026</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: ARCHITECTURE OVERVIEW -->
+  <h1>1. Executive Summary & System Architecture</h1>
+  <p>
+    The <strong>NeuraMorphix Recruitment Portal</strong> is a modern, full-stack recruitment automation platform engineered for managing candidate applications across 10 specialized technical and creative teams. The system incorporates real-time status tracking, responsive candidate application forms, an administrative command center with analytics, automated Nodemailer-powered email workflows via Gmail SMTP, and a Spring Boot + MySQL relational backend.
+  </p>
+
+  <div class="card">
+    <strong>System Highlights:</strong>
+    <ul>
+      <li><strong>Frontend:</strong> React 19 + TypeScript + Vite + Tailwind CSS v4 + Canvas Confetti</li>
+      <li><strong>Backend:</strong> Java 25 + Spring Boot 4.1.1 + Spring Security + Spring Data JPA</li>
+      <li><strong>Database:</strong> MySQL 8.0 / 9.0 (Relational Database) + LocalStorage Cache</li>
+      <li><strong>Email Delivery:</strong> Nodemailer Gmail SMTP + Vercel Serverless Function</li>
+      <li><strong>Deployment & CI/CD:</strong> GitHub (<code>moneswar99/neurapro</code>) + Vercel SPA Routing</li>
+    </ul>
+  </div>
+
+  <h2>System Architecture Diagram</h2>
+  <pre>
++-----------------------------------------------------------------------------------+
+|                            CLIENT BROWSER (Mobile & Desktop)                      |
+|  - Candidate Portal (Role Selection, Multi-Step Application Form, Status Tracker) |
+|  - Admin Dashboard (Live Metrics, Applicant Table, Template Editor, Status Modals)|
++-----------------------------------------------------------------------------------+
+                               |                                 |
+                               | (HTTP / JSON)                   | (HTTP / POST)
+                               v                                 v
++--------------------------------------------+    +---------------------------------+
+|       SPRING BOOT BACKEND (Port 8080)      |    |      NODEMAILER EMAIL SERVICE   |
+|  - SecurityConfig (CORS & Auth filter)     |    |  - Local Vite /api/send-email   |
+|  - UserController (/api/users/login)       |    |  - Vercel api/send-email.js     |
+|  - ApplicantController (/api/applicants)   |    |  - Gmail SMTP (moniswarmoni509) |
++--------------------------------------------+    +---------------------------------+
+                       |                                           |
+                       v                                           v
++--------------------------------------------+    +---------------------------------+
+|            MYSQL DATABASE (3306)           |    |     CANDIDATE INBOX (Gmail)     |
+|  - Table: users (Admin & Recruiters)       |    |  - Instant Branded Confirmation |
+|  - Table: applicants (Applications)        |    |  - Status Updates & Meeting Info|
++--------------------------------------------+    +---------------------------------+
+  </pre>
+
+  <!-- SECTION 2: FRONTEND ARCHITECTURE -->
+  <div class="page-break"></div>
+  <h1>2. Frontend Architecture & Component Structure</h1>
+  <p>
+    The frontend is written in TypeScript using React 19 and compiled with Vite. It features a responsive layout designed for seamless operation on both desktop and mobile screens.
+  </p>
+
+  <h2>Key Frontend Components</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Component Name</th>
+        <th>File Path</th>
+        <th>Purpose & Responsibilities</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ApplicationForm</strong></td>
+        <td><code>src/components/ApplicationForm.tsx</code></td>
+        <td>Multi-step application form with college autocomplete, 10-digit phone verification, skill selectors, and submission pipeline.</td>
+      </tr>
+      <tr>
+        <td><strong>AdminDashboard</strong></td>
+        <td><code>src/components/AdminDashboard.tsx</code></td>
+        <td>Admin portal for reviewing candidates, updating applicant status (Shortlist, Interview, Accept, Decline), and viewing recruitment analytics.</td>
+      </tr>
+      <tr>
+        <td><strong>RoleSelectionSection</strong></td>
+        <td><code>src/components/RoleSelectionSection.tsx</code></td>
+        <td>Interactive grid displaying the 10 NeuraMorphix teams with primary & optional secondary preference selection.</td>
+      </tr>
+      <tr>
+        <td><strong>StatusTracker</strong></td>
+        <td><code>src/components/StatusTracker.tsx</code></td>
+        <td>Public applicant tracker allowing candidates to query their Application ID (e.g. <code>NM-2026-XXXXX</code>) for status timeline.</td>
+      </tr>
+      <tr>
+        <td><strong>EmailInboxDrawer</strong></td>
+        <td><code>src/components/EmailInboxDrawer.tsx</code></td>
+        <td>Live interactive simulated inbox drawer showing sent email previews and delivery statuses in real-time.</td>
+      </tr>
+      <tr>
+        <td><strong>Header & Footer</strong></td>
+        <td><code>src/components/Header.tsx</code>, <code>Footer.tsx</code></td>
+        <td>Branded navigation bars, mobile bottom navigation tabs, recruitment timer, and portal status pills.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Frontend Services</h2>
+  <ul>
+    <li><strong><code>DatabaseService</code> (<code>src/services/db.ts</code>):</strong> Handles local database state, seed data, initial teams, and synchronizes with <code>localStorage</code> for offline support.</li>
+    <li><strong><code>EmailService</code> (<code>src/services/email.ts</code>):</strong> Replaces email template variables (e.g. <code>{{name}}</code>, <code>{{application_id}}</code>) and dispatches requests to <code>/api/send-email</code>.</li>
+    <li><strong><code>BackendApiService</code> (<code>src/services/api.ts</code>):</strong> Connects frontend components to the Spring Boot REST API for applicant creation and admin login with local fallback.</li>
+  </ul>
+
+  <!-- SECTION 3: BACKEND ARCHITECTURE -->
+  <div class="page-break"></div>
+  <h1>3. Spring Boot Backend & MySQL Database</h1>
+  <p>
+    The backend is built with <strong>Java 25</strong> and <strong>Spring Boot 4.1.1</strong>. It exposes RESTful API endpoints for user authentication and candidate management backed by Hibernate/JPA.
+  </p>
+
+  <h2>REST API Endpoints</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Endpoint</th>
+        <th>Description</th>
+        <th>Request Body</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-green">POST</span></td>
+        <td><code>/api/users/register</code></td>
+        <td>Registers a new recruiter / admin user</td>
+        <td><code>{ "name": "", "email": "", "password": "", "role": "admin" }</code></td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-green">POST</span></td>
+        <td><code>/api/users/login</code></td>
+        <td>Authenticates admin user and returns user profile</td>
+        <td><code>{ "email": "", "password": "" }</code></td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-blue">GET</span></td>
+        <td><code>/api/applicants</code></td>
+        <td>Retrieves all recruitment applications</td>
+        <td><em>None</em></td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-blue">GET</span></td>
+        <td><code>/api/applicants/{appId}</code></td>
+        <td>Retrieves single applicant by Application ID</td>
+        <td><em>None</em></td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-green">POST</span></td>
+        <td><code>/api/applicants</code></td>
+        <td>Saves a new recruitment application</td>
+        <td><code>ApplicantEntity</code> JSON payload</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-purple">PUT</span></td>
+        <td><code>/api/applicants/{appId}/status</code></td>
+        <td>Updates applicant status, team, interview details</td>
+        <td><code>{ "status": "Shortlisted", ... }</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Database Schema & Tables</h2>
+  <h3>1. Table: <code>users</code></h3>
+  <table>
+    <thead>
+      <tr><th>Column Name</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>BIGINT</td><td>PRIMARY KEY, AUTO_INCREMENT</td><td>Unique user identifier</td></tr>
+      <tr><td><code>name</code></td><td>VARCHAR(255)</td><td>NOT NULL</td><td>Admin / Recruiter full name</td></tr>
+      <tr><td><code>email</code></td><td>VARCHAR(255)</td><td>UNIQUE, NOT NULL</td><td>Login email address</td></tr>
+      <tr><td><code>password</code></td><td>VARCHAR(255)</td><td>NOT NULL</td><td>Authentication password</td></tr>
+      <tr><td><code>role</code></td><td>VARCHAR(50)</td><td>DEFAULT 'admin'</td><td>Role permissions</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2. Table: <code>applicants</code></h3>
+  <table>
+    <thead>
+      <tr><th>Column Name</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>BIGINT</td><td>PRIMARY KEY, AUTO_INCREMENT</td><td>Unique database ID</td></tr>
+      <tr><td><code>application_id</code></td><td>VARCHAR(50)</td><td>UNIQUE, NOT NULL</td><td>Public ID (e.g. NM-2026-48921)</td></tr>
+      <tr><td><code>full_name</code></td><td>VARCHAR(255)</td><td>NOT NULL</td><td>Applicant candidate name</td></tr>
+      <tr><td><code>email</code></td><td>VARCHAR(255)</td><td>NOT NULL</td><td>Applicant email address</td></tr>
+      <tr><td><code>phone</code></td><td>VARCHAR(50)</td><td>NOT NULL</td><td>10-digit mobile number</td></tr>
+      <tr><td><code>college</code></td><td>VARCHAR(255)</td><td>NOT NULL</td><td>College / University</td></tr>
+      <tr><td><code>department</code></td><td>VARCHAR(255)</td><td>NOT NULL</td><td>Department / Major</td></tr>
+      <tr><td><code>year_of_study</code></td><td>VARCHAR(50)</td><td>NOT NULL</td><td>Year of study (1st, 2nd, etc.)</td></tr>
+      <tr><td><code>first_preference</code></td><td>VARCHAR(255)</td><td>NOT NULL</td><td>1st choice team name</td></tr>
+      <tr><td><code>second_preference</code></td><td>VARCHAR(255)</td><td>NULLABLE</td><td>2nd choice team name</td></tr>
+      <tr><td><code>status</code></td><td>VARCHAR(50)</td><td>DEFAULT 'Application Received'</td><td>Recruitment status</td></tr>
+      <tr><td><code>created_at</code></td><td>DATETIME</td><td>NOT NULL</td><td>Submission timestamp</td></tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 4: EMAIL DELIVERY & NODEMAILER -->
+  <div class="page-break"></div>
+  <h1>4. Automated Email Delivery System</h1>
+  <p>
+    The recruitment platform uses <strong>Nodemailer</strong> configured with Gmail SMTP to dispatch immediate, beautifully styled HTML recruitment notifications to applicants upon form submission and status progression.
+  </p>
+
+  <h2>Email Configuration Parameters</h2>
+  <ul>
+    <li><strong>SMTP Provider:</strong> Gmail SMTP (<code>smtp.gmail.com</code>)</li>
+    <li><strong>System Email:</strong> <code>moniswarmoni509@gmail.com</code></li>
+    <li><strong>Security:</strong> 16-character Google App Password (<code>rzlcebjxhpgbumqb</code>)</li>
+    <li><strong>Supported Environments:</strong>
+      <ul>
+        <li>Local Dev Server: Middleware endpoint inside <code>vite.config.ts</code></li>
+        <li>Standalone Server: Express server in <code>server.js</code></li>
+        <li>Production / Vercel: Serverless Function in <code>api/send-email.js</code></li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>Automated Email Stages</h2>
+  <table>
+    <thead>
+      <tr><th>Event Type</th><th>Subject Line Format</th><th>Trigger Point</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>application_received</code></td>
+        <td>NeuraMorphix Recruitment — Application Received (<code>{{application_id}}</code>)</td>
+        <td>Triggered immediately when candidate submits application.</td>
+      </tr>
+      <tr>
+        <td><code>shortlisted</code></td>
+        <td>Congratulations! Shortlisted for NeuraMorphix 2026</td>
+        <td>Triggered by Admin clicking "Shortlist".</td>
+      </tr>
+      <tr>
+        <td><code>interview</code></td>
+        <td>Interview Scheduled — NeuraMorphix Recruitment 2026</td>
+        <td>Triggered by Admin scheduling interview with Google Meet link.</td>
+      </tr>
+      <tr>
+        <td><code>info_requested</code></td>
+        <td>Action Required: Information Requested for NeuraMorphix</td>
+        <td>Triggered when recruiter requests GitHub / Portfolio.</td>
+      </tr>
+      <tr>
+        <td><code>accepted</code></td>
+        <td>Welcome to NeuraMorphix! Application Accepted</td>
+        <td>Triggered when candidate is accepted into assigned team.</td>
+      </tr>
+      <tr>
+        <td><code>declined</code></td>
+        <td>NeuraMorphix Recruitment 2026 — Application Update</td>
+        <td>Polite notification when role capacity is reached.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 5: HOW TO RUN & VERIFY -->
+  <div class="page-break"></div>
+  <h1>5. Execution & Deployment Guide</h1>
+
+  <h2>1. Running the Frontend</h2>
+  <pre>
+# Navigate to project directory
+cd c:\Users\mones\OneDrive\Desktop\NeuraMorphix
+
+# Start Vite dev server with network exposure
+npm run dev
+
+# Accessible at:
+# Local:   http://localhost:5173/
+# Mobile:  http://&lt;your-wifi-ip&gt;:5173/
+  </pre>
+
+  <h2>2. Running the Spring Boot Backend</h2>
+  <pre>
+# Navigate to backend directory
+cd c:\Users\mones\OneDrive\Desktop\NeuraMorphix\backend
+
+# Run Maven Spring Boot target
+.\mvnw.cmd spring-boot:run
+
+# Backend active at: http://localhost:8080/
+  </pre>
+
+  <h2>3. Viewing Application Data & Candidate Counts</h2>
+  <ul>
+    <li><strong>In Admin Portal:</strong> Open <code>http://localhost:5173/</code> → Click <strong>Admin Login</strong> → Enter <code>moni@neuramorphix.com</code> / <code>admin123</code>. The <strong>Analytics</strong> and <strong>Applicants</strong> tabs show live statistics.</li>
+    <li><strong>In MySQL:</strong> Run <code>SELECT COUNT(*) FROM applicants;</code> inside database <code>recruitment_db</code>.</li>
+    <li><strong>In Browser Storage:</strong> Inspect element (F12) → Local Storage → <code>neuramorphix_applicants_v1</code>.</li>
+  </ul>
+
+  <h2>4. Production Build & Deployment</h2>
+  <pre>
+# Build production bundle
+npm run build
+
+# Push to GitHub
+git add .
+git commit -m "Deploy latest build"
+git push origin main
+  </pre>
+
+  <div class="card" style="border-left-color: #10b981; margin-top: 25px;">
+    <strong>Conclusion:</strong><br/>
+    The NeuraMorphix Recruitment platform is complete, tested, and fully configured for production deployment across desktop and mobile devices.
+  </div>
+
+</body>
+</html>
