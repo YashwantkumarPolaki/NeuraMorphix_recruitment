@@ -160,6 +160,97 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
           />
         ))}
       </div>
+
+      {/* ===== BOTTOM CTA — shown after selecting 1st choice ===== */}
+      {firstChoice && (
+        <div className="mt-12 animate-fadeIn">
+          {/* Summary recap */}
+          <div className="max-w-2xl mx-auto p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/40 border border-cyan-500/30 shadow-2xl shadow-cyan-500/10 text-center space-y-5">
+            <div className="flex justify-center">
+              <span className="px-4 py-1.5 rounded-full bg-emerald-950 text-emerald-300 text-xs font-bold uppercase border border-emerald-500/30 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                Role Selection Done
+              </span>
+            </div>
+
+            <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+              Ready to Apply!
+            </h3>
+
+            {/* Chosen roles recap */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-sm">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-950 border border-cyan-500/40">
+                <span className="text-xl">🥇</span>
+                <div className="text-left">
+                  <div className="text-[10px] text-cyan-400 font-bold uppercase">1st Choice</div>
+                  <div className="text-cyan-300 font-bold text-xs">{firstChoice}</div>
+                </div>
+              </div>
+              {secondChoice ? (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-950 border border-amber-500/40">
+                  <span className="text-xl">🥈</span>
+                  <div className="text-left">
+                    <div className="text-[10px] text-amber-400 font-bold uppercase">2nd Choice</div>
+                    <div className="text-amber-300 font-bold text-xs">{secondChoice}</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="px-4 py-2 rounded-xl bg-slate-950/60 border border-slate-700 text-slate-500 text-xs italic">
+                  No 2nd choice (optional)
+                </div>
+              )}
+            </div>
+
+            <p className="text-slate-400 text-xs max-w-md mx-auto">
+              Click below to fill in your personal information, skills, and experience to complete your NeuraMorphix 2026 recruitment application.
+            </p>
+
+            {/* Primary CTA button */}
+            <button
+              type="button"
+              onClick={onProceedToForm}
+              className="w-full sm:w-auto mx-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-base flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(56,189,248,0.35)] ring-2 ring-cyan-300 transition-all hover:scale-105 cursor-pointer"
+            >
+              Fill Application Details
+              <ArrowRight className="w-5 h-5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={onClearPreferences}
+              className="text-xs text-slate-500 hover:text-slate-300 underline transition-colors"
+            >
+              Reset selection and start over
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ===== MOBILE STICKY BOTTOM BAR — appears after 1st choice selected ===== */}
+      {firstChoice && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-slate-950/95 backdrop-blur-md border-t border-cyan-500/30 px-4 py-3 shadow-[0_-4px_24px_rgba(6,182,212,0.15)]">
+          <div className="flex items-center gap-3 max-w-lg mx-auto">
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] text-cyan-400 font-bold uppercase">Selected:</div>
+              <div className="text-xs font-bold text-white truncate">{firstChoice}</div>
+              {secondChoice && (
+                <div className="text-[10px] text-amber-300 truncate">+ {secondChoice}</div>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={onProceedToForm}
+              className="shrink-0 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-xs flex items-center gap-1.5 shadow-lg cursor-pointer transition-all active:scale-95"
+            >
+              Fill Application
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom padding to avoid mobile sticky bar covering content */}
+      {firstChoice && <div className="md:hidden h-20" />}
     </section>
   );
 };
