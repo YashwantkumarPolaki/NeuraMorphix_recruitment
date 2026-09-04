@@ -20,7 +20,6 @@ interface StatusTrackerProps {
 
 export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) => {
   const [appIdInput, setAppIdInput] = useState(initialAppId || '');
-  const [emailInput, setEmailInput] = useState('');
   const [searchedApplicant, setSearchedApplicant] = useState<Applicant | null>(null);
   const [notFound, setNotFound] = useState(false);
 
@@ -45,7 +44,7 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
     setNotFound(false);
     setReplySuccessMsg(null);
 
-    const found = DatabaseService.getApplicantByStatusQuery(appIdInput, emailInput);
+    const found = DatabaseService.getApplicantById(appIdInput);
     if (found) {
       setSearchedApplicant(found);
     } else {
@@ -125,45 +124,28 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
 
       {/* Search Card */}
       <div className="glass-panel p-6 sm:p-8 rounded-2xl mb-8 border-cyan-500/20">
-        <form onSubmit={handleSearch} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-                Application ID <span className="text-rose-400">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. NM-2026-91823"
-                value={appIdInput}
-                onChange={(e) => setAppIdInput(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl glass-input text-sm font-mono uppercase tracking-wider"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-                Registered Email (Optional)
-              </label>
-              <input
-                type="email"
-                placeholder="e.g. aarav.sharma@example.com"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl glass-input text-sm"
-              />
-            </div>
+        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-end gap-4">
+          <div className="flex-1 w-full">
+            <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+              Application ID <span className="text-rose-400">*</span>
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="e.g. NM-2026-91823"
+              value={appIdInput}
+              onChange={(e) => setAppIdInput(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl glass-input text-sm font-mono uppercase tracking-wider"
+            />
           </div>
 
-          <div className="flex justify-end pt-2">
-            <button
-              type="submit"
-              className="px-8 py-3 rounded-xl text-sm font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center gap-2 shadow-lg shadow-cyan-500/20 cursor-pointer"
-            >
-              <Search className="w-4 h-4" />
-              CHECK APPLICATION STATUS
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full sm:w-auto px-8 py-3 rounded-xl text-sm font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 cursor-pointer shrink-0"
+          >
+            <Search className="w-4 h-4" />
+            CHECK APPLICATION STATUS
+          </button>
         </form>
       </div>
 
@@ -172,7 +154,7 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
           <AlertCircle className="w-8 h-8 text-rose-400 mx-auto mb-2" />
           <h3 className="text-lg font-bold text-white">Application Not Found</h3>
           <p className="text-sm text-slate-400 max-w-md mx-auto">
-            No recruitment record matches Application ID <span className="font-mono text-white">{appIdInput}</span>. Please verify your ID or email.
+            No recruitment record matches Application ID <span className="font-mono text-white">{appIdInput}</span>. Please verify your Application ID.
           </p>
         </div>
       )}

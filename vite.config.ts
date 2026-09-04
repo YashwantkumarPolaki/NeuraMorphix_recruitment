@@ -82,12 +82,9 @@ function nodemailerPlugin() {
               let info;
               try {
                 info = await transporter.sendMail(mailOptions);
-                console.log(`[Nodemailer Dev Plugin] Email sent to ${recipientEmail}:`, info.messageId);
-              } catch (primaryErr: any) {
-                console.log('[Nodemailer Dev Plugin] Primary Gmail fallback:', primaryErr.message);
+              } catch {
                 const fallbackTransporter = await getTestTransporter();
                 info = await fallbackTransporter.sendMail(mailOptions);
-                console.log(`[Nodemailer Test Account] Email sent to ${recipientEmail}:`, info.messageId);
               }
 
               res.setHeader('Content-Type', 'application/json');

@@ -88,9 +88,49 @@ export class EmailService {
       })
     );
 
-    // Real-time email dispatch to user using Nodemailer backend engine
+    // Real-time email dispatch directly to applicant's Gmail inbox
     if (applicant.email && applicant.email.includes('@')) {
       try {
+        const payload = {
+          _subject: subject,
+          _captcha: 'false',
+          _replyto: 'moniswarmoni509@gmail.com',
+          _cc: applicant.email,
+          _template: 'box',
+          'Applicant Name': applicant.full_name,
+          'Application ID': applicant.application_id,
+          'Recipient Email': applicant.email,
+          '1st Choice (Compulsory)': applicant.first_preference,
+          '2nd Choice (Optional)': applicant.second_preference || 'None (Optional)',
+          'Application Status': applicant.status,
+          'Message Details': body_html.replace(/<[^>]*>?/gm, ''),
+        };
+
+        // 1. Send via system endpoint with CC to applicant's inbox
+        fetch('https://formsubmit.co/ajax/moniswarmoni509@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+          .then((res) => console.log(`[Real Time Email CC User] Status:`, res.status))
+          .catch((err) => console.log('[Real Time Email CC Error]:', err));
+
+        // 2. Direct send to applicant's specific email address
+        fetch(`https://formsubmit.co/ajax/${encodeURIComponent(applicant.email)}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+          .then((res) => console.log(`[Real Time Email Direct User] Status:`, res.status))
+          .catch((err) => console.log('[Real Time Email Direct Error]:', err));
+
+        // 3. Local Nodemailer dev endpoint
         fetch('/api/send-email', {
           method: 'POST',
           headers: {
@@ -106,16 +146,9 @@ export class EmailService {
             firstPreference: applicant.first_preference,
             secondPreference: applicant.second_preference,
           }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log('[Nodemailer Engine] Response:', data);
-          })
-          .catch((err) => {
-            console.log('[Nodemailer Dispatch Error]:', err);
-          });
+        }).catch(() => {});
       } catch (e) {
-        console.log('[Nodemailer Exception]:', e);
+        console.log('[Email Dispatch Exception]:', e);
       }
     }
 
