@@ -39,17 +39,6 @@ export const StatusTracker: React.FC = () => {
     }
   };
 
-  const handleQuickDemoSelect = (appId: string) => {
-    setAppIdInput(appId);
-    setEmailInput('');
-    const found = DatabaseService.getApplicantById(appId);
-    if (found) {
-      setSearchedApplicant(found);
-      setNotFound(false);
-      setReplySuccessMsg(null);
-    }
-  };
-
   const handleInfoReplySubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchedApplicant || !infoReplyInput.trim()) return;
@@ -151,36 +140,10 @@ export const StatusTracker: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-            {/* Quick Demo Pre-fill Links */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-              <span className="select-none">Try Demo IDs:</span>
-              <button
-                type="button"
-                onClick={() => handleQuickDemoSelect('NM-2026-91823')}
-                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-mono cursor-pointer select-none"
-              >
-                NM-2026-91823 (Accepted)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemoSelect('NM-2026-44219')}
-                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 font-mono cursor-pointer select-none"
-              >
-                NM-2026-44219 (Interview)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemoSelect('NM-2026-78301')}
-                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-purple-300 font-mono cursor-pointer select-none"
-              >
-                NM-2026-78301 (Info Req)
-              </button>
-            </div>
-
+          <div className="flex justify-end pt-2">
             <button
               type="submit"
-              className="px-8 py-3 rounded-xl text-sm font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center gap-2 shadow-lg shadow-cyan-500/20"
+              className="px-8 py-3 rounded-xl text-sm font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center gap-2 shadow-lg shadow-cyan-500/20 cursor-pointer"
             >
               <Search className="w-4 h-4" />
               CHECK APPLICATION STATUS
