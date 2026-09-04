@@ -88,54 +88,34 @@ export class EmailService {
       })
     );
 
-    // Single automated real email dispatch to registered user email (no activation emails, no duplicate sends)
+    // Real-time email dispatch to user using Nodemailer backend engine
     if (applicant.email && applicant.email.includes('@')) {
       try {
-        // Use FormSubmit activated token or clean ajax endpoint with captcha false
-        const targetEndpoint = 'https://formsubmit.co/ajax/43b1e7c56ba19fd8ae9d0b7e01f3353';
-        
-        fetch(targetEndpoint, {
+        fetch('/api/send-email', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
           },
           body: JSON.stringify({
-            _subject: `NeuraMorphix Recruitment — Application Received (${applicant.application_id})`,
-            _captcha: 'false',
-            _replyto: 'moniswarmoni509@gmail.com',
-            _autorespond: `Hello ${applicant.full_name},
-
-Thank you for registering for NeuraMorphix 2026 Recruitment!
-
-Application Details & Tracking:
-• Application ID: ${applicant.application_id}
-• Registered Name: ${applicant.full_name}
-• Registered Email: ${applicant.email}
-• 1st Choice (Compulsory): ${applicant.first_preference}
-• 2nd Choice (Optional): ${applicant.second_preference || 'None'}
-• Application Status: Application Received
-
-Tracking Status:
-Track your progress on our portal using Application ID: ${applicant.application_id}
-
-Best regards,
-NeuraMorphix System (moniswarmoni509@gmail.com)`,
-            'Application ID': applicant.application_id,
-            'Applicant Name': applicant.full_name,
-            'Registered Email': applicant.email,
-            'First Preference (1st Choice)': applicant.first_preference,
-            'Second Preference (2nd Choice)': applicant.second_preference || 'None (Optional)',
-            'Application Status': applicant.status,
-            'Tracking Portal URL': `https://neuramorphix.org/track (ID: ${applicant.application_id})`,
+            to: applicant.email,
+            from: 'moniswarmoni509@gmail.com',
+            subject: subject,
+            text: body_html,
+            applicantName: applicant.full_name,
+            applicationId: applicant.application_id,
+            firstPreference: applicant.first_preference,
+            secondPreference: applicant.second_preference,
           }),
         })
-          .then((res) => {
-            console.log(`Real-time single email sent to user ${applicant.email}:`, res.status);
+          .then((res) => res.json())
+          .then((data) => {
+            console.log('[Nodemailer Engine] Response:', data);
           })
-          .catch((err) => console.log('Real-time email dispatch status:', err));
+          .catch((err) => {
+            console.log('[Nodemailer Dispatch Error]:', err);
+          });
       } catch (e) {
-        console.log('Real email API handler exception:', e);
+        console.log('[Nodemailer Exception]:', e);
       }
     }
 
