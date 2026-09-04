@@ -20,7 +20,7 @@ import {
 
 interface ApplicationFormProps {
   firstChoice: string;
-  secondChoice: string;
+  secondChoice: string | null;
   roles: Role[];
   onChangePreferences: () => void;
   onApplicationSubmitted: (applicant: Applicant) => void;
@@ -142,7 +142,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
         skills: selectedSkills,
         experience: experience.trim(),
         first_preference: firstChoice,
-        second_preference: secondChoice,
+        second_preference: secondChoice || 'None (Optional)',
         final_assigned_team: null,
         status: 'Application Received',
         resume_url: resumeUrl.trim() || 'https://neuramorphix.org/resumes/default_resume.pdf',
@@ -514,8 +514,10 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 <div className="text-sm font-extrabold text-cyan-300">{firstChoice}</div>
               </div>
               <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
-                <div className="text-[10px] text-slate-400 font-bold uppercase">🥈 Second Choice</div>
-                <div className="text-sm font-extrabold text-amber-300">{secondChoice}</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">🥈 Second Choice (Optional)</div>
+                <div className="text-sm font-extrabold text-amber-300">
+                  {secondChoice || <span className="text-slate-500 italic font-normal">None selected (Optional)</span>}
+                </div>
               </div>
             </div>
           </div>

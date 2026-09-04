@@ -10,24 +10,16 @@ import { AdminDashboard } from './components/AdminDashboard';
 import {
   Sparkles,
   ArrowRight,
+  ArrowLeft,
   ShieldCheck,
   Search,
   Award,
   Calendar,
   Lock,
-  GraduationCap,
-  Briefcase,
 } from 'lucide-react';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState<'home' | 'apply' | 'track' | 'admin'>('home');
-  const [showRoleModal, setShowRoleModal] = useState<boolean>(() => {
-    try {
-      return !sessionStorage.getItem('neuramorphix_entry_selected');
-    } catch {
-      return true;
-    }
-  });
 
   // Selected Preferences state
   const [firstChoice, setFirstChoice] = useState<string | null>(null);
@@ -60,105 +52,94 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSelectCandidateRole = () => {
-    try {
-      sessionStorage.setItem('neuramorphix_entry_selected', 'candidate');
-    } catch {}
-    setShowRoleModal(false);
-    setCurrentTab('home');
-  };
-
-  const handleSelectEmployeeRole = () => {
-    try {
-      sessionStorage.setItem('neuramorphix_entry_selected', 'employee');
-    } catch {}
-    setShowRoleModal(false);
-    setCurrentTab('admin');
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950 relative">
-      {/* INITIAL ENTRY ROLE SELECTION GATEWAY MODAL */}
-      {showRoleModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-fadeIn">
-          <div className="glass-panel max-w-xl w-full p-8 rounded-3xl border border-cyan-500/30 shadow-2xl relative overflow-hidden space-y-6 text-center">
-            {/* Ambient Background Glow Accent */}
-            <div className="absolute -top-24 -right-24 w-60 h-60 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-24 -left-24 w-60 h-60 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
+      {/* Navigation Header */}
+      <Header currentTab={currentTab} onSelectTab={setCurrentTab} />
 
-            <div className="flex justify-center mb-2">
-              <NeuraMorphixLogo size={64} />
-            </div>
+      {/* INTERACTIVE STEP NAVIGATION BAR */}
+      <div className="bg-slate-900/90 border-b border-slate-800/80 py-3 px-4 shadow-md sticky top-20 z-30 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 sm:gap-6 text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => setCurrentTab('home')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+                currentTab === 'home'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20 font-extrabold'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              <span className="w-5 h-5 rounded-full bg-slate-950/40 flex items-center justify-center text-[10px]">1</span>
+              <span>Select Roles</span>
+            </button>
 
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-3">
-                <Sparkles className="w-3.5 h-3.5" />
-                NeuraMorphix Portal Gateway
-              </div>
-              <h2 className="text-3xl font-black text-white tracking-tight">Welcome to NeuraMorphix</h2>
-              <p className="text-sm text-slate-300 mt-2 max-w-md mx-auto">
-                Please select your portal access type to proceed:
-              </p>
-            </div>
+            <span className="text-slate-600 font-mono">→</span>
 
-            {/* Role Options Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              {/* Option: I am candidate */}
+            <button
+              type="button"
+              onClick={() => setCurrentTab('apply')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+                currentTab === 'apply'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20 font-extrabold'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              <span className="w-5 h-5 rounded-full bg-slate-950/40 flex items-center justify-center text-[10px]">2</span>
+              <span>Fill Details</span>
+            </button>
+
+            <span className="text-slate-600 font-mono">→</span>
+
+            <button
+              type="button"
+              onClick={() => setCurrentTab('track')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
+                currentTab === 'track'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20 font-extrabold'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              <span className="w-5 h-5 rounded-full bg-slate-950/40 flex items-center justify-center text-[10px]">3</span>
+              <span>Track Status</span>
+            </button>
+          </div>
+
+          {/* Back / Forward Step Buttons */}
+          <div className="flex items-center gap-2">
+            {currentTab === 'apply' && (
               <button
                 type="button"
-                onClick={handleSelectCandidateRole}
-                className="p-6 rounded-2xl bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 hover:border-cyan-400 text-left transition-all group flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-500/10 cursor-pointer"
+                onClick={() => setCurrentTab('home')}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition-all cursor-pointer"
               >
-                <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform border border-cyan-500/30">
-                    <GraduationCap className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-black text-white group-hover:text-cyan-300 transition-colors">
-                      I am candidate
-                    </h3>
-                    <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                      Explore available teams, apply for open roles, or track your application status.
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-800 flex items-center gap-1 text-xs font-bold text-cyan-400 group-hover:translate-x-1 transition-transform">
-                  <span>Enter Candidate Portal</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Back to Role Selection</span>
               </button>
-
-              {/* Option: I am employee */}
+            )}
+            {currentTab === 'home' && firstChoice && (
               <button
                 type="button"
-                onClick={handleSelectEmployeeRole}
-                className="p-6 rounded-2xl bg-slate-900/90 hover:bg-slate-900 border border-slate-700/80 hover:border-cyan-400 text-left transition-all group flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-500/10 cursor-pointer"
+                onClick={() => setCurrentTab('apply')}
+                className="px-4 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow-md transition-all cursor-pointer hover:scale-105"
               >
-                <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform border border-blue-500/30">
-                    <Briefcase className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-black text-white group-hover:text-cyan-300 transition-colors">
-                      I am employee
-                    </h3>
-                    <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                      Recruiter & administrator sign in (moni@neuramophrix.com).
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-800 flex items-center gap-1 text-xs font-bold text-blue-400 group-hover:translate-x-1 transition-transform">
-                  <span>Sign In as Employee</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
+                <span>Proceed to Form</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
-            </div>
+            )}
+            {currentTab === 'track' && (
+              <button
+                type="button"
+                onClick={() => setCurrentTab('home')}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition-all cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Back to Home</span>
+              </button>
+            )}
           </div>
         </div>
-      )}
-
-      {/* Navigation Header */}
-      <Header currentTab={currentTab} onSelectTab={setCurrentTab} onOpenRoleModal={() => setShowRoleModal(true)} />
+      </div>
 
       {/* RECRUITMENT CLOSED BANNER IF APPLICABLE */}
       {!windowStatus.isOpen && (
@@ -269,23 +250,23 @@ export function App() {
         {/* APPLY APPLICATION FORM VIEW */}
         {currentTab === 'apply' && (
           <div>
-            {!firstChoice || !secondChoice ? (
+            {!firstChoice ? (
               <div className="max-w-2xl mx-auto py-16 px-4 text-center space-y-6">
                 <div className="p-8 rounded-2xl glass-panel border-amber-500/30 space-y-4">
                   <span className="px-3 py-1 rounded-full bg-amber-950 text-amber-300 text-xs font-bold uppercase">
-                    Role Preference Required
+                    1st Choice Role Required
                   </span>
-                  <h2 className="text-2xl font-bold text-white">Please Select Your Two Role Preferences</h2>
+                  <h2 className="text-2xl font-bold text-white">Please Select Your Compulsory 1st Role Choice</h2>
                   <p className="text-sm text-slate-300">
-                    Before filling out your personal information, you must select your 🥇 1st Choice and 🥈 2nd Choice team preferences.
+                    Before filling out your personal details, you must select your 🥇 1st Choice team preference (2nd Choice is optional).
                   </p>
                   <button
                     type="button"
                     onClick={() => setCurrentTab('home')}
-                    className="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg inline-flex items-center gap-2"
+                    className="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg inline-flex items-center gap-2 cursor-pointer"
                   >
+                    <ArrowLeft className="w-4 h-4" />
                     Go to Interactive Role Selector
-                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>

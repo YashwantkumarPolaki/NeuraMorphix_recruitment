@@ -24,8 +24,6 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
 }) => {
   const [warningMsg, setWarningMsg] = useState<string | null>(null);
 
-  const selectedCount = (firstChoice ? 1 : 0) + (secondChoice ? 1 : 0);
-
   const handleSelectFirst = (roleName: string) => {
     setWarningMsg(null);
     if (secondChoice === roleName) {
@@ -54,24 +52,27 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
           Choose Your <span className="glow-text">NeuraMorphix Team Preferences</span>
         </h2>
         <p className="text-slate-300 text-base leading-relaxed">
-          Applicants must select exactly <strong>two distinct role choices</strong> to complete their application. Explore all 10 specialized teams below.
+          Selecting your <strong>1st Choice Role is compulsory</strong>. A <strong>2nd Choice Role is optional</strong>. Explore all 10 specialized teams below.
         </p>
 
         {/* Counter Indicator Widget */}
         <div className="mt-6 inline-flex items-center gap-3 px-6 py-2.5 rounded-2xl glass-panel border-slate-700/80">
-          <span className="text-sm font-semibold text-slate-300">Progress:</span>
+          <span className="text-sm font-semibold text-slate-300">Role Status:</span>
           <div className="flex items-center gap-2">
             <span
               className={`px-3 py-1 rounded-lg text-xs font-extrabold font-mono transition-all ${
-                selectedCount === 2
+                firstChoice
                   ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'
-                  : selectedCount === 1
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50'
-                  : 'bg-slate-800 text-slate-400 border border-slate-700'
+                  : 'bg-rose-500/20 text-rose-300 border border-rose-500/50'
               }`}
             >
-              {selectedCount} / 2 roles selected
+              {firstChoice ? '1st Choice Selected (Ready to Apply)' : '1st Choice Required (Compulsory)'}
             </span>
+            {secondChoice && (
+              <span className="px-3 py-1 rounded-lg text-xs font-extrabold font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/50">
+                + 2nd Choice Added (Optional)
+              </span>
+            )}
           </div>
         </div>
 
@@ -91,15 +92,15 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
           <div className="space-y-2">
             <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4" />
-              Your Role Preferences
+              Your Selected Roles
             </h3>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-1">
-              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-950/80 border border-slate-800">
+              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-950/80 border border-cyan-500/40">
                 <span className="text-xl">🥇</span>
                 <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">First Choice (1st)</div>
+                  <div className="text-[10px] text-cyan-400 uppercase font-bold">First Choice (Compulsory) *</div>
                   <div className="text-sm font-bold text-cyan-300">
-                    {firstChoice || <span className="text-slate-500 italic">Select 1st preference below...</span>}
+                    {firstChoice || <span className="text-rose-400 italic">Select compulsory 1st role below...</span>}
                   </div>
                 </div>
               </div>
@@ -107,9 +108,9 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
               <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-950/80 border border-slate-800">
                 <span className="text-xl">🥈</span>
                 <div>
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Second Choice (2nd)</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Second Choice (Optional)</div>
                   <div className="text-sm font-bold text-amber-300">
-                    {secondChoice || <span className="text-slate-500 italic">Select 2nd preference below...</span>}
+                    {secondChoice || <span className="text-slate-500 italic">Optional (Select 2nd preference)...</span>}
                   </div>
                 </div>
               </div>
@@ -122,20 +123,20 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
               <button
                 type="button"
                 onClick={onClearPreferences}
-                className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                Change Preferences
+                Clear Selection
               </button>
             )}
 
             <button
               type="button"
-              disabled={selectedCount < 2}
+              disabled={!firstChoice}
               onClick={onProceedToForm}
               className={`px-6 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 transition-all shadow-lg ${
-                selectedCount === 2
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-cyan-500/25 ring-2 ring-cyan-300 cursor-pointer'
+                firstChoice
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-cyan-500/25 ring-2 ring-cyan-300 cursor-pointer hover:scale-105'
                   : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed opacity-60'
               }`}
             >

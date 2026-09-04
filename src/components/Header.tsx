@@ -6,10 +6,9 @@ import { Search, UserPlus } from 'lucide-react';
 interface HeaderProps {
   currentTab: 'home' | 'apply' | 'track' | 'admin';
   onSelectTab: (tab: 'home' | 'apply' | 'track' | 'admin') => void;
-  onOpenRoleModal?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, onOpenRoleModal }) => {
+export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab }) => {
   const windowStatus = DatabaseService.isRecruitmentOpen();
   const [timeStr, setTimeStr] = React.useState('');
 
@@ -54,16 +53,6 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab, onOpenR
 
         {/* Navigation Tabs */}
         <nav className="hidden md:flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800">
-          {onOpenRoleModal && (
-            <button
-              type="button"
-              onClick={onOpenRoleModal}
-              className="px-3 py-2 rounded-xl text-xs font-extrabold bg-cyan-950 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-900 transition-all flex items-center gap-1.5"
-            >
-              <span>Change Portal Role</span>
-            </button>
-          )}
-
           <button
             type="button"
             onClick={() => onSelectTab('home')}

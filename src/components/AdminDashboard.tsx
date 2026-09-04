@@ -29,17 +29,13 @@ import {
   Key,
   ArrowRight,
   ShieldCheck,
-  GraduationCap,
-  Briefcase,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
   onSelectTab?: (tab: 'home' | 'apply' | 'track' | 'admin') => void;
 }
 
-export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectTab }) => {
-  // Option selection before login: 'candidate' | 'employee'
-  const [userRoleOption, setUserRoleOption] = useState<'employee' | 'candidate'>('employee');
+export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   // Admin auth state
   const [sessionUser, setSessionUser] = useState<AdminUser | null>(() => {
     try {
@@ -377,87 +373,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectTab }) =
               <ShieldCheck className="w-3.5 h-3.5" />
               NeuraMorphix Access Portal
             </div>
-            <h2 className="text-2xl font-black text-white tracking-tight">System Authentication</h2>
+            <h2 className="text-2xl font-black text-white tracking-tight">Recruiter Sign In</h2>
             <p className="text-xs text-slate-400">
-              Select your access option before proceeding to login.
+              Enter your authorized recruiter or employee credentials to access management dashboard.
             </p>
           </div>
 
-          {/* Role Option Selector Bar */}
-          <div className="bg-slate-950/90 p-1.5 rounded-2xl border border-slate-800 grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setUserRoleOption('candidate')}
-              className={`py-3 px-3.5 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
-                userRoleOption === 'candidate'
-                  ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <GraduationCap className="w-4 h-4 shrink-0" />
-              <span>I am Candidate</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setUserRoleOption('employee')}
-              className={`py-3 px-3.5 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
-                userRoleOption === 'employee'
-                  ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <Briefcase className="w-4 h-4 shrink-0" />
-              <span>I am Employee</span>
-            </button>
-          </div>
-
-          {/* Option 1: Candidate Access View */}
-          {userRoleOption === 'candidate' ? (
-            <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 text-center space-y-5 animate-fadeIn">
-              <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto border border-cyan-500/30">
-                <GraduationCap className="w-7 h-7" />
-              </div>
-              <div>
-                <h3 className="text-xl font-extrabold text-white">Candidate Portal Access</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed max-w-xs mx-auto">
-                  Submit your recruitment application or check your current application status.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => onSelectTab && onSelectTab('apply')}
-                  className="py-3 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs shadow-lg flex items-center justify-center gap-2 transition-all"
-                >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Apply Now</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => onSelectTab && onSelectTab('track')}
-                  className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 flex items-center justify-center gap-2 transition-all"
-                >
-                  <Search className="w-4 h-4 text-cyan-400" />
-                  <span>Track Status</span>
-                </button>
-              </div>
-
-              <div className="pt-2 border-t border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => onSelectTab && onSelectTab('home')}
-                  className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold underline underline-offset-4"
-                >
-                  Explore All Teams & Open Roles &rarr;
-                </button>
-              </div>
-            </div>
-          ) : (
-            /* Option 2: Employee Login Form View */
-            <div className="space-y-6 animate-fadeIn">
+          <div className="space-y-6 animate-fadeIn">
               {/* Error Alert */}
               {authError && (
                 <div className="p-3.5 rounded-xl bg-rose-950/70 border border-rose-500/50 text-rose-200 text-xs flex items-start gap-2.5 animate-fadeIn">
@@ -580,7 +502,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectTab }) =
                 </div>
               </div>
             </div>
-          )}
         </div>
       </div>
     );
