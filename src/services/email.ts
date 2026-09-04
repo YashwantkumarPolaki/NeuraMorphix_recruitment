@@ -88,51 +88,52 @@ export class EmailService {
       })
     );
 
-    // Automatically send real email in background from system mail moniswarmoni509@gmail.com to user's registered email
+    // Single automated real email dispatch to registered user email (no activation emails, no duplicate sends)
     if (applicant.email && applicant.email.includes('@')) {
       try {
-        // Dispatch to registered user email
-        fetch(`https://formsubmit.co/ajax/${encodeURIComponent(applicant.email)}`, {
+        // Use FormSubmit activated token or clean ajax endpoint with captcha false
+        const targetEndpoint = 'https://formsubmit.co/ajax/43b1e7c56ba19fd8ae9d0b7e01f3353';
+        
+        fetch(targetEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
           body: JSON.stringify({
-            _subject: subject,
+            _subject: `NeuraMorphix Recruitment — Application Received (${applicant.application_id})`,
+            _captcha: 'false',
             _replyto: 'moniswarmoni509@gmail.com',
-            'System Mail (Sender)': 'moniswarmoni509@gmail.com',
-            'Recipient (User Registered Email)': applicant.email,
-            'Applicant Name': applicant.full_name,
-            'Application ID': applicant.application_id,
-            'First Preference': applicant.first_preference,
-            'Second Preference': applicant.second_preference,
-            'Application Status': applicant.status,
-            'Tracking Status URL': `https://neuramorphix.org/track (ID: ${applicant.application_id})`,
-            'Message Content': body_html,
-          }),
-        }).then((res) => {
-          console.log(`Automated background email sent to user ${applicant.email}:`, res.status);
-        }).catch((err) => console.log('Background email dispatch to user status:', err));
+            _autorespond: `Hello ${applicant.full_name},
 
-        // Also notify system mail moniswarmoni509@gmail.com
-        fetch('https://formsubmit.co/ajax/moniswarmoni509@gmail.com', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify({
-            _subject: `[New Registration Sent] ${subject}`,
-            'System Mail': 'moniswarmoni509@gmail.com',
-            'Registered User Email': applicant.email,
-            'Applicant Name': applicant.full_name,
+Thank you for registering for NeuraMorphix 2026 Recruitment!
+
+Application Details & Tracking:
+• Application ID: ${applicant.application_id}
+• Registered Name: ${applicant.full_name}
+• Registered Email: ${applicant.email}
+• 1st Choice (Compulsory): ${applicant.first_preference}
+• 2nd Choice (Optional): ${applicant.second_preference || 'None'}
+• Application Status: Application Received
+
+Tracking Status:
+Track your progress on our portal using Application ID: ${applicant.application_id}
+
+Best regards,
+NeuraMorphix System (moniswarmoni509@gmail.com)`,
             'Application ID': applicant.application_id,
-            'First Preference': applicant.first_preference,
-            'Second Preference': applicant.second_preference,
+            'Applicant Name': applicant.full_name,
+            'Registered Email': applicant.email,
+            'First Preference (1st Choice)': applicant.first_preference,
+            'Second Preference (2nd Choice)': applicant.second_preference || 'None (Optional)',
             'Application Status': applicant.status,
+            'Tracking Portal URL': `https://neuramorphix.org/track (ID: ${applicant.application_id})`,
           }),
-        }).catch((err) => console.log('System mail notification status:', err));
+        })
+          .then((res) => {
+            console.log(`Real-time single email sent to user ${applicant.email}:`, res.status);
+          })
+          .catch((err) => console.log('Real-time email dispatch status:', err));
       } catch (e) {
         console.log('Real email API handler exception:', e);
       }

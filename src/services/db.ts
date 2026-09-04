@@ -190,14 +190,12 @@ export const INITIAL_EMAIL_SETTINGS: EmailSettings = {
   enable_decline: true,
   templates: {
     application_received: {
-      subject: 'Neuramorphix Recruitment — Application Generated & Submitted (ID: {{application_id}})',
-      body_template: `From: moniswarmoni509@gmail.com
-To: {{email}}
-Subject: Neuramorphix Recruitment — Application Generated & Submitted
+      subject: 'NeuraMorphix Recruitment — Application Received (ID: {{application_id}})',
+      body_template: `Hello {{name}},
 
-Hello {{name}},
+Thank you for registering for the NeuraMorphix 2026 Team Recruitment.
 
-Your application has been successfully generated and submitted to Neuramorphix!
+Your application has been successfully received!
 
 Application & Tracking Details:
 • Application ID: {{application_id}}
@@ -211,10 +209,10 @@ You can track your live recruitment evaluation progress anytime on our portal us
 
 Recruitment Period: 05 September 2026 – 18 September 2026
 
-Thank you for registering for the Neuramorphix 2026 Team Recruitment.
+Thank you for your interest in NeuraMorphix.
 
 Best regards,
-Neuramorphix System (moniswarmoni509@gmail.com)`,
+NeuraMorphix System (moniswarmoni509@gmail.com)`,
     },
     shortlisted: {
       subject: 'Neuramorphix Recruitment — You Have Been Shortlisted!',
