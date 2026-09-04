@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   AlertTriangle,
   RotateCcw,
+  Search,
 } from 'lucide-react';
 
 interface ApplicationFormProps {
@@ -24,6 +25,7 @@ interface ApplicationFormProps {
   roles: Role[];
   onChangePreferences: () => void;
   onApplicationSubmitted: (applicant: Applicant) => void;
+  onTrackStatusDirectly?: (appId: string) => void;
 }
 
 export const ApplicationForm: React.FC<ApplicationFormProps> = ({
@@ -32,6 +34,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   roles,
   onChangePreferences,
   onApplicationSubmitted,
+  onTrackStatusDirectly,
 }) => {
   const [step, setStep] = useState<'details' | 'skills_experience' | 'review' | 'submitted'>('details');
 
@@ -676,6 +679,17 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
           </div>
 
           <div className="pt-4 flex flex-wrap justify-center gap-4">
+            {onTrackStatusDirectly && (
+              <button
+                type="button"
+                onClick={() => onTrackStatusDirectly(submittedApplicant.application_id)}
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 text-xs font-black cursor-pointer shadow-xl flex items-center gap-2 transition-all hover:scale-105"
+              >
+                <Search className="w-4 h-4 text-slate-950" />
+                <span>Track Application Status Directly &rarr;</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={() => {
@@ -683,7 +697,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 setSubmittedApplicant(null);
                 setConfirmed(false);
               }}
-              className="px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold cursor-pointer shadow-lg"
+              className="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 cursor-pointer transition-all"
             >
               Submit Another Application
             </button>

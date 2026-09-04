@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Applicant, ApplicationStatus } from '../types/recruitment';
 import { DatabaseService } from '../services/db';
 import {
@@ -14,8 +14,12 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-export const StatusTracker: React.FC = () => {
-  const [appIdInput, setAppIdInput] = useState('');
+interface StatusTrackerProps {
+  initialAppId?: string | null;
+}
+
+export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) => {
+  const [appIdInput, setAppIdInput] = useState(initialAppId || '');
   const [emailInput, setEmailInput] = useState('');
   const [searchedApplicant, setSearchedApplicant] = useState<Applicant | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -24,6 +28,17 @@ export const StatusTracker: React.FC = () => {
   const [infoReplyInput, setInfoReplyInput] = useState('');
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [replySuccessMsg, setReplySuccessMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialAppId) {
+      const found = DatabaseService.getApplicantById(initialAppId);
+      if (found) {
+        setAppIdInput(initialAppId);
+        setSearchedApplicant(found);
+        setNotFound(false);
+      }
+    }
+  }, [initialAppId]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

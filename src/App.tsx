@@ -24,6 +24,7 @@ export function App() {
   // Selected Preferences state
   const [firstChoice, setFirstChoice] = useState<string | null>(null);
   const [secondChoice, setSecondChoice] = useState<string | null>(null);
+  const [trackedAppId, setTrackedAppId] = useState<string | null>(null);
 
   const roles = DatabaseService.getRoles();
   const windowStatus = DatabaseService.isRecruitmentOpen();
@@ -49,6 +50,12 @@ export function App() {
 
   const handleProceedToForm = () => {
     setCurrentTab('apply');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleTrackStatusDirectly = (appId: string) => {
+    setTrackedAppId(appId);
+    setCurrentTab('track');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -276,16 +283,17 @@ export function App() {
                 secondChoice={secondChoice}
                 roles={roles}
                 onChangePreferences={() => setCurrentTab('home')}
-                onApplicationSubmitted={() => {
-                  // After submission keep user on submitted state or offer tracking
+                onApplicationSubmitted={(applicant) => {
+                  setTrackedAppId(applicant.application_id);
                 }}
+                onTrackStatusDirectly={handleTrackStatusDirectly}
               />
             )}
           </div>
         )}
 
         {/* APPLICATION STATUS TRACKER VIEW */}
-        {currentTab === 'track' && <StatusTracker />}
+        {currentTab === 'track' && <StatusTracker initialAppId={trackedAppId} />}
 
         {/* ADMIN RECRUITMENT PORTAL VIEW */}
         {currentTab === 'admin' && <AdminDashboard onSelectTab={setCurrentTab} />}
