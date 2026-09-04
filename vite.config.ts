@@ -3,6 +3,32 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 // @ts-ignore
 import nodemailer from 'nodemailer';
+// @ts-ignore
+import { readFileSync } from 'fs';
+// @ts-ignore
+import { resolve } from 'path';
+
+// Load .env manually for Vite plugins (they run in Node context)
+function loadDotEnv(): Record<string, string> {
+  try {
+    const envPath = resolve(process.cwd(), '.env');
+    const content = readFileSync(envPath, 'utf-8');
+    const vars: Record<string, string> = {};
+    content.split('\n').forEach((line: string) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const eqIdx = trimmed.indexOf('=');
+      if (eqIdx !== -1) {
+        const key = trimmed.slice(0, eqIdx).trim();
+        const value = trimmed.slice(eqIdx + 1).trim();
+        vars[key] = value;
+      }
+    });
+    return vars;
+  } catch {
+    return {};
+  }
+}
 
 function buildHtml({ applicantName, applicationId, phone, firstPreference, secondPreference, emailType }: any) {
   const typeLabel: Record<string, string> = {
@@ -15,8 +41,7 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
   };
   const label = typeLabel[emailType] || 'Recruitment Update';
 
-  return `
-<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -77,7 +102,7 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
                 Please <strong style="color:#f8fafc;">save your Application ID</strong> — you will need it to track your recruitment status on our portal at any time.
               </p>
               <p style="margin:0 0 24px 0;color:#94a3b8;font-size:13px;line-height:1.7;">
-                Our recruitment team will review all applications and update your status accordingly. You will receive further communications at this email address.
+                Our recruitment team will review all applications and update your status accordingly. You will receive further updates at this email address.
               </p>
               <p style="margin:0;color:#64748b;font-size:12px;border-top:1px solid #334155;padding-top:20px;line-height:1.7;">
                 Thank you for applying and for your interest in joining NeuraMorphix.<br/>
@@ -101,17 +126,23 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
 }
 
 function nodemailerPlugin() {
-  const systemEmail = process.env.SMTP_USER || 'moniswarmoni509@gmail.com';
-  const systemPass = process.env.SMTP_PASS || 'moni1234';
+  const env = loadDotEnv();
+  const systemEmail = env.SMTP_USER || process.env.SMTP_USER || 'moniswarmoni509@gmail.com';
+  const systemPass = env.SMTP_PASS || process.env.SMTP_PASS || '';
 
-  const transporter = nodemailer.createTransport({
+  const isRealPassword = systemPass.length >= 16;
+
+  // Primary Gmail transporter
+  const gmailTransporter = nodemailer.createTransport({
     service: 'gmail',
     auth: { user: systemEmail, pass: systemPass },
+    tls: { rejectUnauthorized: false },
   });
 
   let testTransporter: nodemailer.Transporter | null = null;
-  async function getTestTransporter() {
+  async function getEtherealTransporter() {
     if (!testTransporter) {
+      console.log('\n[NeuraMorphix Mailer] Creating Ethereal test account...');
       const testAccount = await nodemailer.createTestAccount();
       testTransporter = nodemailer.createTransport({
         host: 'smtp.ethereal.email',
@@ -119,8 +150,18 @@ function nodemailerPlugin() {
         secure: false,
         auth: { user: testAccount.user, pass: testAccount.pass },
       });
+      console.log('[NeuraMorphix Mailer] Ethereal test account ready:', testAccount.user);
     }
     return testTransporter;
+  }
+
+  if (!isRealPassword) {
+    console.log('\n⚠️  [NeuraMorphix Mailer] No Gmail App Password found in .env (SMTP_PASS).');
+    console.log('   Emails will use Ethereal test preview (not delivered to real inbox).');
+    console.log('   To send real emails: set SMTP_PASS=<16-char Gmail App Password> in .env\n');
+  } else {
+    console.log(`\n✅ [NeuraMorphix Mailer] Gmail configured for ${systemEmail}`);
+    console.log('   Real emails will be sent immediately via Gmail SMTP.\n');
   }
 
   return {
@@ -151,18 +192,37 @@ function nodemailerPlugin() {
               html: htmlContent,
             };
 
-            let info;
-            try {
-              info = await transporter.sendMail(mailOptions);
-            } catch {
-              const fallback = await getTestTransporter();
-              info = await fallback.sendMail(mailOptions);
+            let info: any;
+            let sentVia = 'Gmail';
+
+            if (isRealPassword) {
+              try {
+                info = await gmailTransporter.sendMail(mailOptions);
+                console.log(`\n✅ [NeuraMorphix Mailer] Email sent to ${recipientEmail} via Gmail`);
+                console.log(`   Message ID: ${info.messageId}`);
+              } catch (gmailErr: any) {
+                console.log(`\n⚠️  [NeuraMorphix Mailer] Gmail failed: ${gmailErr.message}`);
+                console.log('   Falling back to Ethereal preview...');
+                const ethereal = await getEtherealTransporter();
+                info = await ethereal.sendMail(mailOptions);
+                sentVia = 'Ethereal (preview)';
+                const previewUrl = nodemailer.getTestMessageUrl(info);
+                console.log(`\n📧 [NeuraMorphix Mailer] Email preview: ${previewUrl}\n`);
+              }
+            } else {
+              // No real password — use Ethereal for preview
+              const ethereal = await getEtherealTransporter();
+              info = await ethereal.sendMail(mailOptions);
+              sentVia = 'Ethereal (preview)';
+              const previewUrl = nodemailer.getTestMessageUrl(info);
+              console.log(`\n📧 [NeuraMorphix Mailer] Email preview (open in browser): ${previewUrl}\n`);
             }
 
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
-            res.end(JSON.stringify({ success: true, messageId: info.messageId }));
+            res.end(JSON.stringify({ success: true, messageId: info.messageId, via: sentVia }));
           } catch (err: any) {
+            console.error('\n❌ [NeuraMorphix Mailer] Error:', err.message);
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 500;
             res.end(JSON.stringify({ success: false, error: err.message }));
