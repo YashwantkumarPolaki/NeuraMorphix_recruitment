@@ -65,7 +65,7 @@ export class EmailService {
     };
 
     const subject = replaceVariables(template.subject);
-    const body_html = replaceVariables(template.body_template);
+    const body_text = replaceVariables(template.body_template);
 
     const emailLog: EmailLog = {
       email_id: `email-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -73,7 +73,7 @@ export class EmailService {
       recipient_email: applicant.email,
       email_type: type,
       subject: subject,
-      body_html: body_html,
+      body_html: body_text,
       status: 'Sent',
       sent_at: new Date().toISOString(),
     };
@@ -88,68 +88,22 @@ export class EmailService {
       })
     );
 
-    // Real-time email dispatch directly to applicant's Gmail inbox
+    // Send ONLY via local Nodemailer — no FormSubmit (avoids activation email on localhost)
     if (applicant.email && applicant.email.includes('@')) {
-      try {
-        const payload = {
-          _subject: subject,
-          _captcha: 'false',
-          _replyto: 'moniswarmoni509@gmail.com',
-          _cc: applicant.email,
-          _template: 'box',
-          'Applicant Name': applicant.full_name,
-          'Application ID': applicant.application_id,
-          'Recipient Email': applicant.email,
-          '1st Choice (Compulsory)': applicant.first_preference,
-          '2nd Choice (Optional)': applicant.second_preference || 'None (Optional)',
-          'Application Status': applicant.status,
-          'Message Details': body_html.replace(/<[^>]*>?/gm, ''),
-        };
-
-        // 1. Send via system endpoint with CC to applicant's inbox
-        fetch('https://formsubmit.co/ajax/moniswarmoni509@gmail.com', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        })
-          .then((res) => console.log(`[Real Time Email CC User] Status:`, res.status))
-          .catch((err) => console.log('[Real Time Email CC Error]:', err));
-
-        // 2. Direct send to applicant's specific email address
-        fetch(`https://formsubmit.co/ajax/${encodeURIComponent(applicant.email)}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        })
-          .then((res) => console.log(`[Real Time Email Direct User] Status:`, res.status))
-          .catch((err) => console.log('[Real Time Email Direct Error]:', err));
-
-        // 3. Local Nodemailer dev endpoint
-        fetch('/api/send-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            to: applicant.email,
-            from: 'moniswarmoni509@gmail.com',
-            subject: subject,
-            text: body_html,
-            applicantName: applicant.full_name,
-            applicationId: applicant.application_id,
-            firstPreference: applicant.first_preference,
-            secondPreference: applicant.second_preference,
-          }),
-        }).catch(() => {});
-      } catch (e) {
-        console.log('[Email Dispatch Exception]:', e);
-      }
+      fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: applicant.email,
+          subject: subject,
+          applicantName: applicant.full_name,
+          applicationId: applicant.application_id,
+          phone: applicant.phone,
+          firstPreference: applicant.first_preference,
+          secondPreference: applicant.second_preference,
+          emailType: type,
+        }),
+      }).catch(() => {});
     }
 
     return emailLog;

@@ -349,18 +349,6 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                   </div>
                 )}
               </div>
-              {/* Digit counter */}
-              <div className={`mt-1 text-[11px] font-medium ${
-                phoneHasInput
-                  ? isPhoneValid ? 'text-emerald-400' : 'text-rose-400'
-                  : 'text-slate-500'
-              }`}>
-                {phoneHasInput
-                  ? isPhoneValid
-                    ? '✓ Valid 10-digit phone number'
-                    : `${phoneDigits.length}/10 digits entered`
-                  : 'Enter 10-digit mobile number'}
-              </div>
             </div>
 
             {/* College with Autocomplete */}
