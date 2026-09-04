@@ -64,8 +64,8 @@ export function App() {
       {/* Navigation Header */}
       <Header currentTab={currentTab} onSelectTab={setCurrentTab} />
 
-      {/* INTERACTIVE STEP NAVIGATION BAR */}
-      <div className="bg-slate-900/90 border-b border-slate-800/80 py-3 px-4 shadow-md sticky top-20 z-30 backdrop-blur-md">
+      {/* INTERACTIVE STEP NAVIGATION BAR — desktop only (mobile uses header tab bar) */}
+      <div className="hidden md:block bg-slate-900/90 border-b border-slate-800/80 py-3 px-4 shadow-md sticky top-20 z-30 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 sm:gap-6 text-xs font-bold">
             <button
@@ -185,7 +185,7 @@ export function App() {
                 Join NeuraMorphix's multidisciplinary teams pushing boundaries in Artificial Intelligence, Web/App Development, IoT, UI/UX, Hardware, Research, and Operations.
               </p>
 
-              <div className="flex flex-wrap items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4">
                 {windowStatus.isOpen ? (
                   <button
                     type="button"
@@ -193,7 +193,7 @@ export function App() {
                       const el = document.getElementById('roles-section');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="px-8 py-3.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-sm flex items-center gap-2 shadow-[0_0_30px_rgba(56,189,248,0.35)] transition-transform hover:scale-105"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-sm flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(56,189,248,0.35)] transition-transform hover:scale-105"
                   >
                     Select Role Preferences & Apply
                     <ArrowRight className="w-4 h-4" />
@@ -202,7 +202,7 @@ export function App() {
                   <button
                     type="button"
                     onClick={() => setCurrentTab('track')}
-                    className="px-8 py-3.5 rounded-2xl bg-slate-800 text-slate-300 font-extrabold text-sm flex items-center gap-2 border border-slate-700"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-slate-800 text-slate-300 font-extrabold text-sm flex items-center justify-center gap-2 border border-slate-700"
                   >
                     Track Existing Application Status
                     <Search className="w-4 h-4" />
@@ -212,7 +212,7 @@ export function App() {
                 <button
                   type="button"
                   onClick={() => setCurrentTab('track')}
-                  className="px-6 py-3.5 rounded-2xl glass-panel text-slate-200 font-semibold text-sm hover:border-cyan-400/50 transition-colors flex items-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl glass-panel text-slate-200 font-semibold text-sm hover:border-cyan-400/50 transition-colors flex items-center justify-center gap-2"
                 >
                   <Search className="w-4 h-4 text-cyan-400" />
                   Check Application Status
