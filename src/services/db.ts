@@ -8,26 +8,27 @@ import type {
 } from '../types/recruitment';
 
 const STORAGE_KEYS = {
-  APPLICANTS: 'neuramorphix_applicants_v1',
-  ROLES: 'neuramorphix_roles_v1',
+  APPLICANTS: 'neuramorphix_applicants_v4',
+  ROLES: 'neuramorphix_roles_v4',
   EMAIL_LOGS: 'neuramorphix_email_logs_v1',
   EMAIL_SETTINGS: 'neuramorphix_email_settings_v1',
   CONFIG: 'neuramorphix_config_v1',
   ADMINS: 'neuramorphix_admins_v1',
 };
 
-// Initial 10 Teams
+// 15 Specialized Sub-Domains across 3 Core Domains (Technical, Non-Technical, Entrepreneurship & Startups)
 export const INITIAL_ROLES: Role[] = [
+  // 💻 1. TECHNICAL DOMAIN
   {
-    role_id: 'role-1',
-    role_name: 'AI & ML Team',
+    role_id: 'role-tech-1',
+    role_name: 'Technical - AI / ML',
     description:
-      'Artificial intelligence, machine learning, data analysis, intelligent healthcare systems, model development, and experimentation.',
+      'Artificial intelligence, deep learning models, natural language processing, computer vision, and data pipelines.',
     skills: [
       'Python',
       'PyTorch / TensorFlow',
-      'Data Analysis',
       'Scikit-Learn',
+      'Data Analysis',
       'LLM Prompting',
       'Computer Vision',
     ],
@@ -35,147 +36,228 @@ export const INITIAL_ROLES: Role[] = [
     is_active: true,
   },
   {
-    role_id: 'role-2',
-    role_name: 'Web & App Development Team',
+    role_id: 'role-tech-2',
+    role_name: 'Technical - Web Development',
     description:
-      'Frontend and mobile application development, interfaces, APIs, databases, and user-facing products.',
+      'Frontend and backend web applications, REST APIs, databases, responsive web UI components, and modern web frameworks.',
     skills: [
-      'React / React Native',
+      'React / Next.js',
       'TypeScript',
-      'Next.js',
-      'REST APIs',
-      'Mobile Dev',
+      'Node.js / Express',
       'Tailwind CSS',
+      'REST APIs',
+      'Git & GitHub',
     ],
     icon_name: 'Code2',
     is_active: true,
   },
   {
-    role_id: 'role-3',
-    role_name: 'UI/UX Design Team',
+    role_id: 'role-tech-3',
+    role_name: 'Technical - App Development',
     description:
-      'User research, wireframes, prototypes, visual design, interaction design, and product experience.',
+      'Cross-platform and native mobile apps for iOS and Android, mobile UI/UX, push notifications, and offline sync.',
     skills: [
-      'Figma',
-      'Wireframing',
-      'User Research',
-      'Prototyping',
-      'Design Systems',
-      'Micro-Interactions',
+      'Flutter',
+      'React Native',
+      'iOS / Android',
+      'Mobile UI/UX',
+      'Firebase',
+      'Kotlin / Swift',
     ],
-    icon_name: 'Palette',
+    icon_name: 'Smartphone',
     is_active: true,
   },
   {
-    role_id: 'role-4',
-    role_name: 'Marketing, Leadership & PR Team',
+    role_id: 'role-tech-4',
+    role_name: 'Technical - Research & Innovation',
     description:
-      'Brand strategy, marketing, partnerships, public relations, outreach, and leadership initiatives.',
+      'Researching cutting-edge AI architectures, paper publishing, algorithmic benchmarks, literature synthesis, and patent ideation.',
     skills: [
-      'Brand Strategy',
-      'Public Relations',
-      'Campaign Management',
-      'Growth Marketing',
-      'Leadership',
-      'Sponsorships',
+      'Paper Publishing',
+      'Deep Learning Research',
+      'Algorithmic Benchmarking',
+      'Patent Ideation',
+      'Literature Review',
     ],
-    icon_name: 'Megaphone',
+    icon_name: 'BookOpen',
     is_active: true,
   },
   {
-    role_id: 'role-5',
-    role_name: 'Full Stack Development Team',
+    role_id: 'role-tech-5',
+    role_name: 'Technical - IoT & Hardware',
     description:
-      'End-to-end product development involving frontend, backend, databases, APIs, authentication, and deployment.',
-    skills: [
-      'Node.js / Express',
-      'PostgreSQL / MongoDB',
-      'React / Vue',
-      'Docker',
-      'System Architecture',
-      'GraphQL',
-    ],
-    icon_name: 'Layers',
-    is_active: true,
-  },
-  {
-    role_id: 'role-6',
-    role_name: 'IoT & Hardware Team',
-    description:
-      'Sensors, embedded systems, electronics, hardware prototypes, IoT connectivity, and hardware-software integration.',
+      'Microcontroller programming, sensor networks, embedded C/C++, robotics, circuit design, and cloud IoT connectivity.',
     skills: [
       'Arduino / ESP32',
       'Raspberry Pi',
       'Embedded C/C++',
       'Circuit Design',
-      'MQTT',
-      'Sensor Integration',
+      'MQTT / Cloud',
+      'Sensors',
     ],
     icon_name: 'Radio',
     is_active: true,
   },
   {
-    role_id: 'role-7',
-    role_name: 'Events & Operations Team',
+    role_id: 'role-tech-6',
+    role_name: 'Technical - Cybersecurity',
     description:
-      'Event planning, coordination, logistics, scheduling, execution, and operational management.',
+      'Ethical hacking, network security auditing, vulnerability assessments, cryptography, CTF competitions, and secure coding.',
+    skills: [
+      'Ethical Hacking',
+      'Network Security',
+      'CTF Challenges',
+      'Cryptography',
+      'Web Vulnerabilities',
+      'Penetration Testing',
+    ],
+    icon_name: 'ShieldCheck',
+    is_active: true,
+  },
+
+  // 🎨 2. NON-TECHNICAL DOMAIN
+  {
+    role_id: 'role-nontech-1',
+    role_name: 'Non-Technical - Creatives & Design',
+    description:
+      'UI/UX interface design, branding, vector graphics, poster art, motion graphics, and visual design systems.',
+    skills: [
+      'UI/UX Design',
+      'Figma',
+      'Graphic Design',
+      'Poster Art',
+      'Motion Graphics',
+      'Branding',
+    ],
+    icon_name: 'Palette',
+    is_active: true,
+  },
+  {
+    role_id: 'role-nontech-2',
+    role_name: 'Non-Technical - PR & Outreach',
+    description:
+      'Public relations campaigns, campus marketing, media outreach, press coverage, influencer partnerships, and brand promotion.',
+    skills: [
+      'Public Relations',
+      'Campus Marketing',
+      'Media Coverage',
+      'Outreach Campaigns',
+      'Press Releases',
+      'Social PR',
+    ],
+    icon_name: 'Megaphone',
+    is_active: true,
+  },
+  {
+    role_id: 'role-nontech-3',
+    role_name: 'Non-Technical - Sponsorships & Business Development',
+    description:
+      'Corporate sponsorships, pitch proposals, funding drives, brand partnerships, client relations, and financial negotiation.',
+    skills: [
+      'Corporate Proposals',
+      'Brand Pitching',
+      'Fund Raising',
+      'Client Relations',
+      'Negotiation',
+    ],
+    icon_name: 'Handshake',
+    is_active: true,
+  },
+  {
+    role_id: 'role-nontech-4',
+    role_name: 'Non-Technical - Events & Operations',
+    description:
+      'Planning campus hackathons, managing venue logistics, scheduling, on-site coordination, crowd control, and operational execution.',
     skills: [
       'Event Logistics',
-      'Vendor Management',
+      'On-Site Management',
+      'Venue Coordination',
+      'Crowd Control',
+      'Stage Ops',
       'Scheduling',
-      'Budgeting',
-      'Resource Allocation',
-      'On-Site Coordination',
     ],
     icon_name: 'CalendarCheck',
     is_active: true,
   },
   {
-    role_id: 'role-8',
-    role_name: 'HR & Community Team',
+    role_id: 'role-nontech-5',
+    role_name: 'Non-Technical - Content & Media',
     description:
-      'Recruitment, member engagement, team culture, onboarding, communication, and community building.',
+      'Technical copywriting, video editing, social media reels/shorts, photography, event recaps, and content publishing.',
     skills: [
-      'Talent Acquisition',
-      'Member Engagement',
-      'Onboarding',
+      'Copywriting',
+      'Video Editing',
+      'Social Media Management',
+      'Photography',
+      'Reels & Shorts',
+      'Blogging',
+    ],
+    icon_name: 'Video',
+    is_active: true,
+  },
+  {
+    role_id: 'role-nontech-6',
+    role_name: 'Non-Technical - HR & Community',
+    description:
+      'Talent onboarding, community culture, member engagement, team building, interview scheduling, and conflict resolution.',
+    skills: [
+      'Talent Onboarding',
+      'Member Relations',
+      'Team Culture',
       'Conflict Resolution',
-      'Community Building',
-      'Culture',
+      'Interview Scheduling',
     ],
     icon_name: 'Users',
     is_active: true,
   },
+
+  // 🚀 3. ENTREPRENEURSHIP & STARTUPS DOMAIN
   {
-    role_id: 'role-9',
-    role_name: 'Content & Communication Team',
+    role_id: 'role-startup-1',
+    role_name: 'Entrepreneurship - Pitch Decks & Product Strategy',
     description:
-      'Technical content, social media, documentation, presentations, copywriting, and communication.',
+      'Building investor pitch decks, product roadmaps, MVP ideation, value proposition design, and feature prioritization.',
     skills: [
-      'Technical Writing',
-      'Social Media Management',
-      'Copywriting',
-      'Slide Deck Design',
-      'Public Speaking',
-      'Blogging',
+      'Pitch Decks',
+      'Product Strategy',
+      'MVP Roadmap',
+      'Value Proposition',
+      'User Stories',
+      'Feature Specs',
     ],
-    icon_name: 'FileText',
+    icon_name: 'Rocket',
     is_active: true,
   },
   {
-    role_id: 'role-10',
-    role_name: 'Research & Innovation Team',
+    role_id: 'role-startup-2',
+    role_name: 'Entrepreneurship - Startup Incubations & Venture Growth',
     description:
-      'Research, literature review, ideation, experimentation, scientific exploration, innovation, and future project development.',
+      'Accelerating early-stage startups, mentor networking, pitch competitions, team building, and venture scaling.',
     skills: [
-      'Literature Review',
-      'Academic Writing',
-      'Hypothesis Testing',
-      'Patent Research',
-      'R&D Strategy',
-      'Rapid Prototyping',
+      'Venture Planning',
+      'Incubation Ops',
+      'Pitch Competitions',
+      'Investor Relations',
+      'Growth Hacking',
+      'Fundraising',
     ],
     icon_name: 'Lightbulb',
+    is_active: true,
+  },
+  {
+    role_id: 'role-startup-3',
+    role_name: 'Entrepreneurship - Market Research & Business Models',
+    description:
+      'Conducting TAM/SAM market research, competitor benchmarking, monetization strategy, and business model canvas creation.',
+    skills: [
+      'Market Analysis',
+      'TAM/SAM Modeling',
+      'Business Model Canvas',
+      'Monetization Strategy',
+      'Competitor Audit',
+      'Financial Projection',
+    ],
+    icon_name: 'Handshake',
     is_active: true,
   },
 ];
@@ -193,7 +275,7 @@ export const INITIAL_EMAIL_SETTINGS: EmailSettings = {
       subject: 'NeuraMorphix Recruitment — Application Received (ID: {{application_id}})',
       body_template: `Hello {{name}},
 
-Thank you for registering for the NeuraMorphix 2026 Team Recruitment.
+Thank you for registering for the NeuraMorphix 2026 Recruitment.
 
 Your application has been successfully received!
 
@@ -209,16 +291,14 @@ You can track your live recruitment evaluation progress anytime on our portal us
 
 Recruitment Period: 05 September 2026 – 18 September 2026
 
-Thank you for your interest in NeuraMorphix.
-
 Best regards,
-NeuraMorphix System (moniswarmoni509@gmail.com)`,
+NeuraMorphix Team (neuramorphix@gmail.com)`,
     },
     shortlisted: {
       subject: 'Neuramorphix Recruitment — You Have Been Shortlisted!',
       body_template: `Hello {{name}},
 
-Great news! Your application for Neuramorphix 2026 Recruitment (ID: {{application_id}}) has passed our initial screening and has been SHORTLISTENED.
+Great news! Your application for Neuramorphix 2026 Recruitment (ID: {{application_id}}) has passed our initial screening and has been SHORTLISTED.
 
 Selected Choices Evaluated:
 1st Preference: {{first_preference}}
@@ -241,7 +321,7 @@ Evaluated Role: {{first_preference}}
 Interview Details:
 {{interview_details}}
 
-Please ensure you join on time and bring any relevant project materials or code repositories.
+Please ensure you join on time and bring any relevant project materials.
 
 Best regards,
 Neuramorphix Recruitment Team`,
@@ -302,7 +382,6 @@ export const INITIAL_CONFIG: RecruitmentConfig = {
   is_manually_open: true,
 };
 
-
 // Sample Applicants for testing admin dashboard out of the box
 export const MOCK_APPLICANTS: Applicant[] = [
   {
@@ -311,15 +390,15 @@ export const MOCK_APPLICANTS: Applicant[] = [
     full_name: 'Aarav Sharma',
     email: 'aarav.sharma@example.com',
     phone: '+91 98765 43210',
-    college: 'IIT Delhi',
+    college: 'SRM Institute of Science and Technology',
     department: 'Computer Science & Engineering',
     year: '3rd Year',
     skills: ['Python', 'PyTorch / TensorFlow', 'Data Analysis', 'Scikit-Learn'],
     experience:
-      'Built a transformer-based medical imaging classification model with 94.2% accuracy. Published paper in IEEE student conference.',
-    first_preference: 'AI & ML Team',
-    second_preference: 'Research & Innovation Team',
-    final_assigned_team: 'AI & ML Team',
+      'Built a transformer-based medical imaging classification model with 94.2% accuracy.',
+    first_preference: 'Technical - AI & Machine Learning',
+    second_preference: 'Technical - Web & App Development',
+    final_assigned_team: 'Technical - AI & Machine Learning',
     status: 'Accepted',
     resume_url: 'https://example.com/resumes/aarav_sharma.pdf',
     github_url: 'https://github.com/aaravsharma-ai',
@@ -328,8 +407,8 @@ export const MOCK_APPLICANTS: Applicant[] = [
     admin_notes: [
       {
         id: 'note-1',
-        author: 'Dr. Sarah Vance (Lead Recruiter)',
-        text: 'Exceptional background in computer vision. Strong publication record.',
+        author: 'Lead Recruiter',
+        text: 'Exceptional background in computer vision and machine learning.',
         created_at: '2026-09-06T10:15:00Z',
       },
     ],
@@ -343,7 +422,7 @@ export const MOCK_APPLICANTS: Applicant[] = [
     reviewed_at: '2026-09-06T10:00:00Z',
     accepted_at: '2026-09-08T16:20:00Z',
     declined_at: null,
-    accepted_by: 'Dr. Sarah Vance',
+    accepted_by: 'Lead Recruiter',
   },
   {
     id: 'app-2',
@@ -351,20 +430,20 @@ export const MOCK_APPLICANTS: Applicant[] = [
     full_name: 'Priya Sundaram',
     email: 'priya.sundaram@example.com',
     phone: '+91 98123 76543',
-    college: 'BITS Pilani',
+    college: 'SRM Institute of Science and Technology',
     department: 'Information Technology',
     year: '2nd Year',
-    skills: ['React / React Native', 'TypeScript', 'Next.js', 'Tailwind CSS'],
+    skills: ['Guitar / Bass', 'Keyboard / Piano', 'Audio Mixing'],
     experience:
-      'Developed 3 full-stack React web apps with automated deployment pipelines on Vercel.',
-    first_preference: 'Web & App Development Team',
-    second_preference: 'Full Stack Development Team',
+      'Lead guitarist for campus band. Composed 4 original instrumentals in FL Studio.',
+    first_preference: 'Music - Instrumental & Production',
+    second_preference: 'Music - Vocals & Performance',
     final_assigned_team: null,
     status: 'Interview',
     resume_url: 'https://example.com/resumes/priya_s.pdf',
-    github_url: 'https://github.com/priyasundaram',
+    github_url: '',
     linkedin_url: 'https://linkedin.com/in/priyasundaram',
-    portfolio_url: 'https://priya.codes',
+    portfolio_url: 'https://soundcloud.com/priyasundaram',
     admin_notes: [],
     decline_reason: null,
     decline_note: null,
@@ -374,110 +453,6 @@ export const MOCK_APPLICANTS: Applicant[] = [
     created_at: '2026-09-05T14:10:00Z',
     updated_at: '2026-09-07T11:00:00Z',
     reviewed_at: '2026-09-06T15:30:00Z',
-    accepted_at: null,
-    declined_at: null,
-  },
-  {
-    id: 'app-3',
-    application_id: 'NM-2026-78301',
-    full_name: 'Rohan Mehta',
-    email: 'rohan.mehta@example.com',
-    phone: '+91 97654 32109',
-    college: 'VIT Vellore',
-    department: 'Electronics & Communication',
-    year: '3rd Year',
-    skills: ['Arduino / ESP32', 'Raspberry Pi', 'Embedded C/C++', 'Circuit Design'],
-    experience:
-      'Designed an IoT smart energy meter using ESP32 with MQTT protocol sending real-time telemetry to Grafana dashboard.',
-    first_preference: 'IoT & Hardware Team',
-    second_preference: 'Full Stack Development Team',
-    final_assigned_team: null,
-    status: 'Information Requested',
-    resume_url: 'https://example.com/resumes/rohan_mehta.pdf',
-    github_url: 'https://github.com/rohan-embed',
-    linkedin_url: 'https://linkedin.com/in/rohanmehta-iot',
-    portfolio_url: 'https://rohanmehta.tech',
-    admin_notes: [
-      {
-        id: 'note-2',
-        author: 'Marcus Vance',
-        text: 'Good circuit design experience, requested schematic diagrams.',
-        created_at: '2026-09-06T12:00:00Z',
-      },
-    ],
-    decline_reason: null,
-    decline_note: null,
-    requested_info_question:
-      'Please provide your GitHub repository or video demonstration link for your ESP32 energy meter project.',
-    requested_info_response: null,
-    interview_details: null,
-    created_at: '2026-09-05T18:45:00Z',
-    updated_at: '2026-09-06T12:00:00Z',
-    reviewed_at: '2026-09-06T12:00:00Z',
-    accepted_at: null,
-    declined_at: null,
-  },
-  {
-    id: 'app-4',
-    application_id: 'NM-2026-12948',
-    full_name: 'Ananya Verma',
-    email: 'ananya.verma@example.com',
-    phone: '+91 99887 76655',
-    college: 'NIFT Delhi',
-    department: 'Design & Communication',
-    year: '4th Year',
-    skills: ['Figma', 'Wireframing', 'User Research', 'Design Systems', 'Micro-Interactions'],
-    experience:
-      'Created comprehensive design system for campus event app with dark/light themes and full Figma component library.',
-    first_preference: 'UI/UX Design Team',
-    second_preference: 'Content & Communication Team',
-    final_assigned_team: null,
-    status: 'Shortlisted',
-    resume_url: 'https://example.com/resumes/ananya_v.pdf',
-    github_url: '',
-    linkedin_url: 'https://linkedin.com/in/ananya-design',
-    portfolio_url: 'https://behance.net/ananyaverma',
-    admin_notes: [],
-    decline_reason: null,
-    decline_note: null,
-    requested_info_question: null,
-    requested_info_response: null,
-    interview_details: null,
-    created_at: '2026-09-06T08:20:00Z',
-    updated_at: '2026-09-07T09:15:00Z',
-    reviewed_at: '2026-09-07T09:15:00Z',
-    accepted_at: null,
-    declined_at: null,
-  },
-  {
-    id: 'app-5',
-    application_id: 'NM-2026-55092',
-    full_name: 'Karan Malhotra',
-    email: 'karan.m@example.com',
-    phone: '+91 91234 56789',
-    college: 'SRM Institute',
-    department: 'Mechanical Engineering',
-    year: '1st Year',
-    skills: ['Event Logistics', 'Scheduling'],
-    experience:
-      'Organized high school cultural fest with 800+ attendees.',
-    first_preference: 'Events & Operations Team',
-    second_preference: 'HR & Community Team',
-    final_assigned_team: null,
-    status: 'Application Received',
-    resume_url: 'https://example.com/resumes/karan_m.pdf',
-    github_url: '',
-    linkedin_url: 'https://linkedin.com/in/karanmalhotra',
-    portfolio_url: '',
-    admin_notes: [],
-    decline_reason: null,
-    decline_note: null,
-    requested_info_question: null,
-    requested_info_response: null,
-    interview_details: null,
-    created_at: '2026-09-06T11:00:00Z',
-    updated_at: '2026-09-06T11:00:00Z',
-    reviewed_at: null,
     accepted_at: null,
     declined_at: null,
   },
@@ -500,25 +475,8 @@ export const INITIAL_ADMINS: AdminUser[] = [
     password: 'admin123',
     created_at: '2026-01-01T00:00:00Z',
   },
-  {
-    admin_id: 'admin-1',
-    name: 'Dr. Sarah Vance',
-    email: 'recruitment.lead@neuramorphix.org',
-    role: 'Lead Recruiter',
-    password: 'admin123',
-    created_at: '2026-01-01T00:00:00Z',
-  },
-  {
-    admin_id: 'admin-2',
-    name: 'Alex Rivera',
-    email: 'alex.rivera@neuramorphix.org',
-    role: 'Technical Reviewer',
-    password: 'admin123',
-    created_at: '2026-01-01T00:00:00Z',
-  },
 ];
 
-// Helper database manager class with LocalStorage persistence
 export class DatabaseService {
   private static getItem<T>(key: string, defaultValue: T): T {
     try {
@@ -647,7 +605,6 @@ export class DatabaseService {
     return null;
   }
 
-  // Check if recruitment is open based on dates + config override
   static isRecruitmentOpen(): { isOpen: boolean; message: string } {
     const config = this.getConfig();
     if (config.is_manually_open === true) {

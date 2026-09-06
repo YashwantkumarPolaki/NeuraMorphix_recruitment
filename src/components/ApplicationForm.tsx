@@ -8,21 +8,13 @@ import confetti from 'canvas-confetti';
 
 import {
   User,
-  Mail,
-  Phone,
-  GraduationCap,
   Code,
   FileCheck,
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle,
   CheckCircle2,
-  ShieldCheck,
   AlertTriangle,
   RotateCcw,
-  Search,
-  Camera,
   XCircle,
+  Plus,
 } from 'lucide-react';
 
 interface ApplicationFormProps {
@@ -46,76 +38,48 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
     'details' | 'skills_experience' | 'review' | 'submitted'
   >('details');
 
-  // =========================================================
   // FORM FIELDS
-  // =========================================================
-
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [college, setCollege] = useState('');
+  const [college, setCollege] = useState('SRM Institute of Science and Technology, Kattankulathur');
   const [department, setDepartment] = useState('');
-  const [year, setYear] = useState('3rd Year');
+  const [year, setYear] = useState('1st Year');
 
   const [resumeUrl, setResumeUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [portfolioUrl, setPortfolioUrl] = useState('');
 
-  // =========================================================
   // PHONE VALIDATION
-  // =========================================================
-
   const phoneDigits = phone.replace(/\D/g, '');
   const isPhoneValid = phoneDigits.length === 10;
   const phoneHasInput = phone.trim().length > 0;
 
-  // =========================================================
   // COLLEGE AUTOCOMPLETE
-  // =========================================================
-
-  const [collegeQuery, setCollegeQuery] = useState('');
-  const [showCollegeSuggestions, setShowCollegeSuggestions] =
-    useState(false);
-
+  const [collegeQuery, setCollegeQuery] = useState('SRM Institute of Science and Technology, Kattankulathur');
+  const [showCollegeSuggestions, setShowCollegeSuggestions] = useState(false);
   const collegeRef = useRef<HTMLDivElement>(null);
 
   const collegeSuggestions =
     collegeQuery.trim().length >= 2
       ? INDIAN_COLLEGES.filter((c) =>
-          c
-            .toLowerCase()
-            .includes(collegeQuery.toLowerCase())
-        ).slice(0, 8)
+          c.toLowerCase().includes(collegeQuery.toLowerCase())
+        ).slice(0, 6)
       : [];
 
-  const isCollegeVerified =
-    INDIAN_COLLEGES.includes(college) &&
-    college.trim().length > 0;
 
   useEffect(() => {
     const handleOutside = (e: MouseEvent) => {
       if (
         collegeRef.current &&
-        !collegeRef.current.contains(
-          e.target as Node
-        )
+        !collegeRef.current.contains(e.target as Node)
       ) {
         setShowCollegeSuggestions(false);
       }
     };
-
-    document.addEventListener(
-      'mousedown',
-      handleOutside
-    );
-
-    return () => {
-      document.removeEventListener(
-        'mousedown',
-        handleOutside
-      );
-    };
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
   }, []);
 
   const handleCollegeSelect = (name: string) => {
@@ -124,102 +88,54 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
     setShowCollegeSuggestions(false);
   };
 
-  // =========================================================
   // SKILLS & EXPERIENCE
-  // =========================================================
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [customSkillInput, setCustomSkillInput] = useState('');
+  const [experience, setExperience] = useState('');
 
-  const [selectedSkills, setSelectedSkills] =
-    useState<string[]>([]);
-
-  const [customSkillInput, setCustomSkillInput] =
-    useState('');
-
-  const [experience, setExperience] =
-    useState('');
-
-  // =========================================================
   // REVIEW & SUBMISSION
-  // =========================================================
+  const [confirmed, setConfirmed] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [submittedApplicant, setSubmittedApplicant] = useState<Applicant | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [confirmed, setConfirmed] =
-    useState(false);
-
-  const [errorMsg, setErrorMsg] =
-    useState<string | null>(null);
-
-  const [submittedApplicant, setSubmittedApplicant] =
-    useState<Applicant | null>(null);
-
-  const [isSubmitting, setIsSubmitting] =
-    useState(false);
-
-  const [emailStatus, setEmailStatus] = useState<
-    'idle' | 'sending' | 'sent' | 'failed'
-  >('idle');
-
-  // =========================================================
   // ROLE SKILLS
-  // =========================================================
-
-  const firstRoleObj = roles.find(
-    (r) => r.role_name === firstChoice
-  );
-
-  const secondRoleObj = roles.find(
-    (r) => r.role_name === secondChoice
-  );
-
+  const firstRoleObj = roles.find((r) => r.role_name === firstChoice);
+  const secondRoleObj = roles.find((r) => r.role_name === secondChoice);
   const suggestedSkills = Array.from(
     new Set([
       ...(firstRoleObj?.skills || []),
       ...(secondRoleObj?.skills || []),
+      'React',
+      'Node.js',
+      'Python',
+      'Figma',
+      'UI/UX Design',
+      'Event Management',
+      'Public Relations',
+      'Content Writing',
+      'Video Editing',
     ])
   );
 
-  // =========================================================
-  // SKILL FUNCTIONS
-  // =========================================================
-
   const toggleSkill = (skill: string) => {
     if (selectedSkills.includes(skill)) {
-      setSelectedSkills(
-        selectedSkills.filter(
-          (s) => s !== skill
-        )
-      );
+      setSelectedSkills(selectedSkills.filter((s) => s !== skill));
     } else {
-      setSelectedSkills([
-        ...selectedSkills,
-        skill,
-      ]);
+      setSelectedSkills([...selectedSkills, skill]);
     }
   };
 
   const addCustomSkill = () => {
     const skill = customSkillInput.trim();
-
-    if (
-      skill &&
-      !selectedSkills.includes(skill)
-    ) {
-      setSelectedSkills([
-        ...selectedSkills,
-        skill,
-      ]);
-
+    if (skill && !selectedSkills.includes(skill)) {
+      setSelectedSkills([...selectedSkills, skill]);
       setCustomSkillInput('');
     }
   };
 
-  // =========================================================
-  // STEP 1 → STEP 2
-  // =========================================================
-
-  const handleNextFromDetails = (
-    e: React.FormEvent
-  ) => {
+  const handleNextFromDetails = (e: React.FormEvent) => {
     e.preventDefault();
-
     setErrorMsg(null);
 
     if (
@@ -229,24 +145,16 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       !college.trim() ||
       !department.trim()
     ) {
-      setErrorMsg(
-        'Please fill in all required personal information fields.'
-      );
-
+      setErrorMsg('Please fill in all required personal information fields.');
       return;
     }
 
     if (!isPhoneValid) {
-      setErrorMsg(
-        'Please enter a valid 10-digit phone number.'
-      );
-
+      setErrorMsg('Please enter a valid 10-digit phone number.');
       return;
     }
 
-    const windowCheck =
-      DatabaseService.isRecruitmentOpen();
-
+    const windowCheck = DatabaseService.isRecruitmentOpen();
     if (!windowCheck.isOpen) {
       setErrorMsg(windowCheck.message);
       return;
@@ -255,1405 +163,569 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
     setStep('skills_experience');
   };
 
-  // =========================================================
-  // STEP 2 → STEP 3
-  // =========================================================
-
-  const handleNextFromSkills = (
-    e: React.FormEvent
-  ) => {
+  const handleNextFromSkills = (e: React.FormEvent) => {
     e.preventDefault();
-
     setErrorMsg(null);
 
     if (selectedSkills.length === 0) {
-      setErrorMsg(
-        'Please select or add at least one relevant skill.'
-      );
-
+      setErrorMsg('Please select or add at least one relevant skill.');
       return;
     }
 
     if (!experience.trim()) {
-      setErrorMsg(
-        'Please provide a brief description of your previous projects or experience.'
-      );
-
+      setErrorMsg('Please provide a brief summary of your interest/projects.');
       return;
     }
 
     setStep('review');
   };
 
-  // =========================================================
-  // SUBMIT APPLICATION
-  // FRONTEND → BACKEND EMAIL API
-  // =========================================================
+  const handleSubmitApplication = async () => {
+    setErrorMsg(null);
 
-  const handleSubmitApplication =
-    async () => {
-      setErrorMsg(null);
+    if (!confirmed) {
+      setErrorMsg('Please confirm your application submission.');
+      return;
+    }
 
-      if (!confirmed) {
-        setErrorMsg(
-          'You must check the confirmation box before submitting your application.'
-        );
+    const windowCheck = DatabaseService.isRecruitmentOpen();
+    if (!windowCheck.isOpen) {
+      setErrorMsg(windowCheck.message);
+      return;
+    }
 
-        return;
-      }
+    setIsSubmitting(true);
 
-      const windowCheck =
-        DatabaseService.isRecruitmentOpen();
+    try {
+      const randomNum = Math.floor(10000 + Math.random() * 90000);
+      const appId = `NM-2026-${randomNum}`;
 
-      if (!windowCheck.isOpen) {
-        setErrorMsg(windowCheck.message);
-        return;
-      }
+      const newApplicant: Applicant = {
+        id: `app-${Date.now()}`,
+        application_id: appId,
+        full_name: fullName.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        college: college.trim(),
+        department: department.trim(),
+        year,
+        skills: selectedSkills,
+        experience: experience.trim(),
+        first_preference: firstChoice,
+        second_preference: secondChoice || 'None (Optional)',
+        final_assigned_team: null,
+        status: 'Application Received',
+        resume_url: resumeUrl.trim(),
+        github_url: githubUrl.trim(),
+        linkedin_url: linkedinUrl.trim(),
+        portfolio_url: portfolioUrl.trim(),
+        admin_notes: [],
+        decline_reason: null,
+        decline_note: null,
+        requested_info_question: null,
+        requested_info_response: null,
+        interview_details: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        reviewed_at: null,
+        accepted_at: null,
+        declined_at: null,
+      };
 
-      setIsSubmitting(true);
-      setEmailStatus('sending');
+      DatabaseService.addApplicant(newApplicant);
+      BackendApiService.syncApplicant(newApplicant);
+
+      await EmailService.sendEmail('application_received', newApplicant);
 
       try {
-        // ---------------------------------------------------
-        // Generate application ID
-        // ---------------------------------------------------
-
-        const randomNum = Math.floor(
-          10000 + Math.random() * 90000
-        );
-
-        const appId =
-          `NM-2026-${randomNum}`;
-
-        // ---------------------------------------------------
-        // Create applicant object
-        // ---------------------------------------------------
-
-        const newApplicant: Applicant = {
-          id: `app-${Date.now()}`,
-
-          application_id: appId,
-
-          full_name: fullName.trim(),
-
-          email: email.trim(),
-
-          phone: phone.trim(),
-
-          college: college.trim(),
-
-          department: department.trim(),
-
-          year,
-
-          skills: selectedSkills,
-
-          experience: experience.trim(),
-
-          first_preference: firstChoice,
-
-          second_preference:
-            secondChoice ||
-            'None (Optional)',
-
-          final_assigned_team: null,
-
-          status:
-            'Application Received',
-
-          resume_url:
-            resumeUrl.trim(),
-
-          github_url:
-            githubUrl.trim(),
-
-          linkedin_url:
-            linkedinUrl.trim(),
-
-          portfolio_url:
-            portfolioUrl.trim(),
-
-          admin_notes: [],
-
-          decline_reason: null,
-
-          decline_note: null,
-
-          requested_info_question:
-            null,
-
-          requested_info_response:
-            null,
-
-          interview_details:
-            null,
-
-          created_at:
-            new Date().toISOString(),
-
-          updated_at:
-            new Date().toISOString(),
-
-          reviewed_at: null,
-
-          accepted_at: null,
-
-          declined_at: null,
-        };
-
-        // ---------------------------------------------------
-        // SAVE APPLICATION
-        // ---------------------------------------------------
-
-        DatabaseService.addApplicant(
-          newApplicant
-        );
-
-        // Sync to Spring Boot MySQL backend asynchronously
-        BackendApiService.syncApplicant(
-          newApplicant
-        );
-
-        // ---------------------------------------------------
-        // SEND EMAIL
-        //
-        // React frontend
-        //       ↓
-        // EmailService
-        //       ↓
-        // /api/send-email
-        //       ↓
-        // Nodemailer
-        //       ↓
-        // Gmail SMTP
-        // ---------------------------------------------------
-
-        const emailResult =
-          await EmailService.sendEmail(
-            'application_received',
-            newApplicant
-          );
-
-        if (emailResult.success) {
-          setEmailStatus('sent');
-        } else {
-          setEmailStatus('failed');
-
-          console.warn(
-            'Application saved, but email could not be sent:',
-            emailResult.message
-          );
-        }
-
-        // ---------------------------------------------------
-        // CONFETTI
-        // ---------------------------------------------------
-
-        try {
-          confetti({
-            particleCount: 120,
-            spread: 80,
-            origin: {
-              y: 0.6,
-            },
-          });
-        } catch (e) {
-          console.log(
-            'Confetti triggered',
-            e
-          );
-        }
-
-        // ---------------------------------------------------
-        // SHOW SUCCESS SCREEN
-        // ---------------------------------------------------
-
-        setSubmittedApplicant(
-          newApplicant
-        );
-
-        setStep('submitted');
-
-        onApplicationSubmitted(
-          newApplicant
-        );
-      } catch (err) {
-        console.error(
-          'Submission error:',
-          err
-        );
-
-        setEmailStatus('failed');
-
-        setErrorMsg(
-          'An error occurred during submission. Please try again.'
-        );
-      } finally {
-        setIsSubmitting(false);
+        confetti({
+          particleCount: 150,
+          spread: 90,
+          origin: { y: 0.6 },
+        });
+      } catch (e) {
+        console.log('Confetti triggered', e);
       }
-    };
 
-  // =========================================================
-  // UI
-  // =========================================================
+      setSubmittedApplicant(newApplicant);
+      setStep('submitted');
+      onApplicationSubmitted(newApplicant);
+    } catch (err) {
+      console.error('Submission error:', err);
+      setErrorMsg('An error occurred during submission. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6">
-
-      {/* ===================================================
-          PROGRESS HEADER
-      =================================================== */}
-
-      <div className="mb-8 glass-panel rounded-2xl p-4 flex items-center justify-between">
-
-        <div className="flex items-center gap-2">
-
-          <span className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-sm">
-
-            {step === 'details'
-              ? '1'
-              : step ===
-                'skills_experience'
-              ? '2'
-              : step === 'review'
-              ? '3'
-              : '✓'}
-
-          </span>
-
+    <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6">
+      {/* PROGRESS HEADER */}
+      <div className="mb-8 bg-white border-[3px] border-[#1E1B24] rounded-2xl p-4 shadow-[4px_4px_0_#1E1B24] flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#3E9FFF] text-white border-[2px] border-[#1E1B24] flex items-center justify-center font-outfit font-black text-base shadow-[2px_2px_0_#1E1B24]">
+            {step === 'details' ? '1' : step === 'skills_experience' ? '2' : step === 'review' ? '3' : '✓'}
+          </div>
           <div>
-
-            <div className="text-xs text-slate-400 font-semibold uppercase">
-
-              Step{' '}
-
-              {step === 'details'
-                ? '1 of 3'
-                : step ===
-                  'skills_experience'
-                ? '2 of 3'
-                : '3 of 3'}
-
+            <div className="text-xs font-outfit font-extrabold text-[#3E9FFF] uppercase tracking-wider">
+              Step {step === 'details' ? '1 of 3' : step === 'skills_experience' ? '2 of 3' : '3 of 3'}
             </div>
-
-            <div className="text-sm font-bold text-white">
-
-              {step === 'details' &&
-                'Personal Information'}
-
-              {step ===
-                'skills_experience' &&
-                'Skills & Project Experience'}
-
-              {step === 'review' &&
-                'Review Your Application'}
-
-              {step === 'submitted' &&
-                'Application Submitted Successfully!'}
-
+            <div className="text-base font-outfit font-black text-[#1E1B24]">
+              {step === 'details' && 'Candidate Details'}
+              {step === 'skills_experience' && 'Skills & Experience'}
+              {step === 'review' && 'Review & Confirm Application'}
+              {step === 'submitted' && 'Application Submitted Successfully! 🎉'}
             </div>
-
           </div>
         </div>
 
         {step !== 'submitted' && (
           <button
             type="button"
-            onClick={
-              onChangePreferences
-            }
-            className="text-xs text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800"
+            onClick={onChangePreferences}
+            className="text-xs font-rubik font-bold text-[#1E1B24] bg-[#FFD93D] hover:bg-[#ffe169] px-3.5 py-2 rounded-xl border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24] flex items-center gap-1.5 cursor-pointer transition-all"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-
-            Change Preference Choices
+            Change Roles
           </button>
         )}
-
       </div>
 
-      {/* ===================================================
-          ERROR MESSAGE
-      =================================================== */}
-
+      {/* ERROR DISPLAY */}
       {errorMsg && (
-        <div className="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-sm flex items-center gap-3">
-
-          <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
-
+        <div className="mb-6 p-4 rounded-xl bg-[#FF4B4B] text-white border-[3px] border-[#1E1B24] shadow-[4px_4px_0_#1E1B24] font-rubik font-bold text-sm flex items-center gap-3">
+          <AlertTriangle className="w-5 h-5 shrink-0" />
           <span>{errorMsg}</span>
-
         </div>
       )}
 
-      {/* ===================================================
-          STEP 1
-      =================================================== */}
-
+      {/* STEP 1: CANDIDATE DETAILS */}
       {step === 'details' && (
-        <form
-          onSubmit={
-            handleNextFromDetails
-          }
-          className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6"
-        >
+        <form onSubmit={handleNextFromDetails} className="bg-white border-[3px] border-[#1E1B24] rounded-3xl p-6 sm:p-8 shadow-[6px_6px_0_#1E1B24] space-y-6">
+          <div className="border-b-[3px] border-[#1E1B24] pb-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-outfit font-black text-[#1E1B24] flex items-center gap-2">
+                <User className="w-6 h-6 text-[#3E9FFF]" />
+                Personal & Academic Details
+              </h2>
+              <p className="font-rubik text-sm text-[#5C5866] font-medium">Enter your official contact and student details below.</p>
+            </div>
+          </div>
 
-          <div className="border-b border-slate-800 pb-4">
-
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-
-              <User className="w-6 h-6 text-cyan-400" />
-
-              Personal Information
-
-            </h2>
-
-            <p className="text-sm text-slate-400">
-              Enter your official contact and academic details.
-            </p>
-
+          {/* Preferences Banner */}
+          <div className="p-4 bg-[#FAF7EE] border-[2px] border-[#1E1B24] rounded-2xl flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-outfit font-black text-[#1E1B24]">🥇 1st Choice:</span>
+              <span className="neo-badge bg-[#FF4B4B] text-white text-xs">{firstChoice}</span>
+            </div>
+            {secondChoice && secondChoice !== 'None (Optional)' && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-outfit font-black text-[#1E1B24]">🥈 2nd Choice:</span>
+                <span className="neo-badge bg-[#FFD93D] text-[#1E1B24] text-xs">{secondChoice}</span>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-
-            {/* NAME */}
-
             <div>
-
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-                Full Name{' '}
-                <span className="text-rose-400">
-                  *
-                </span>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-2">
+                Full Name <span className="text-[#FF4B4B]">*</span>
               </label>
-
-              <div className="relative">
-
-                <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
-
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Aarav Sharma"
-                  value={fullName}
-                  onChange={(e) =>
-                    setFullName(
-                      e.target.value
-                    )
-                  }
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-sm"
-                />
-
-              </div>
-
+              <input
+                type="text"
+                required
+                placeholder="e.g. Aarav Sharma"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-sm shadow-[2px_2px_0_#1E1B24] focus:outline-none"
+              />
             </div>
 
-            {/* EMAIL */}
-
             <div>
-
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-                Email Address{' '}
-                <span className="text-rose-400">
-                  *
-                </span>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-2">
+                Email Address <span className="text-[#FF4B4B]">*</span>
               </label>
-
-              <div className="relative">
-
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
-
-                <input
-                  type="email"
-                  required
-                  placeholder="e.g. aarav@example.com"
-                  value={email}
-                  onChange={(e) =>
-                    setEmail(
-                      e.target.value
-                    )
-                  }
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-sm"
-                />
-
-              </div>
-
+              <input
+                type="email"
+                required
+                placeholder="e.g. aarav@srmist.edu.in"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-sm shadow-[2px_2px_0_#1E1B24] focus:outline-none"
+              />
             </div>
 
-            {/* PHONE */}
-
             <div>
-
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-                Phone Number{' '}
-                <span className="text-rose-400">
-                  *
-                </span>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-2">
+                Phone Number (10 digits) <span className="text-[#FF4B4B]">*</span>
               </label>
-
               <div className="relative">
-
-                <Phone className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
-
                 <input
                   type="tel"
                   required
                   maxLength={10}
-                  placeholder="10-digit number e.g. 9876543210"
+                  placeholder="e.g. 9876543210"
                   value={phone}
-                  onChange={(e) =>
-                    setPhone(
-                      e.target.value
-                        .replace(
-                          /[^0-9]/g,
-                          ''
-                        )
-                        .slice(0, 10)
-                    )
-                  }
-                  className={`w-full pl-10 py-2.5 rounded-xl glass-input text-sm transition-all ${
-                    phoneHasInput
-                      ? isPhoneValid
-                        ? 'pr-10 border border-emerald-500/60'
-                        : 'pr-10 border border-rose-500/60'
-                      : 'pr-4'
-                  }`}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  className="w-full px-4 py-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-sm shadow-[2px_2px_0_#1E1B24] focus:outline-none"
                 />
-
                 {phoneHasInput && (
-                  <div className="absolute right-3 top-3">
-
+                  <div className="absolute right-3 top-3.5">
                     {isPhoneValid ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle2 className="w-5 h-5 text-[#4EC37B]" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-rose-400" />
+                      <XCircle className="w-5 h-5 text-[#FF4B4B]" />
                     )}
-
                   </div>
                 )}
-
               </div>
-
             </div>
 
-            {/* COLLEGE */}
-
-            <div ref={collegeRef}>
-
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-                College / Institution{' '}
-                <span className="text-rose-400">
-                  *
-                </span>
+            <div ref={collegeRef} className="relative">
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-2">
+                College / Institution <span className="text-[#FF4B4B]">*</span>
               </label>
-
-              <div className="relative">
-
-                <GraduationCap className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5 z-10" />
-
-                <input
-                  type="text"
-                  required
-                  autoComplete="off"
-                  placeholder="Type to search college..."
-                  value={collegeQuery}
-                  onFocus={() =>
-                    setShowCollegeSuggestions(
-                      true
-                    )
-                  }
-                  onChange={(e) => {
-                    setCollegeQuery(
-                      e.target.value
-                    );
-
-                    setCollege(
-                      e.target.value
-                    );
-
-                    setShowCollegeSuggestions(
-                      true
-                    );
-                  }}
-                  className={`w-full pl-10 py-2.5 rounded-xl glass-input text-sm transition-all ${
-                    college.trim()
-                      .length > 0
-                      ? isCollegeVerified
-                        ? 'pr-10 border border-emerald-500/60'
-                        : 'pr-4'
-                      : 'pr-4'
-                  }`}
-                />
-
-                {isCollegeVerified && (
-                  <div className="absolute right-3 top-3">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  </div>
-                )}
-
-                {showCollegeSuggestions &&
-                  collegeSuggestions.length >
-                    0 && (
-                    <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden max-h-56 overflow-y-auto">
-
-                      {collegeSuggestions.map(
-                        (name, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onMouseDown={() =>
-                              handleCollegeSelect(
-                                name
-                              )
-                            }
-                            className="w-full text-left px-4 py-2.5 text-xs text-slate-200 hover:bg-cyan-900/60 hover:text-cyan-300 flex items-center gap-2 border-b border-slate-800 last:border-0 transition-colors"
-                          >
-                            <GraduationCap className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-
-                            {name}
-                          </button>
-                        )
-                      )}
-
-                    </div>
-                  )}
-
-              </div>
-
-              {college.trim().length >
-                0 && (
-                <div
-                  className={`mt-1 text-[11px] font-medium ${
-                    isCollegeVerified
-                      ? 'text-emerald-400'
-                      : 'text-slate-400'
-                  }`}
-                >
-                  {isCollegeVerified
-                    ? '✓ College verified from list'
-                    : 'Not from list — you can still type your college name'}
-                </div>
-              )}
-
-            </div>
-
-            {/* DEPARTMENT */}
-
-            <div>
-
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-                Department / Major{' '}
-                <span className="text-rose-400">
-                  *
-                </span>
-              </label>
-
               <input
                 type="text"
                 required
-                placeholder="e.g. Computer Science / Electronics"
-                value={department}
-                onChange={(e) =>
-                  setDepartment(
-                    e.target.value
-                  )
-                }
-                className="w-full px-4 py-2.5 rounded-xl glass-input text-sm"
+                autoComplete="off"
+                placeholder="Search college..."
+                value={collegeQuery}
+                onFocus={() => setShowCollegeSuggestions(true)}
+                onChange={(e) => {
+                  setCollegeQuery(e.target.value);
+                  setCollege(e.target.value);
+                  setShowCollegeSuggestions(true);
+                }}
+                className="w-full px-4 py-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-sm shadow-[2px_2px_0_#1E1B24] focus:outline-none"
               />
-
+              {showCollegeSuggestions && collegeSuggestions.length > 0 && (
+                <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border-[3px] border-[#1E1B24] rounded-xl shadow-[4px_4px_0_#1E1B24] max-h-48 overflow-y-auto">
+                  {collegeSuggestions.map((name, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => handleCollegeSelect(name)}
+                      className="w-full text-left px-4 py-2.5 hover:bg-[#FFD93D] font-rubik text-xs text-[#1E1B24] font-bold border-b border-[#1E1B24] last:border-none cursor-pointer"
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-
-            {/* YEAR */}
 
             <div>
-
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-                Academic Year{' '}
-                <span className="text-rose-400">
-                  *
-                </span>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-2">
+                Department / Branch <span className="text-[#FF4B4B]">*</span>
               </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. Computer Science / IT / ECE"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-sm shadow-[2px_2px_0_#1E1B24] focus:outline-none"
+              />
+            </div>
 
+            <div>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-2">
+                Year of Study <span className="text-[#FF4B4B]">*</span>
+              </label>
               <select
                 value={year}
-                onChange={(e) =>
-                  setYear(
-                    e.target.value
-                  )
-                }
-                className="w-full px-4 py-2.5 rounded-xl glass-input text-sm bg-slate-900 text-white"
+                onChange={(e) => setYear(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-sm font-bold shadow-[2px_2px_0_#1E1B24] focus:outline-none cursor-pointer"
               >
-                <option value="1st Year">
-                  1st Year
-                </option>
-
-                <option value="2nd Year">
-                  2nd Year
-                </option>
-
-                <option value="3rd Year">
-                  3rd Year
-                </option>
-
-                <option value="4th Year">
-                  4th Year
-                </option>
-
-                <option value="Postgraduate / PhD">
-                  Postgraduate / PhD
-                </option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
               </select>
-
             </div>
-
           </div>
 
-          {/* ONLINE PROFILES */}
-
-          <div className="pt-4 border-t border-slate-800 space-y-4">
-
-            <h3 className="text-sm font-semibold text-slate-300">
-              Online Profiles & Portfolio Links (Optional)
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-              <input
-                type="url"
-                placeholder="GitHub Profile URL"
-                value={githubUrl}
-                onChange={(e) =>
-                  setGithubUrl(
-                    e.target.value
-                  )
-                }
-                className="w-full px-4 py-2 rounded-xl glass-input text-xs"
-              />
-
-              <input
-                type="url"
-                placeholder="LinkedIn Profile URL"
-                value={linkedinUrl}
-                onChange={(e) =>
-                  setLinkedinUrl(
-                    e.target.value
-                  )
-                }
-                className="w-full px-4 py-2 rounded-xl glass-input text-xs"
-              />
-
-              <input
-                type="url"
-                placeholder="Portfolio / Personal Website URL"
-                value={portfolioUrl}
-                onChange={(e) =>
-                  setPortfolioUrl(
-                    e.target.value
-                  )
-                }
-                className="w-full px-4 py-2 rounded-xl glass-input text-xs"
-              />
-
-              <input
-                type="url"
-                placeholder="Resume Drive/PDF Link"
-                value={resumeUrl}
-                onChange={(e) =>
-                  setResumeUrl(
-                    e.target.value
-                  )
-                }
-                className="w-full px-4 py-2 rounded-xl glass-input text-xs"
-              />
-
-            </div>
-
-          </div>
-
-          {/* NAVIGATION */}
-
-          <div className="flex justify-between pt-6 border-t border-slate-800">
-
-            <button
-              type="button"
-              onClick={
-                onChangePreferences
-              }
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-
-              Back to Role Selection
-            </button>
-
+          <div className="flex justify-end pt-4">
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center gap-2 shadow-lg shadow-cyan-500/20"
+              className="px-8 py-3.5 rounded-xl bg-[#3E9FFF] text-white font-rubik font-bold text-base border-[3px] border-[#1E1B24] shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_#1E1B24] transition-all flex items-center gap-2 uppercase tracking-wide cursor-pointer"
             >
-              Continue to Skills & Experience
-
-              <ArrowRight className="w-4 h-4" />
+              Next: Skills & Experience →
             </button>
-
           </div>
-
         </form>
       )}
 
-      {/* ===================================================
-          STEP 2
-      =================================================== */}
-
+      {/* STEP 2: SKILLS & EXPERIENCE */}
       {step === 'skills_experience' && (
-        <form
-          onSubmit={
-            handleNextFromSkills
-          }
-          className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6"
-        >
-
-          <div className="border-b border-slate-800 pb-4">
-
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-
-              <Code className="w-6 h-6 text-cyan-400" />
-
-              Skills & Experience
-
+        <form onSubmit={handleNextFromSkills} className="bg-white border-[3px] border-[#1E1B24] rounded-3xl p-6 sm:p-8 shadow-[6px_6px_0_#1E1B24] space-y-6">
+          <div className="border-b-[3px] border-[#1E1B24] pb-4">
+            <h2 className="text-2xl font-outfit font-black text-[#1E1B24] flex items-center gap-2">
+              <Code className="w-6 h-6 text-[#3E9FFF]" />
+              Skills & Portfolio Links
             </h2>
-
-            <p className="text-sm text-slate-400">
-              Highlight your expertise relevant to your selected role preferences.
-            </p>
-
+            <p className="font-rubik text-sm text-[#5C5866] font-medium">Highlight your tech stack, projects, and work links.</p>
           </div>
 
-          {/* SUGGESTED SKILLS */}
-
+          {/* Suggested Skills */}
           <div>
-
-            <label className="block text-xs font-semibold text-slate-300 uppercase mb-3">
-              Select Relevant Skills{' '}
-              <span className="text-rose-400">
-                *
-              </span>
+            <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-2">
+              Select Relevant Skills <span className="text-[#FF4B4B]">*</span>
             </label>
-
             <div className="flex flex-wrap gap-2 mb-4">
-
-              {suggestedSkills.map(
-                (skill, idx) => {
-                  const active =
-                    selectedSkills.includes(
-                      skill
-                    );
-
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() =>
-                        toggleSkill(
-                          skill
-                        )
-                      }
-                      className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-                        active
-                          ? 'bg-cyan-500 text-slate-950 font-bold border border-cyan-400 shadow-md'
-                          : 'bg-slate-800/90 text-slate-300 hover:bg-slate-700 border border-slate-700'
-                      }`}
-                    >
-                      {active
-                        ? '✓ '
-                        : '+ '}
-
-                      {skill}
-                    </button>
-                  );
-                }
-              )}
-
+              {suggestedSkills.map((skill, idx) => {
+                const isSelected = selectedSkills.includes(skill);
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => toggleSkill(skill)}
+                    className={`px-3.5 py-1.5 rounded-xl border-[2px] border-[#1E1B24] font-rubik text-xs font-bold transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#FFD93D] text-[#1E1B24] shadow-[2px_2px_0_#1E1B24]'
+                        : 'bg-[#FAF7EE] text-[#5C5866] hover:bg-white'
+                    }`}
+                  >
+                    {isSelected ? '✓ ' : '+ '}
+                    {skill}
+                  </button>
+                );
+              })}
             </div>
 
-            {/* CUSTOM SKILL */}
-
+            {/* Custom Skill */}
             <div className="flex gap-2 max-w-md">
-
               <input
                 type="text"
-                placeholder="Add custom skill (e.g. OpenCV, Docker)"
+                placeholder="Add custom skill..."
                 value={customSkillInput}
-                onChange={(e) =>
-                  setCustomSkillInput(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setCustomSkillInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (
-                    e.key === 'Enter'
-                  ) {
+                  if (e.key === 'Enter') {
                     e.preventDefault();
                     addCustomSkill();
                   }
                 }}
-                className="px-4 py-2 rounded-xl glass-input text-xs flex-1"
+                className="flex-1 px-4 py-2 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-xs shadow-[2px_2px_0_#1E1B24]"
               />
-
               <button
                 type="button"
-                onClick={
-                  addCustomSkill
-                }
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700 hover:bg-slate-700"
+                onClick={addCustomSkill}
+                className="px-4 py-2 rounded-xl bg-[#3E9FFF] text-white font-rubik font-bold text-xs border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24] cursor-pointer"
               >
-                Add Skill
+                <Plus className="w-4 h-4" />
               </button>
-
             </div>
-
           </div>
 
-          {/* EXPERIENCE */}
-
+          {/* Project Experience */}
           <div>
-
-            <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-              Previous Projects / Experience{' '}
-              <span className="text-rose-400">
-                *
-              </span>
+            <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-2">
+              Brief Project Summary / Experience <span className="text-[#FF4B4B]">*</span>
             </label>
-
             <textarea
               required
-              rows={5}
-              placeholder="Describe your previous projects, team experience, code repositories, design portfolios, or research contributions..."
+              rows={4}
+              placeholder="Describe projects, tools, or relevant experience..."
               value={experience}
-              onChange={(e) =>
-                setExperience(
-                  e.target.value
-                )
-              }
-              className="w-full p-4 rounded-xl glass-input text-sm leading-relaxed"
+              onChange={(e) => setExperience(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-sm shadow-[2px_2px_0_#1E1B24] focus:outline-none"
             />
-
           </div>
 
-          {/* NAVIGATION */}
+          {/* Links */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-1">GitHub / Code Link</label>
+              <input
+                type="url"
+                placeholder="https://github.com/username"
+                value={githubUrl}
+                onChange={(e) => setGithubUrl(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-xs shadow-[2px_2px_0_#1E1B24]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-1">LinkedIn Profile</label>
+              <input
+                type="url"
+                placeholder="https://linkedin.com/in/username"
+                value={linkedinUrl}
+                onChange={(e) => setLinkedinUrl(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-xs shadow-[2px_2px_0_#1E1B24]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-1">Portfolio / Website</label>
+              <input
+                type="url"
+                placeholder="https://yourportfolio.com"
+                value={portfolioUrl}
+                onChange={(e) => setPortfolioUrl(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-xs shadow-[2px_2px_0_#1E1B24]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-outfit font-extrabold text-[#1E1B24] uppercase mb-1">Resume Drive / Cloud Link</label>
+              <input
+                type="url"
+                placeholder="https://drive.google.com/..."
+                value={resumeUrl}
+                onChange={(e) => setResumeUrl(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-xs shadow-[2px_2px_0_#1E1B24]"
+              />
+            </div>
+          </div>
 
-          <div className="flex justify-between pt-6 border-t border-slate-800">
-
+          <div className="flex justify-between pt-4">
             <button
               type="button"
-              onClick={() =>
-                setStep('details')
-              }
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center gap-2"
+              onClick={() => setStep('details')}
+              className="px-6 py-3 rounded-xl bg-white text-[#1E1B24] font-rubik font-bold text-sm border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24] cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4" />
-
-              Back to Personal Info
+              ← Back to Details
             </button>
-
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center gap-2 shadow-lg shadow-cyan-500/20"
+              className="px-8 py-3.5 rounded-xl bg-[#3E9FFF] text-white font-rubik font-bold text-base border-[3px] border-[#1E1B24] shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_#1E1B24] transition-all flex items-center gap-2 uppercase tracking-wide cursor-pointer"
             >
-              Proceed to Final Review
-
-              <ArrowRight className="w-4 h-4" />
+              Next: Review Application →
             </button>
-
           </div>
-
         </form>
       )}
 
-      {/* ===================================================
-          STEP 3 - REVIEW
-      =================================================== */}
-
+      {/* STEP 3: REVIEW & CONFIRM */}
       {step === 'review' && (
-        <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-8">
-
-          <div className="border-b border-slate-800 pb-4 text-center">
-
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950 text-cyan-300 text-xs font-bold uppercase mb-2">
-
-              <FileCheck className="w-3.5 h-3.5" />
-
-              Final Step
-
-            </span>
-
-            <h2 className="text-3xl font-extrabold text-white tracking-tight">
-              REVIEW YOUR APPLICATION
+        <div className="bg-white border-[3px] border-[#1E1B24] rounded-3xl p-6 sm:p-8 shadow-[6px_6px_0_#1E1B24] space-y-6">
+          <div className="border-b-[3px] border-[#1E1B24] pb-4">
+            <h2 className="text-2xl font-outfit font-black text-[#1E1B24] flex items-center gap-2">
+              <FileCheck className="w-6 h-6 text-[#3E9FFF]" />
+              Review Your Summary
             </h2>
-
-            <p className="text-slate-400 text-xs mt-1">
-              Please verify all details before submitting your application to NeuraMorphix.
-            </p>
-
+            <p className="font-rubik text-sm text-[#5C5866] font-medium">Verify your details before submitting to the recruitment team.</p>
           </div>
 
-          {/* ROLE PREFERENCES */}
-
-          <div className="p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
-
-            <div className="flex items-center justify-between">
-
-              <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
-                Role Preferences
-              </h3>
-
-              <button
-                type="button"
-                onClick={
-                  onChangePreferences
-                }
-                className="text-xs text-slate-400 hover:text-cyan-300 font-medium underline"
-              >
-                Change Preferences
-              </button>
-
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
-
-                <div className="text-[10px] text-slate-400 font-bold uppercase">
-                  🥇 First Choice
-                </div>
-
-                <div className="text-sm font-extrabold text-cyan-300">
-                  {firstChoice}
-                </div>
-
-              </div>
-
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
-
-                <div className="text-[10px] text-slate-400 font-bold uppercase">
-                  🥈 Second Choice (Optional)
-                </div>
-
-                <div className="text-sm font-extrabold text-amber-300">
-
-                  {secondChoice || (
-                    <span className="text-slate-500 italic font-normal">
-                      None selected (Optional)
-                    </span>
-                  )}
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* PERSONAL SUMMARY */}
-
-          <div className="p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
-
-            <div className="flex items-center justify-between">
-
-              <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
-                Personal Information
-              </h3>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setStep('details')
-                }
-                className="text-xs text-slate-400 hover:text-cyan-300 font-medium underline"
-              >
-                Edit
-              </button>
-
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-
-              <div>
-                <span className="text-slate-400 block">
-                  Name:
-                </span>
-
-                <span className="font-semibold text-slate-200">
-                  {fullName}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-slate-400 block">
-                  Email:
-                </span>
-
-                <span className="font-semibold text-slate-200">
-                  {email}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-slate-400 block">
-                  Phone:
-                </span>
-
-                <span className="font-semibold text-slate-200">
-                  {phone}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-slate-400 block">
-                  College:
-                </span>
-
-                <span className="font-semibold text-slate-200">
-                  {college}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-slate-400 block">
-                  Department:
-                </span>
-
-                <span className="font-semibold text-slate-200">
-                  {department}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-slate-400 block">
-                  Year:
-                </span>
-
-                <span className="font-semibold text-slate-200">
-                  {year}
-                </span>
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* SKILLS SUMMARY */}
-
-          <div className="p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
-
-            <div className="flex items-center justify-between">
-
-              <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
-                Skills & Experience
-              </h3>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setStep(
-                    'skills_experience'
-                  )
-                }
-                className="text-xs text-slate-400 hover:text-cyan-300 font-medium underline"
-              >
-                Edit
-              </button>
-
-            </div>
-
+          {/* Details Summary Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#FAF7EE] p-5 rounded-2xl border-[2px] border-[#1E1B24]">
             <div>
-
-              <span className="text-slate-400 text-xs block mb-1.5">
-                Selected Skills:
-              </span>
-
-              <div className="flex flex-wrap gap-1.5">
-
-                {selectedSkills.map(
-                  (sk, i) => (
-                    <span
-                      key={i}
-                      className="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 text-xs font-medium border border-slate-700"
-                    >
-                      {sk}
-                    </span>
-                  )
-                )}
-
-              </div>
-
+              <div className="text-xs font-outfit font-black text-[#3E9FFF] uppercase">Applicant Name</div>
+              <div className="text-base font-rubik font-bold text-[#1E1B24]">{fullName}</div>
             </div>
-
-            <div className="pt-2">
-
-              <span className="text-slate-400 text-xs block mb-1">
-                Previous Projects / Experience:
-              </span>
-
-              <p className="text-xs text-slate-300 whitespace-pre-wrap leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800">
-                {experience}
-              </p>
-
+            <div>
+              <div className="text-xs font-outfit font-black text-[#3E9FFF] uppercase">Email & Phone</div>
+              <div className="text-sm font-rubik font-bold text-[#1E1B24]">{email} · {phone}</div>
             </div>
-
+            <div>
+              <div className="text-xs font-outfit font-black text-[#3E9FFF] uppercase">College & Department</div>
+              <div className="text-sm font-rubik font-bold text-[#1E1B24]">{college}</div>
+              <div className="text-xs font-rubik text-[#5C5866]">{department} ({year})</div>
+            </div>
+            <div>
+              <div className="text-xs font-outfit font-black text-[#FF4B4B] uppercase">Domain Preferences</div>
+              <div className="text-sm font-rubik font-bold text-[#1E1B24]">🥇 1st: {firstChoice}</div>
+              {secondChoice && secondChoice !== 'None (Optional)' && (
+                <div className="text-xs font-rubik font-bold text-[#5C5866]">🥈 2nd: {secondChoice}</div>
+              )}
+            </div>
           </div>
 
-          {/* CONFIRMATION */}
+          <div>
+            <div className="text-xs font-outfit font-black text-[#1E1B24] uppercase mb-1">Selected Skills</div>
+            <div className="flex flex-wrap gap-1.5">
+              {selectedSkills.map((s, i) => (
+                <span key={i} className="text-xs font-rubik font-bold px-2.5 py-1 rounded-lg bg-[#FFD93D] text-[#1E1B24] border-[1px] border-[#1E1B24]">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
 
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
+          <div>
+            <div className="text-xs font-outfit font-black text-[#1E1B24] uppercase mb-1">Experience Summary</div>
+            <p className="font-rubik text-sm text-[#5C5866] bg-[#FAF7EE] p-3.5 rounded-xl border-[2px] border-[#1E1B24] font-medium leading-relaxed">
+              {experience}
+            </p>
+          </div>
 
+          <label className="flex items-start gap-3 p-4 bg-[#FAF7EE] border-[2px] border-[#1E1B24] rounded-2xl cursor-pointer">
             <input
               type="checkbox"
-              id="confirm-check"
               checked={confirmed}
-              onChange={(e) =>
-                setConfirmed(
-                  e.target.checked
-                )
-              }
-              className="mt-1 w-4 h-4 rounded text-cyan-500 focus:ring-cyan-400 bg-slate-900 border-slate-700 cursor-pointer"
+              onChange={(e) => setConfirmed(e.target.checked)}
+              className="mt-0.5 w-5 h-5 accent-[#3E9FFF] cursor-pointer"
             />
+            <span className="font-rubik text-xs sm:text-sm text-[#1E1B24] font-bold">
+              I confirm that all information provided above is accurate and true to the best of my knowledge.
+            </span>
+          </label>
 
-            <label
-              htmlFor="confirm-check"
-              className="text-xs text-slate-300 leading-relaxed cursor-pointer"
-            >
-              I confirm that the information provided is accurate and I understand that my role preferences are subject to the Neuramorphix selection process.
-            </label>
-
-          </div>
-
-          {/* SUBMIT */}
-
-          <div className="flex justify-between pt-4 border-t border-slate-800">
-
+          <div className="flex justify-between pt-2">
             <button
               type="button"
-              onClick={() =>
-                setStep(
-                  'skills_experience'
-                )
-              }
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center gap-2"
+              onClick={() => setStep('skills_experience')}
+              className="px-6 py-3 rounded-xl bg-white text-[#1E1B24] font-rubik font-bold text-sm border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24] cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4" />
-
-              Back
+              ← Back to Edit
             </button>
-
             <button
               type="button"
-              disabled={
-                !confirmed ||
-                isSubmitting
-              }
-              onClick={
-                handleSubmitApplication
-              }
-              className={`px-8 py-3 rounded-xl text-sm font-extrabold flex items-center gap-2 shadow-xl transition-all ${
-                confirmed &&
-                !isSubmitting
-                  ? 'bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-slate-950 shadow-cyan-500/25 ring-2 ring-cyan-300 cursor-pointer'
-                  : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed opacity-60'
+              disabled={isSubmitting || !confirmed}
+              onClick={handleSubmitApplication}
+              className={`px-10 py-3.5 rounded-xl font-rubik font-bold text-base border-[3px] border-[#1E1B24] transition-all uppercase tracking-wide cursor-pointer ${
+                confirmed && !isSubmitting
+                  ? 'bg-[#FF4B4B] text-white shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_#1E1B24]'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-60'
               }`}
             >
-
-              {isSubmitting ? (
-                <>
-                  Sending Application...
-                </>
-              ) : (
-                <>
-                  <ShieldCheck className="w-4 h-4" />
-
-                  SUBMIT APPLICATION
-                </>
-              )}
-
+              {isSubmitting ? 'Submitting Application...' : 'SUBMIT APPLICATION NOW 🎉'}
             </button>
-
           </div>
-
         </div>
       )}
 
-      {/* ===================================================
-          STEP 4 - SUCCESS
-      =================================================== */}
+      {/* STEP 4: SUBMITTED CONFIRMATION */}
+      {step === 'submitted' && submittedApplicant && (
+        <div className="bg-white border-[4px] border-[#1E1B24] rounded-3xl p-8 shadow-[8px_8px_0_#1E1B24] text-center space-y-6">
+          <div className="w-16 h-16 rounded-full bg-[#4EC37B] text-white border-[3px] border-[#1E1B24] flex items-center justify-center mx-auto shadow-[4px_4px_0_#1E1B24]">
+            <CheckCircle2 className="w-10 h-10 stroke-[3]" />
+          </div>
 
-      {step === 'submitted' &&
-        submittedApplicant && (
-          <div className="glass-panel p-8 rounded-2xl text-center space-y-6 animate-fadeIn">
+          <h2 className="text-3xl sm:text-4xl font-outfit font-black text-[#1E1B24]">
+            Application Registered Successfully!
+          </h2>
 
-            {/* SUCCESS ICON */}
+          <p className="font-rubik text-base text-[#5C5866] max-w-lg mx-auto font-medium leading-relaxed">
+            Welcome aboard, <strong className="text-[#3E9FFF]">{submittedApplicant.full_name}</strong>! Your application has been registered and sent to our recruitment system.
+          </p>
 
-            <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.3)]">
-
-              <CheckCircle className="w-10 h-10" />
-
+          {/* APPLICATION ID CARD */}
+          <div className="max-w-md mx-auto p-6 bg-[#FFD93D] border-[3px] border-[#1E1B24] rounded-2xl shadow-[6px_6px_0_#1E1B24]">
+            <div className="text-xs font-outfit font-black text-[#1E1B24] uppercase tracking-widest mb-1">
+              Your Official Application ID
             </div>
-
-            {/* TITLE */}
-
-            <div className="space-y-2">
-
-              <span className="px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 text-xs font-bold uppercase border border-emerald-500/30">
-                Application Status: Received
-              </span>
-
-              <h2 className="text-3xl font-extrabold text-white">
-                Application Received!
-              </h2>
-
-              <p className="text-slate-300 text-sm max-w-lg mx-auto">
-
-                Thank you,{' '}
-
-                <strong className="text-white">
-                  {
-                    submittedApplicant.full_name
-                  }
-                </strong>
-                !
-
-                Your registration for the NeuraMorphix 2026 Team Recruitment has been successfully received.
-
-              </p>
-
+            <div className="font-mono text-3xl font-black text-[#1E1B24] tracking-wider my-2">
+              {submittedApplicant.application_id}
             </div>
-
-            {/* APPLICATION ID */}
-
-            <div className="p-6 rounded-2xl bg-slate-950 border border-cyan-500/30 max-w-md mx-auto shadow-2xl space-y-3">
-
-              <div className="text-xs text-slate-400 uppercase font-semibold">
-                Application Number
-              </div>
-
-              <div className="text-2xl font-mono font-black text-cyan-300 tracking-wider">
-                {
-                  submittedApplicant.application_id
-                }
-              </div>
-
-              <div className="text-[11px] text-slate-400">
-
-                Registered Name:{' '}
-
-                <strong className="text-slate-200">
-                  {
-                    submittedApplicant.full_name
-                  }
-                </strong>
-
-              </div>
-
-              <div className="pt-2.5 border-t border-slate-800 text-amber-300 text-xs font-semibold flex items-center justify-center gap-2 bg-amber-950/40 py-2.5 px-4 rounded-xl border border-amber-500/30">
-
-                <Camera className="w-4 h-4 text-amber-400 shrink-0" />
-
-                <span>
-                  Note: Remember your application ID or take a screenshot
-                </span>
-
-              </div>
-
+            <div className="text-xs font-rubik text-[#1E1B24] font-bold">
+              Please save this ID to track your application stage!
             </div>
+          </div>
 
-            {/* EMAIL STATUS */}
-
-            <div className="flex justify-center pt-2">
-
-              {emailStatus ===
-                'sent' && (
-                <span className="px-5 py-2.5 rounded-2xl bg-emerald-950/90 text-emerald-300 border border-emerald-500/40 text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-500/10">
-
-                  <CheckCircle className="w-4 h-4 text-emerald-400" />
-
-                  Email Sent Successfully
-
-                </span>
-              )}
-
-              {emailStatus ===
-                'failed' && (
-                <span className="px-5 py-2.5 rounded-2xl bg-rose-950/90 text-rose-300 border border-rose-500/40 text-xs font-black uppercase tracking-wider flex items-center gap-2">
-
-                  <XCircle className="w-4 h-4 text-rose-400" />
-
-                  Application Saved — Email Failed
-
-                </span>
-              )}
-
-            </div>
-
-            {/* BUTTONS */}
-
-            <div className="pt-4 flex flex-wrap justify-center gap-4">
-
-              {onTrackStatusDirectly && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    onTrackStatusDirectly(
-                      submittedApplicant.application_id
-                    )
-                  }
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 text-xs font-black cursor-pointer shadow-xl flex items-center gap-2 transition-all hover:scale-105"
-                >
-
-                  <Search className="w-4 h-4 text-slate-950" />
-
-                  <span>
-                    Track Application Status
-                    →
-                  </span>
-
-                </button>
-              )}
-
+          <div className="pt-4 flex flex-wrap justify-center gap-4">
+            {onTrackStatusDirectly && (
               <button
                 type="button"
-                onClick={() => {
-                  setStep('details');
-                  setSubmittedApplicant(null);
-                  setConfirmed(false);
-                  setEmailStatus('idle');
-
-                  setFullName('');
-                  setEmail('');
-                  setPhone('');
-                  setCollege('');
-                  setCollegeQuery('');
-                  setDepartment('');
-                  setYear('3rd Year');
-
-                  setResumeUrl('');
-                  setGithubUrl('');
-                  setLinkedinUrl('');
-                  setPortfolioUrl('');
-
-                  setSelectedSkills([]);
-                  setCustomSkillInput('');
-                  setExperience('');
-                  setErrorMsg(null);
-                }}
-                className="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 cursor-pointer transition-all"
+                onClick={() => onTrackStatusDirectly(submittedApplicant.application_id)}
+                className="px-8 py-3.5 rounded-xl bg-[#3E9FFF] text-white font-rubik font-bold text-base border-[3px] border-[#1E1B24] shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] transition-all cursor-pointer uppercase"
               >
-                Submit Another Application
+                Track Live Status →
               </button>
-
-            </div>
-
+            )}
           </div>
-        )}
-
+        </div>
+      )}
     </div>
   );
 };

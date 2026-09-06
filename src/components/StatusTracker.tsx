@@ -25,7 +25,6 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
   });
   const [notFound, setNotFound] = useState(false);
 
-  // Response field for Information Requested status
   const [infoReplyInput, setInfoReplyInput] = useState('');
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [replySuccessMsg, setReplySuccessMsg] = useState<string | null>(null);
@@ -68,14 +67,13 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
 
     if (updated) {
       setSearchedApplicant(updated);
-      setReplySuccessMsg('Thank you! Your requested information has been submitted to the recruitment team.');
+      setReplySuccessMsg('Thank you! Your response has been submitted to the recruitment team.');
       setInfoReplyInput('');
     }
 
     setIsSubmittingReply(false);
   };
 
-  // Timeline Stepper Order
   const TIMELINE_STEPS: { status: ApplicationStatus; label: string }[] = [
     { status: 'Application Received', label: 'Received' },
     { status: 'Under Review', label: 'Under Review' },
@@ -112,24 +110,24 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
     <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6">
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto mb-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-semibold uppercase mb-4">
-          <Clock className="w-3.5 h-3.5" />
-          Real-Time Application Status
+        <div className="neo-badge bg-[#FFD93D] text-[#1E1B24] mb-4">
+          <Clock className="w-3.5 h-3.5 mr-1" />
+          LIVE APPLICATION TRACKER
         </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Track Your <span className="glow-text">Recruitment Progress</span>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[#1E1B24] tracking-tight">
+          Track Your <span className="text-[#3E9FFF]">Application Stage</span>
         </h2>
-        <p className="text-slate-300 text-sm mt-2">
-          Enter your Application ID to view your live evaluation status, interview updates, or respond to recruitment queries.
+        <p className="font-rubik text-sm text-[#5C5866] mt-2 font-medium">
+          Enter your Application ID below to view your recruitment status in real-time.
         </p>
       </div>
 
-      {/* Search Card */}
-      <div className="glass-panel p-6 sm:p-8 rounded-2xl mb-8 border-cyan-500/20">
+      {/* Search Form Card */}
+      <div className="bg-white border-[3px] border-[#1E1B24] p-6 sm:p-8 rounded-3xl shadow-[6px_6px_0_#1E1B24] mb-8">
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-end gap-4">
           <div className="flex-1 w-full">
-            <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
-              Application ID <span className="text-rose-400">*</span>
+            <label className="block text-xs font-outfit font-black text-[#1E1B24] uppercase mb-2">
+              Application ID <span className="text-[#FF4B4B]">*</span>
             </label>
             <input
               type="text"
@@ -137,81 +135,81 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
               placeholder="e.g. NM-2026-91823"
               value={appIdInput}
               onChange={(e) => setAppIdInput(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl glass-input text-sm font-mono uppercase tracking-wider"
+              className="w-full px-4 py-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-mono text-sm font-bold uppercase tracking-wider shadow-[2px_2px_0_#1E1B24] focus:outline-none"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full sm:w-auto px-8 py-3 rounded-xl text-sm font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 cursor-pointer shrink-0"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-rubik font-bold bg-[#3E9FFF] text-white border-[3px] border-[#1E1B24] shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_#1E1B24] transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 uppercase"
           >
             <Search className="w-4 h-4" />
-            CHECK APPLICATION STATUS
+            Track Status
           </button>
         </form>
       </div>
 
       {notFound && (
-        <div className="p-6 rounded-2xl glass-panel border-rose-500/30 text-center space-y-2 animate-fadeIn">
-          <AlertCircle className="w-8 h-8 text-rose-400 mx-auto mb-2" />
-          <h3 className="text-lg font-bold text-white">Application Not Found</h3>
-          <p className="text-sm text-slate-400 max-w-md mx-auto">
-            No recruitment record matches Application ID <span className="font-mono text-white">{appIdInput}</span>. Please verify your Application ID.
+        <div className="p-6 bg-[#FF4B4B] text-white border-[3px] border-[#1E1B24] rounded-2xl shadow-[6px_6px_0_#1E1B24] text-center space-y-2">
+          <AlertCircle className="w-8 h-8 mx-auto" />
+          <h3 className="text-xl font-outfit font-black">Application Not Found</h3>
+          <p className="font-rubik text-sm font-medium">
+            No application record matches <span className="font-mono underline">{appIdInput}</span>. Please verify your Application ID.
           </p>
         </div>
       )}
 
       {/* APPLICANT DETAILS & TIMELINE */}
       {searchedApplicant && (
-        <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-8 animate-fadeIn">
-          {/* Top Bar with ID and Status Badge */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+        <div className="bg-white border-[3px] border-[#1E1B24] p-6 sm:p-8 rounded-3xl shadow-[6px_6px_0_#1E1B24] space-y-8">
+          {/* Top Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b-[3px] border-[#1E1B24]">
             <div>
-              <div className="text-xs text-slate-400 uppercase font-semibold">Application ID</div>
-              <h3 className="text-2xl font-black font-mono text-cyan-300">{searchedApplicant.application_id}</h3>
-              <p className="text-xs text-slate-400 mt-1">Applicant: <strong className="text-white">{searchedApplicant.full_name}</strong> ({searchedApplicant.college})</p>
+              <div className="text-xs font-outfit font-black text-[#3E9FFF] uppercase">Official Application ID</div>
+              <h3 className="text-3xl font-mono font-black text-[#1E1B24]">{searchedApplicant.application_id}</h3>
+              <p className="font-rubik text-sm text-[#5C5866] font-bold mt-1">
+                Candidate: <span className="text-[#1E1B24]">{searchedApplicant.full_name}</span> ({searchedApplicant.college})
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
               <span
-                className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border shadow-lg ${
+                className={`neo-badge text-xs border-[2px] border-[#1E1B24] ${
                   searchedApplicant.status === 'Accepted'
-                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                    ? 'bg-[#4EC37B] text-white'
                     : searchedApplicant.status === 'Declined'
-                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/50'
+                    ? 'bg-[#FF4B4B] text-white'
                     : searchedApplicant.status === 'Interview'
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
-                    : searchedApplicant.status === 'Information Requested'
-                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/50'
-                    : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
+                    ? 'bg-[#FFD93D] text-[#1E1B24]'
+                    : 'bg-[#3E9FFF] text-white'
                 }`}
               >
-                {searchedApplicant.status === 'Accepted' && <UserCheck className="w-4 h-4" />}
-                {searchedApplicant.status === 'Declined' && <UserX className="w-4 h-4" />}
-                {searchedApplicant.status === 'Information Requested' && <FileQuestion className="w-4 h-4" />}
+                {searchedApplicant.status === 'Accepted' && <UserCheck className="w-3.5 h-3.5 mr-1" />}
+                {searchedApplicant.status === 'Declined' && <UserX className="w-3.5 h-3.5 mr-1" />}
+                {searchedApplicant.status === 'Information Requested' && <FileQuestion className="w-3.5 h-3.5 mr-1" />}
                 Status: {searchedApplicant.status}
               </span>
             </div>
           </div>
 
-          {/* VISUAL PROGRESS TIMELINE */}
+          {/* VISUAL TIMELINE */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-6">Visual Application Timeline</h4>
+            <h4 className="text-xs font-outfit font-black uppercase tracking-wider text-[#1E1B24] mb-6">Application Progress</h4>
             {searchedApplicant.status === 'Declined' ? (
-              <div className="p-4 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-200 text-sm flex items-center gap-3">
-                <UserX className="w-6 h-6 text-rose-400 shrink-0" />
+              <div className="p-4 rounded-2xl bg-[#FF4B4B] text-white border-[2px] border-[#1E1B24] text-sm flex items-center gap-3">
+                <UserX className="w-6 h-6 shrink-0" />
                 <div>
-                  <div className="font-bold">Application Status: Declined</div>
-                  <div className="text-xs text-rose-300 mt-0.5">
-                    Thank you for applying for the NeuraMorphix 2026 cycle. Unfortunately, your application was not selected for this recruitment period.
+                  <div className="font-outfit font-black">Status: Application Declined</div>
+                  <div className="font-rubik text-xs mt-0.5 font-medium">
+                    Thank you for applying. Unfortunately, your application was not selected for this recruitment cycle.
                   </div>
                 </div>
               </div>
             ) : (
               <div className="relative py-4">
-                <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-800 -translate-y-1/2 rounded-full -z-0"></div>
+                <div className="absolute top-1/2 left-0 right-0 h-2 bg-[#FAF7EE] border-[1px] border-[#1E1B24] -translate-y-1/2 rounded-full -z-0"></div>
                 <div
-                  className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-cyan-500 to-emerald-400 -translate-y-1/2 rounded-full transition-all duration-500 -z-0"
+                  className="absolute top-1/2 left-0 h-2 bg-[#3E9FFF] border-[1px] border-[#1E1B24] -translate-y-1/2 rounded-full transition-all duration-500 -z-0"
                   style={{
                     width: `${(Math.max(0, currentStepIdx) / (TIMELINE_STEPS.length - 1)) * 100}%`,
                   }}
@@ -224,17 +222,17 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
                     return (
                       <div key={idx} className="flex flex-col items-center">
                         <div
-                          className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
+                          className={`w-9 h-9 rounded-full flex items-center justify-center font-outfit font-black text-xs border-[2px] border-[#1E1B24] transition-all ${
                             isCompleted
-                              ? 'bg-cyan-500 text-slate-950 ring-4 ring-cyan-500/20 shadow-lg shadow-cyan-500/30'
-                              : 'bg-slate-800 text-slate-500 border border-slate-700'
+                              ? 'bg-[#4EC37B] text-white shadow-[2px_2px_0_#1E1B24]'
+                              : 'bg-white text-[#5C5866]'
                           }`}
                         >
                           {isCompleted ? <CheckCircle2 className="w-5 h-5 stroke-[3]" /> : idx + 1}
                         </div>
                         <span
-                          className={`text-[11px] font-semibold mt-2.5 ${
-                            isCurrent ? 'text-cyan-300 font-extrabold' : isCompleted ? 'text-slate-200' : 'text-slate-500'
+                          className={`text-xs font-rubik mt-2 ${
+                            isCurrent ? 'text-[#3E9FFF] font-black' : isCompleted ? 'text-[#1E1B24] font-bold' : 'text-[#5C5866] font-medium'
                           }`}
                         >
                           {stepItem.label}
@@ -247,66 +245,66 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
             )}
           </div>
 
-          {/* ACCEPTED FINAL ASSIGNED TEAM BANNER */}
+          {/* ACCEPTED BANNER */}
           {searchedApplicant.status === 'Accepted' && (
-            <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-cyan-950/80 border border-emerald-500/50 shadow-2xl flex items-center gap-4">
-              <div className="p-3.5 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                <Award className="w-8 h-8" />
+            <div className="p-6 bg-[#4EC37B] text-white border-[3px] border-[#1E1B24] rounded-2xl shadow-[6px_6px_0_#1E1B24] flex items-center gap-4">
+              <div className="p-3.5 rounded-2xl bg-white text-[#1E1B24] border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24]">
+                <Award className="w-8 h-8 text-[#4EC37B]" />
               </div>
               <div>
-                <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Accepted into Team</div>
-                <div className="text-xl font-black text-white">
+                <div className="text-xs font-outfit font-black uppercase tracking-wider text-white">Selected into Team</div>
+                <div className="text-2xl font-outfit font-black">
                   {searchedApplicant.final_assigned_team || searchedApplicant.first_preference}
                 </div>
-                <p className="text-xs text-slate-300 mt-1">
+                <p className="font-rubik text-xs mt-1 font-medium">
                   Congratulations! Onboarding details will be communicated via email shortly.
                 </p>
               </div>
             </div>
           )}
 
-          {/* INFORMATION REQUESTED ACTION BOX */}
+          {/* INFORMATION REQUESTED BOX */}
           {(searchedApplicant.status === 'Information Requested' || searchedApplicant.requested_info_question) && (
-            <div className="p-6 rounded-2xl bg-purple-950/80 border border-purple-500/50 space-y-4">
+            <div className="p-6 bg-[#FAF7EE] border-[3px] border-[#1E1B24] rounded-2xl shadow-[4px_4px_0_#1E1B24] space-y-4">
               <div className="flex items-center gap-3">
-                <FileQuestion className="w-6 h-6 text-purple-400" />
+                <FileQuestion className="w-6 h-6 text-[#3E9FFF]" />
                 <div>
-                  <h4 className="text-sm font-bold text-white">Additional Information Requested by Recruiter</h4>
-                  <p className="text-xs text-purple-200 mt-0.5">
+                  <h4 className="font-outfit font-black text-lg text-[#1E1B24]">Additional Information Requested</h4>
+                  <p className="font-rubik text-xs text-[#5C5866] font-bold mt-0.5">
                     {searchedApplicant.requested_info_question}
                   </p>
                 </div>
               </div>
 
               {searchedApplicant.requested_info_response ? (
-                <div className="p-4 rounded-xl bg-slate-950/90 border border-slate-800 text-xs">
-                  <span className="text-slate-400 block font-semibold mb-1">Your Submitted Response:</span>
-                  <p className="text-slate-200 whitespace-pre-wrap">{searchedApplicant.requested_info_response}</p>
-                  <span className="inline-block mt-2 text-[10px] text-emerald-400 font-bold uppercase">✓ Status: Information Received</span>
+                <div className="p-4 bg-white border-[2px] border-[#1E1B24] rounded-xl text-xs font-rubik">
+                  <span className="text-[#5C5866] font-bold block mb-1">Your Submitted Response:</span>
+                  <p className="text-[#1E1B24] font-medium">{searchedApplicant.requested_info_response}</p>
+                  <span className="inline-block mt-2 text-[10px] text-[#4EC37B] font-extrabold uppercase">✓ Status: Information Received</span>
                 </div>
               ) : (
                 <form onSubmit={handleInfoReplySubmit} className="space-y-3">
                   <textarea
                     required
                     rows={3}
-                    placeholder="Type your response here (e.g. GitHub link, portfolio details, or clarifications)..."
+                    placeholder="Type your response here..."
                     value={infoReplyInput}
                     onChange={(e) => setInfoReplyInput(e.target.value)}
-                    className="w-full p-3 rounded-xl glass-input text-xs"
+                    className="w-full p-3 rounded-xl border-[2px] border-[#1E1B24] bg-white font-rubik text-xs shadow-[2px_2px_0_#1E1B24]"
                   />
                   <button
                     type="submit"
                     disabled={isSubmittingReply || !infoReplyInput.trim()}
-                    className="px-5 py-2.5 rounded-xl bg-purple-500 hover:bg-purple-400 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-lg"
+                    className="px-5 py-2.5 rounded-xl bg-[#3E9FFF] text-white font-rubik font-bold text-xs border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24] flex items-center gap-2 cursor-pointer uppercase"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    Submit Requested Information
+                    Submit Requested Response
                   </button>
                 </form>
               )}
 
               {replySuccessMsg && (
-                <div className="p-3 rounded-xl bg-emerald-950 text-emerald-300 text-xs font-medium">
+                <div className="p-3 bg-[#4EC37B] text-white font-rubik font-bold text-xs rounded-xl border-[2px] border-[#1E1B24]">
                   {replySuccessMsg}
                 </div>
               )}
@@ -315,25 +313,25 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
 
           {/* INTERVIEW DETAILS BOX */}
           {searchedApplicant.interview_details && (
-            <div className="p-5 rounded-xl bg-amber-950/60 border border-amber-500/40 text-amber-200 text-xs space-y-1">
-              <div className="font-bold flex items-center gap-2 text-amber-300">
+            <div className="p-5 bg-[#FFD93D] border-[3px] border-[#1E1B24] rounded-2xl shadow-[4px_4px_0_#1E1B24] text-xs font-rubik space-y-1">
+              <div className="font-outfit font-black text-sm flex items-center gap-2 text-[#1E1B24]">
                 <Sparkles className="w-4 h-4" />
-                Interview Information
+                Interview Schedule
               </div>
-              <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">{searchedApplicant.interview_details}</p>
+              <p className="text-[#1E1B24] font-bold whitespace-pre-wrap">{searchedApplicant.interview_details}</p>
             </div>
           )}
 
-          {/* Application Summary Breakdown */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-4 border-t border-slate-800">
-            <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-slate-400 block font-semibold mb-1">🥇 First Preference</span>
-              <span className="text-sm font-bold text-cyan-300">{searchedApplicant.first_preference}</span>
+          {/* Preferences Summary */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-4 border-t-[2px] border-dashed border-[#1E1B24]">
+            <div className="p-4 rounded-xl bg-[#FAF7EE] border-[2px] border-[#1E1B24]">
+              <span className="text-[#5C5866] font-bold block mb-1">🥇 1st Choice Preference</span>
+              <span className="text-base font-outfit font-black text-[#FF4B4B]">{searchedApplicant.first_preference}</span>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-slate-400 block font-semibold mb-1">🥈 Second Preference</span>
-              <span className="text-sm font-bold text-amber-300">{searchedApplicant.second_preference}</span>
+            <div className="p-4 rounded-xl bg-[#FAF7EE] border-[2px] border-[#1E1B24]">
+              <span className="text-[#5C5866] font-bold block mb-1">🥈 2nd Choice Preference</span>
+              <span className="text-base font-outfit font-black text-[#3E9FFF]">{searchedApplicant.second_preference}</span>
             </div>
           </div>
         </div>

@@ -1,79 +1,93 @@
-import React, { useState } from 'react';
-import { HelpCircle, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Minus } from 'lucide-react';
 
 interface FAQItem {
   question: string;
   answer: string;
 }
 
-export const FAQSection: React.FC = () => {
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
+const faqs: FAQItem[] = [
+  {
+    question: "Who can apply for NeuraMorphix 2026 Recruitment?",
+    answer: "All SRMIST students across 1st, 2nd, and 3rd year from any branch or department who have a passion for learning, building, and teamwork are eligible to apply!"
+  },
+  {
+    question: "Can I apply for more than one domain preference?",
+    answer: "Yes! You can choose a compulsory 1st Choice Role and an optional 2nd Choice Role preference across Technical, Corporate, and Creative domains."
+  },
+  {
+    question: "Is prior experience mandatory to join?",
+    answer: "Not at all! We value curiosity, enthusiasm, and willingness to learn above all. Beginner-friendly training and mentorship are provided for every domain."
+  },
+  {
+    question: "What happens after I submit my application form?",
+    answer: "You will receive an instant Application ID on screen and via email. Shortlisted candidates will be contacted for interactive domain interactions."
+  },
+  {
+    question: "How can I track my recruitment status?",
+    answer: "Use your unique Application ID or registered email on our 'Track Status' page anytime to view live updates on your application stage."
+  }
+];
 
-  const faqs: FAQItem[] = [
-    {
-      question: 'Who can participate in NeuraMorphix recruitment?',
-      answer: 'Anyone passionate about building intelligence systems! Whether you are a developer, designer, AI researcher, hardware engineer, or product strategist — you are welcome here. Candidates apply individually and choose 1st & 2nd preference roles.',
-    },
-    {
-      question: 'How does the selection process work in NeuraMorphix?',
-      answer: 'First, submit your application with role preferences. Next, participate in Open Trial tasks (Photo ID Generator, Voice RAG, etc.). Top performers move through Alpha, Beta, and Charlie interview stages before final cohort residency placement.',
-    },
-    {
-      question: 'Is there a registration or application fee?',
-      answer: 'No! Participation and application in NeuraMorphix recruitment is completely free. Selected cohort members receive hardware workstations, cloud credits, and monthly stipends.',
-    },
-    {
-      question: 'Can I apply to multiple teams simultaneously?',
-      answer: 'Yes! Our Dual Preference System allows you to pick a Primary (1st Choice) and Secondary (2nd Choice) role across AI, Web, Mobile, IoT, UI/UX, Hardware, and Research teams.',
-    },
-    {
-      question: 'What should I submit for the trial challenges?',
-      answer: 'Submit your public GitHub repository link along with an unedited screen recording demonstrating your code running end to end. High signal, working code is prioritized above all.',
-    },
-  ];
+export function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const toggleIndex = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-900">
-      <div className="text-center space-y-3 mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-[11px] font-bold uppercase tracking-wider">
-          <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Clear Signal</span>
+    <section id="faqs" className="w-full bg-[#FFFEEF] border-t-[3px] border-[#1E1B24] py-16 lg:py-24 px-6 md:px-12 flex flex-col items-center">
+      <div className="max-w-4xl w-full flex flex-col items-center gap-4 text-center mb-12">
+        <div className="neo-badge bg-[#A855F7] text-white">
+          <span>GOT QUESTIONS?</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-          Frequently Asked <span className="glow-text">Questions</span>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[#1E1B24] tracking-tight">
+          Frequently Asked Questions
         </h2>
-        <p className="text-slate-400 text-sm max-w-lg mx-auto">
-          Everything you need to know about applying, selection stages, and cohort residency.
+        <p className="font-rubik text-base sm:text-lg text-[#5C5866] max-w-xl font-medium">
+          Everything you need to know about the NeuraMorphix 2026 recruitment process and team roles.
         </p>
       </div>
 
-      <div className="space-y-4">
-        {faqs.map((faq, idx) => (
-          <div
-            key={faq.question}
-            className="glass-panel rounded-2xl border border-slate-800/80 overflow-hidden transition-all"
-          >
-            <button
-              type="button"
-              onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
-              className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-white text-sm hover:text-cyan-300 transition-colors"
+      <div className="max-w-3xl w-full flex flex-col gap-4">
+        {faqs.map((faq, index) => {
+          const isOpen = openIndex === index;
+          return (
+            <div
+              key={index}
+              className="bg-white border-[3px] border-[#1E1B24] rounded-2xl shadow-[4px_4px_0_#1E1B24] overflow-hidden transition-all"
             >
-              <span>{faq.question}</span>
-              <ChevronDown
-                className={`w-4 h-4 text-cyan-400 shrink-0 transition-transform ${
-                  openIdx === idx ? 'rotate-180' : ''
-                }`}
-              />
-            </button>
+              <button
+                type="button"
+                onClick={() => toggleIndex(index)}
+                className="w-full p-5 sm:p-6 flex items-center justify-between gap-4 text-left cursor-pointer bg-transparent border-none"
+              >
+                <span className="font-outfit font-extrabold text-lg sm:text-xl text-[#1E1B24]">
+                  {faq.question}
+                </span>
+                <div
+                  className={`w-8 h-8 rounded-full border-[2px] border-[#1E1B24] flex items-center justify-center shrink-0 transition-transform ${
+                    isOpen ? 'bg-[#FFD93D] rotate-180' : 'bg-[#FAF7EE]'
+                  }`}
+                >
+                  {isOpen ? (
+                    <Minus className="w-5 h-5 text-[#1E1B24] stroke-[3]" />
+                  ) : (
+                    <Plus className="w-5 h-5 text-[#1E1B24] stroke-[3]" />
+                  )}
+                </div>
+              </button>
 
-            {openIdx === idx && (
-              <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-900 pt-3 animate-fadeIn">
-                {faq.answer}
-              </div>
-            )}
-          </div>
-        ))}
+              {isOpen && (
+                <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-base font-rubik font-medium text-[#5C5866] leading-relaxed border-t-[2px] border-dashed border-[#1E1B24] mt-1 pt-4">
+                  {faq.answer}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </section>
   );
-};
+}

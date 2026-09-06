@@ -1,155 +1,194 @@
-import React from 'react';
-import { DatabaseService } from '../services/db';
+import { useState } from 'react';
 import { NeuraMorphixLogo } from './NeuraMorphixLogo';
-import { Search, UserPlus } from 'lucide-react';
+import { ChevronDown, Search, ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
   currentTab: 'home' | 'apply' | 'track' | 'admin';
   onSelectTab: (tab: 'home' | 'apply' | 'track' | 'admin') => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentTab, onSelectTab }) => {
-  const windowStatus = DatabaseService.isRecruitmentOpen();
-  const [timeStr, setTimeStr] = React.useState('');
+export function Header({ currentTab, onSelectTab }: HeaderProps) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  React.useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setTimeStr(
-        now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' IST'
-      );
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const handleNavClick = (hash: string) => {
+    onSelectTab('home');
+    setMobileMenuOpen(false);
+    setTimeout(() => {
+      const el = document.querySelector(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 bg-slate-950/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
-        {/* Brand Logo */}
-        <div
-          onClick={() => onSelectTab('home')}
-          className="flex items-center gap-2 sm:gap-3 cursor-pointer group shrink-0"
-        >
-          <NeuraMorphixLogo size={36} />
-          <div>
-            <span className="text-base sm:text-xl font-extrabold tracking-wider text-white group-hover:text-cyan-300 transition-colors">
-              NEURAMORPHIX
-            </span>
-            {/* Full subtitle — desktop only */}
-            <div className="hidden sm:flex items-center gap-2 text-[10px] text-slate-400 font-semibold uppercase tracking-widest">
-              <span>Recruitment 2026</span>
-              <span className="text-cyan-400">•</span>
-              <span className="text-slate-300">05 Sep – 18 Sep 2026</span>
-              {timeStr && (
-                <>
-                  <span className="text-cyan-400">•</span>
-                  <span className="text-cyan-300 font-mono font-bold">{timeStr}</span>
-                </>
-              )}
-            </div>
-            {/* Compact — mobile only */}
-            <div className="flex sm:hidden text-[9px] text-slate-400 font-semibold uppercase tracking-wide">
-              Recruitment 2026
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation Tabs — desktop only */}
-        <nav className="hidden md:flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800">
-          <button
-            type="button"
-            onClick={() => onSelectTab('home')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              currentTab === 'home'
-                ? 'bg-cyan-500 text-slate-950 shadow-md'
-                : 'text-slate-300 hover:text-white'
-            }`}
-          >
-            Explore Teams
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onSelectTab('apply')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              currentTab === 'apply'
-                ? 'bg-cyan-500 text-slate-950 shadow-md'
-                : 'text-slate-300 hover:text-white'
-            }`}
-          >
-            <UserPlus className="w-3.5 h-3.5" />
-            Apply Now
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onSelectTab('track')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-              currentTab === 'track'
-                ? 'bg-cyan-500 text-slate-950 shadow-md'
-                : 'text-slate-300 hover:text-white'
-            }`}
-          >
-            <Search className="w-3.5 h-3.5" />
-            Track Status
-          </button>
-        </nav>
-
-        {/* Recruitment Status Pill */}
-        <div className="flex items-center shrink-0">
-          <span
-            className={`px-2.5 sm:px-3.5 py-1.5 rounded-full text-[10px] sm:text-xs font-extrabold flex items-center gap-1.5 border shadow-inner ${
-              windowStatus.isOpen
-                ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
-                : 'bg-rose-950/80 text-rose-300 border-rose-500/40'
-            }`}
-          >
-            <span
-              className={`w-2 h-2 rounded-full shrink-0 ${
-                windowStatus.isOpen ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'bg-rose-400'
-              }`}
-            ></span>
-            <span className="hidden sm:inline">{windowStatus.isOpen ? 'RECRUITMENT OPEN' : 'RECRUITMENT CLOSED'}</span>
-            <span className="sm:hidden">{windowStatus.isOpen ? 'OPEN' : 'CLOSED'}</span>
+    <nav className="sticky top-0 p-4 bg-[#FAF7EE] w-full flex justify-between items-center md:px-8 z-50 border-b-[3px] border-[#1E1B24] shadow-sm">
+      {/* Brand Logo */}
+      <button
+        type="button"
+        onClick={() => {
+          onSelectTab('home');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity bg-transparent border-none text-left"
+      >
+        <NeuraMorphixLogo size={44} />
+        <div className="flex flex-col">
+          <span className="font-outfit font-black text-xl tracking-tight text-[#1E1B24]">
+            NeuraMorphix
+          </span>
+          <span className="font-rubik font-bold text-[10px] uppercase tracking-widest text-[#3E9FFF]">
+            Recruitment 2026
           </span>
         </div>
+      </button>
+
+      {/* Desktop Links */}
+      <div className="hidden md:flex items-center gap-6 lg:gap-8">
+        <button
+          type="button"
+          onClick={() => handleNavClick('#about')}
+          className="font-montserrat font-bold text-[#1E1B24] hover:text-[#3E9FFF] transition-colors text-base tracking-wide cursor-pointer bg-transparent border-none"
+        >
+          About
+        </button>
+        <button
+          type="button"
+          onClick={() => handleNavClick('#domains')}
+          className="font-montserrat font-bold text-[#1E1B24] hover:text-[#3E9FFF] transition-colors text-base tracking-wide cursor-pointer bg-transparent border-none"
+        >
+          Domains
+        </button>
+        <button
+          type="button"
+          onClick={() => handleNavClick('#process')}
+          className="font-montserrat font-bold text-[#1E1B24] hover:text-[#3E9FFF] transition-colors text-base tracking-wide cursor-pointer bg-transparent border-none"
+        >
+          Process
+        </button>
+        <button
+          type="button"
+          onClick={() => handleNavClick('#faqs')}
+          className="font-montserrat font-bold text-[#1E1B24] hover:text-[#3E9FFF] transition-colors text-base tracking-wide cursor-pointer bg-transparent border-none"
+        >
+          FAQs
+        </button>
       </div>
 
-      {/* Mobile bottom nav tabs — only visible on mobile */}
-      <div className="flex md:hidden border-t border-slate-800 bg-slate-950/95">
-        <button
-          type="button"
-          onClick={() => onSelectTab('home')}
-          className={`flex-1 py-2.5 text-[11px] font-bold transition-all flex flex-col items-center gap-0.5 ${
-            currentTab === 'home' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-slate-500'
-          }`}
-        >
-          <span>🏠</span>
-          <span>Teams</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onSelectTab('apply')}
-          className={`flex-1 py-2.5 text-[11px] font-bold transition-all flex flex-col items-center gap-0.5 ${
-            currentTab === 'apply' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-slate-500'
-          }`}
-        >
-          <UserPlus className="w-4 h-4" />
-          <span>Apply</span>
-        </button>
+      {/* Action Buttons & Tabs */}
+      <div className="hidden md:flex items-center gap-3">
         <button
           type="button"
           onClick={() => onSelectTab('track')}
-          className={`flex-1 py-2.5 text-[11px] font-bold transition-all flex flex-col items-center gap-0.5 ${
-            currentTab === 'track' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-slate-500'
+          className={`px-4 py-2 rounded-xl font-rubik font-bold text-xs uppercase border-[2px] border-[#1E1B24] flex items-center gap-1.5 transition-all cursor-pointer ${
+            currentTab === 'track'
+              ? 'bg-[#FFD93D] text-[#1E1B24] shadow-[2px_2px_0_#1E1B24]'
+              : 'bg-white text-[#1E1B24] hover:bg-[#FAF7EE]'
           }`}
         >
-          <Search className="w-4 h-4" />
-          <span>Track</span>
+          <Search className="w-3.5 h-3.5" />
+          <span>Track Status</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onSelectTab('admin')}
+          className={`px-3 py-2 rounded-xl font-rubik font-bold text-xs uppercase border-[2px] border-[#1E1B24] flex items-center gap-1.5 transition-all cursor-pointer ${
+            currentTab === 'admin'
+              ? 'bg-[#FF4B4B] text-white shadow-[2px_2px_0_#1E1B24]'
+              : 'bg-white text-[#1E1B24] hover:bg-[#FAF7EE]'
+          }`}
+        >
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>Admin</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            onSelectTab('apply');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="inline-flex items-center justify-center px-7 py-2.5 rounded-full border-[3px] border-[#1E1B24] font-rubik font-bold text-white tracking-wider uppercase shadow-[4px_4px_0_#1E1B24] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#1E1B24] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none bg-[#3E9FFF] text-sm cursor-pointer"
+        >
+          JOIN US
         </button>
       </div>
-    </header>
+
+      {/* Mobile Popover Toggle */}
+      <div className="flex md:hidden items-center gap-2 relative">
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="flex justify-between items-center gap-2 px-4 py-2 border-[3px] border-[#1E1B24] rounded-xl text-white font-rubik text-sm font-bold shadow-[3px_3px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer bg-[#3E9FFF]"
+        >
+          <span>Go to</span>
+          <ChevronDown className={`w-4 h-4 transition-transform ${mobileMenuOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {mobileMenuOpen && (
+          <div className="absolute top-[calc(100%+12px)] right-0 w-[240px] flex flex-col gap-2.5 p-3 bg-[#FAF7EE] border-[3px] border-[#1E1B24] rounded-2xl shadow-[6px_6px_0_#1E1B24] z-50 animate-in fade-in zoom-in-95">
+            <button
+              type="button"
+              onClick={() => handleNavClick('#about')}
+              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+            >
+              About
+            </button>
+            <button
+              type="button"
+              onClick={() => handleNavClick('#domains')}
+              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+            >
+              Domains
+            </button>
+            <button
+              type="button"
+              onClick={() => handleNavClick('#process')}
+              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+            >
+              Process
+            </button>
+            <button
+              type="button"
+              onClick={() => handleNavClick('#faqs')}
+              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+            >
+              FAQs
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onSelectTab('track');
+                setMobileMenuOpen(false);
+              }}
+              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-[#FFD93D] text-[#1E1B24] font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+            >
+              Track Status
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onSelectTab('admin');
+                setMobileMenuOpen(false);
+              }}
+              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-[#FF4B4B] text-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+            >
+              Admin Portal
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onSelectTab('apply');
+                setMobileMenuOpen(false);
+              }}
+              className="w-full text-center py-2.5 px-4 border-[3px] border-[#1E1B24] rounded-full bg-[#3E9FFF] text-white font-rubik font-bold text-sm shadow-[3px_3px_0_#1E1B24] cursor-pointer uppercase mt-1"
+            >
+              JOIN US NOW
+            </button>
+          </div>
+        )}
+      </div>
+    </nav>
   );
-};
+}

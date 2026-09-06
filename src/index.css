@@ -1,161 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Overpass:wght@800;900&family=Rubik:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
-
-/* Comprehensive Explicit Cursor & Caret Reset */
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video, svg, path {
-  cursor: default !important;
-  caret-color: transparent !important; /* Hide text caret / blinking bar on non-editable elements */
-  outline: none !important;
-}
-
-/* Interactive elements strictly use hand pointer cursor */
-button, 
-[role="button"], 
-a, 
-select,
-summary,
-input[type="submit"],
-input[type="button"],
-label[for],
-.clickable,
-.glass-card,
-.interactive-badge, 
-.tab-btn {
-  cursor: pointer !important;
-  caret-color: transparent !important;
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  outline: none !important;
-}
-
-/* Input fields and textareas strictly use visible text cursor and glowing cyan caret */
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="url"],
-input[type="number"],
-input[type="search"],
-input[type="date"],
-textarea, 
-[contenteditable="true"] {
-  cursor: text !important;
-  caret-color: #38bdf8 !important; /* Visible text caret only inside actual form fields */
-  user-select: text !important;
-  -webkit-user-select: text !important;
-}
 
 @layer base {
   :root {
-    --bg-dark: #080d1a;
-    --bg-card: rgba(15, 23, 42, 0.75);
-    --border-glow: rgba(56, 189, 248, 0.25);
-    --cyan-glow: #38bdf8;
-    --violet-glow: #818cf8;
-    --gold-glow: #f59e0b;
+    --color-bg-cream: #FAF7EE;
+    --color-bg-white: #FFFFFF;
+    --color-text-primary: #1E1B24;
+    --color-text-muted: #5C5866;
+    --color-blue: #3E9FFF;
+    --color-red: #FF4B4B;
+    --color-yellow: #FFD93D;
+    --color-green: #4EC37B;
+    --color-purple: #A855F7;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-bg-cream);
+    color: var(--color-text-primary);
+    font-family: 'Outfit', 'Rubik', sans-serif;
   }
 
   body {
-    background-color: #030712;
-    color: #f3f4f6;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    background-image: 
-      radial-gradient(at 10% 10%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
-      radial-gradient(at 90% 10%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
-      radial-gradient(at 50% 90%, rgba(236, 72, 153, 0.05) 0px, transparent 50%);
-  }
-
-  #root {
-    width: 100%;
-    max-width: 100%;
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    overflow-x: hidden;
+    background-color: var(--color-bg-cream);
+    color: var(--color-text-primary);
   }
 }
 
-/* Custom Utilities */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+/* Custom Typography Utility Classes */
+.font-outfit {
+  font-family: 'Outfit', sans-serif;
+}
+.font-rubik {
+  font-family: 'Rubik', sans-serif;
+}
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+.font-overpass {
+  font-family: 'Overpass', sans-serif;
 }
 
-.glass-card {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Stroke heading style matching GitHub SRM site */
+.text-stroke-primary {
+  -webkit-text-stroke: 4px #1E1B24;
+  paint-order: stroke fill;
+}
+
+@media (min-width: 768px) {
+  .text-stroke-primary {
+    -webkit-text-stroke: 5px #1E1B24;
+  }
+}
+
+/* Neo-Brutalist Shadow & Border Utilities */
+.neo-box {
+  background-color: #ffffff;
+  border: 3px solid #1E1B24;
+  box-shadow: 4px 4px 0px #1E1B24;
+}
+
+.neo-box-lg {
+  background-color: #ffffff;
+  border: 3px solid #1E1B24;
+  box-shadow: 6px 6px 0px #1E1B24;
+}
+
+.neo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  border: 3px solid #1E1B24;
+  box-shadow: 3px 3px 0px #1E1B24;
+  padding: 6px 20px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #1E1B24;
+  user-select: none;
+}
+
+.neo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #1E1B24;
+  border-radius: 12px;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 700;
+  box-shadow: 4px 4px 0px #1E1B24;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer !important;
+  user-select: none;
 }
 
-.glass-card:hover {
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.25);
-  transform: translateY(-2px);
+.neo-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #1E1B24;
 }
 
-.glass-input {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  transition: all 0.2s ease;
-  cursor: text !important;
-  caret-color: #38bdf8 !important;
+.neo-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #1E1B24;
 }
 
-.glass-input:focus {
-  outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+.neo-btn-pill {
+  border-radius: 9999px;
 }
 
-.glow-text {
-  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Marquee Animation Keyframes */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
 }
 
-.gold-gradient-text {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.animate-marquee {
+  animation: marquee 35s linear infinite;
 }
 
-.silver-gradient-text {
-  background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 50%, #64748b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.animate-marquee-reverse {
+  animation: marquee 35s linear infinite reverse;
+}
+
+.animate-marquee:hover, 
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #FAF7EE;
+  border-left: 2px solid #1E1B24;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: #FFD93D;
+  border: 2px solid #1E1B24;
+  border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #FF4B4B;
 }

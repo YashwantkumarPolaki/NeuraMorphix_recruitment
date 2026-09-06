@@ -939,7 +939,7 @@ export default async function handler(req, res) {
     }
 
     // Environment variables
-    const systemEmail = process.env.SMTP_USER || 'moniswarmoni509@gmail.com';
+    const systemEmail = process.env.SMTP_USER || 'neuramorphix@gmail.com';
     const systemPass = process.env.SMTP_PASS || 'rzlcebjxhpgbumqb';
 
     // Gmail SMTP
@@ -1116,7 +1116,7 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
                 Thank you for applying and for your interest in joining NeuraMorphix.<br/>
                 We look forward to reviewing your application!<br/><br/>
                 <strong style="color:#38bdf8;">Thank you,<br/>The NeuraMorphix Team</strong><br/>
-                <span style="color:#475569;">NeuraMorphix Recruitment System · moniswarmoni509@gmail.com</span>
+                <span style="color:#475569;">NeuraMorphix Recruitment System · neuramorphix@gmail.com</span>
               </p>
             </td>
           </tr>
@@ -1135,7 +1135,7 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
 
 function nodemailerPlugin() {
   const env = loadDotEnv();
-  const systemEmail = env.SMTP_USER || process.env.SMTP_USER || 'moniswarmoni509@gmail.com';
+  const systemEmail = env.SMTP_USER || process.env.SMTP_USER || 'neuramorphix@gmail.com';
   const systemPass = env.SMTP_PASS || process.env.SMTP_PASS || 'rzlcebjxhpgbumqb';
 
   const isRealPassword = systemPass.length > 0 && !systemPass.includes('your_gmail_app_password');
@@ -1728,7 +1728,7 @@ Recruitment Period: 05 September 2026 – 18 September 2026
 Thank you for your interest in NeuraMorphix.
 
 Best regards,
-NeuraMorphix System (moniswarmoni509@gmail.com)`,
+NeuraMorphix System (neuramorphix@gmail.com)`,
     },
     shortlisted: {
       subject: 'Neuramorphix Recruitment — You Have Been Shortlisted!',

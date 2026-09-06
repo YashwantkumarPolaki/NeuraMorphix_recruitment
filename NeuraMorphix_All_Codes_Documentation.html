@@ -1118,7 +1118,7 @@ export default async function handler(req, res) {
     }
 
     // Environment variables
-    const systemEmail = process.env.SMTP_USER || &#039;moniswarmoni509@gmail.com&#039;;
+    const systemEmail = process.env.SMTP_USER || &#039;neuramorphix@gmail.com&#039;;
     const systemPass = process.env.SMTP_PASS || &#039;rzlcebjxhpgbumqb&#039;;
 
     // Gmail SMTP
@@ -1298,7 +1298,7 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
                 Thank you for applying and for your interest in joining NeuraMorphix.&lt;br/&gt;
                 We look forward to reviewing your application!&lt;br/&gt;&lt;br/&gt;
                 &lt;strong style=&quot;color:#38bdf8;&quot;&gt;Thank you,&lt;br/&gt;The NeuraMorphix Team&lt;/strong&gt;&lt;br/&gt;
-                &lt;span style=&quot;color:#475569;&quot;&gt;NeuraMorphix Recruitment System · moniswarmoni509@gmail.com&lt;/span&gt;
+                &lt;span style=&quot;color:#475569;&quot;&gt;NeuraMorphix Recruitment System · neuramorphix@gmail.com&lt;/span&gt;
               &lt;/p&gt;
             &lt;/td&gt;
           &lt;/tr&gt;
@@ -1317,7 +1317,7 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
 
 function nodemailerPlugin() {
   const env = loadDotEnv();
-  const systemEmail = env.SMTP_USER || process.env.SMTP_USER || &#039;moniswarmoni509@gmail.com&#039;;
+  const systemEmail = env.SMTP_USER || process.env.SMTP_USER || &#039;neuramorphix@gmail.com&#039;;
   const systemPass = env.SMTP_PASS || process.env.SMTP_PASS || &#039;rzlcebjxhpgbumqb&#039;;
 
   const isRealPassword = systemPass.length &gt; 0 &amp;&amp; !systemPass.includes(&#039;your_gmail_app_password&#039;);
@@ -1914,7 +1914,7 @@ Recruitment Period: 05 September 2026 – 18 September 2026
 Thank you for your interest in NeuraMorphix.
 
 Best regards,
-NeuraMorphix System (moniswarmoni509@gmail.com)`,
+NeuraMorphix System (neuramorphix@gmail.com)`,
     },
     shortlisted: {
       subject: &#039;Neuramorphix Recruitment — You Have Been Shortlisted!&#039;,

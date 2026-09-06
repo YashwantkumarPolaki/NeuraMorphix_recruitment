@@ -124,67 +124,78 @@ function buildHtml({
     body {
       margin: 0;
       padding: 0;
-      background: #0f172a;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #e2e8f0;
+      background: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #334155;
     }
 
     .container {
-      max-width: 650px;
-      margin: 40px auto;
-      background: #111827;
+      max-width: 600px;
+      margin: 32px auto;
+      background: #ffffff;
       border-radius: 16px;
       overflow: hidden;
-      border: 1px solid #334155;
+      border: 1px solid #e2e8f0;
     }
 
     .header {
-      padding: 28px;
-      background: #020617;
+      padding: 32px;
+      background: linear-gradient(135deg, #0284c7, #2563eb);
       text-align: center;
+      color: #ffffff;
     }
 
     .header h1 {
       margin: 0;
-      color: #22d3ee;
+      color: #ffffff;
       font-size: 26px;
+    }
+
+    .header p {
+      margin: 6px 0 0 0;
+      color: #e0f2fe;
+      font-size: 13px;
     }
 
     .content {
       padding: 32px;
       line-height: 1.7;
+      background: #ffffff;
     }
 
     .info-box {
       margin: 20px 0;
       padding: 16px;
-      background: #0f172a;
-      border: 1px solid #155e75;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
       border-radius: 10px;
-      color: #67e8f9;
+      color: #1e40af;
     }
 
     .details {
       margin-top: 20px;
       padding: 18px;
-      background: #020617;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: 10px;
     }
 
     .details p {
       margin: 8px 0;
+      color: #0f172a;
     }
 
     .footer {
-      padding: 20px;
-      background: #020617;
+      padding: 18px 24px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
       text-align: center;
       font-size: 12px;
-      color: #94a3b8;
+      color: #64748b;
     }
 
     strong {
-      color: #f8fafc;
+      color: #0f172a;
     }
   </style>
 </head>
@@ -303,7 +314,7 @@ export default async function handler(req, res) {
     }
 
     // Environment variables
-    const systemEmail = process.env.SMTP_USER || 'moniswarmoni509@gmail.com';
+    const systemEmail = process.env.SMTP_USER || 'neuramorphix@gmail.com';
     const systemPass = process.env.SMTP_PASS || 'rzlcebjxhpgbumqb';
 
     // Gmail SMTP
