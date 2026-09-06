@@ -7,7 +7,6 @@ import { ApplicationForm } from './components/ApplicationForm';
 import { StatusTracker } from './components/StatusTracker';
 import { AdminDashboard } from './components/AdminDashboard';
 import { FAQSection } from './components/FAQSection';
-import { NeuraMorphixLogo } from './components/NeuraMorphixLogo';
 import {
   Code,
   GraduationCap,
@@ -17,7 +16,6 @@ import {
   Briefcase,
   Rocket,
   Lock,
-  Search,
 } from 'lucide-react';
 
 export function App() {
