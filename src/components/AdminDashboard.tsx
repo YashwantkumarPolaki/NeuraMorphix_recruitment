@@ -27,7 +27,6 @@ import {
   LogOut,
   Lock,
   AlertCircle,
-  Key,
   ArrowRight,
   ShieldCheck,
 } from 'lucide-react';
@@ -56,7 +55,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   });
 
   // Login Form State
-  const [loginEmail, setLoginEmail] = useState('moni@neuramophrix.com');
+  const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -93,7 +92,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         }
         showToast(`Welcome back, ${matchedAdmin.name}! Authenticated as ${matchedAdmin.role}.`);
       } else {
-        setAuthError('Invalid credentials. Check email & password (e.g. moni@neuramophrix.com / admin123).');
+        setAuthError('Invalid credentials. Contact the NeuraMorphix team lead for admin access.');
       }
     } catch {
       setAuthError('Authentication error. Please try again.');
@@ -359,182 +358,135 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="max-w-lg mx-auto py-10 px-4 sm:px-6">
-        {/* Toast Notification */}
-        {toastMsg && (
-          <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl bg-slate-900 border border-cyan-500 text-cyan-200 text-xs font-semibold shadow-2xl flex items-center gap-3 animate-fadeIn">
-            <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
-            <span>{toastMsg}</span>
-          </div>
-        )}
-
-        <div className="glass-panel p-8 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden space-y-6">
-          {/* Ambient Glow Background Accent */}
-          <div className="absolute -top-24 -right-24 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-          {/* Logo & Header */}
-          <div className="text-center space-y-3">
-            <div className="flex justify-center mb-2">
-              <NeuraMorphixLogo size={56} />
+      <div className="w-full min-h-[85vh] bg-[var(--color-bg-paper)] text-[var(--color-text-primary)] py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center border-t-4 border-[#1E1B24]">
+        <div className="max-w-lg w-full mx-auto">
+          {/* Toast Notification */}
+          {toastMsg && (
+            <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-saffron)] text-[var(--color-saffron)] text-xs font-semibold shadow-2xl flex items-center gap-3 animate-fadeIn">
+              <Sparkles className="w-4 h-4 text-[var(--color-saffron)] shrink-0" />
+              <span>{toastMsg}</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-[11px] font-bold uppercase tracking-wider">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              NeuraMorphix Access Portal
-            </div>
-            <h2 className="text-2xl font-black text-white tracking-tight">Recruiter Sign In</h2>
-            <p className="text-xs text-slate-400">
-              Enter your authorized recruiter or employee credentials to access management dashboard.
-            </p>
-          </div>
+          )}
 
-          <div className="space-y-6 animate-fadeIn">
-              {/* Error Alert */}
-              {authError && (
-                <div className="p-3.5 rounded-xl bg-rose-950/70 border border-rose-500/50 text-rose-200 text-xs flex items-start gap-2.5 animate-fadeIn">
-                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                  <span className="leading-snug">{authError}</span>
-                </div>
-              )}
+          <div className="glass-panel p-8 rounded-3xl border border-[var(--color-saffron)]/30 shadow-2xl relative overflow-hidden space-y-6">
+            {/* Ambient Glow Background Accent */}
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-[var(--color-saffron)]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-              {/* Login Form */}
-              <form onSubmit={handleLoginSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Employee / Admin Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      value={loginEmail}
-                      onChange={(e) => setLoginEmail(e.target.value)}
-                      placeholder="moni@neuramophrix.com"
-                      required
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Employee Password
-                  </label>
-                  <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      placeholder="Enter password (e.g. admin123)"
-                      required
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isLoggingIn}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-sm shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2"
-                >
-                  {isLoggingIn ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin text-slate-950" />
-                      <span>Authenticating Employee...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Sign In as Employee</span>
-                      <ArrowRight className="w-4 h-4 text-slate-950" />
-                    </>
-                  )}
-                </button>
-              </form>
-
-              {/* Quick Fill Credentials Helper Box */}
-              <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2.5">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-300 uppercase tracking-wider">
-                  <Key className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Employee Demo Accounts</span>
-                </div>
-                <p className="text-[11px] text-slate-400 leading-normal">
-                  Click any employee account below to auto-fill credentials:
-                </p>
-                <div className="flex flex-col gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLoginEmail('moni@neuramophrix.com');
-                      setLoginPassword('admin123');
-                      setAuthError(null);
-                    }}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-cyan-500/40 hover:border-cyan-400 text-left flex items-center justify-between group transition-all"
-                  >
-                    <div>
-                      <div className="text-xs font-bold text-cyan-300 group-hover:text-cyan-200">
-                        moni@neuramophrix.com
-                      </div>
-                      <div className="text-[10px] text-slate-400">Role: Executive Admin / Employee</div>
-                    </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 font-mono">
-                      admin123
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLoginEmail('recruitment.lead@neuramorphix.org');
-                      setLoginPassword('admin123');
-                      setAuthError(null);
-                    }}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 text-left flex items-center justify-between group transition-all"
-                  >
-                    <div>
-                      <div className="text-xs font-bold text-slate-200 group-hover:text-white">
-                        recruitment.lead@neuramorphix.org
-                      </div>
-                      <div className="text-[10px] text-slate-400">Role: Lead Recruiter (Dr. Vance)</div>
-                    </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-mono">
-                      admin123
-                    </span>
-                  </button>
-                </div>
+            {/* Logo & Header */}
+            <div className="text-center space-y-3">
+              <div className="flex justify-center mb-2">
+                <NeuraMorphixLogo size={56} />
               </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-bg-dark)]/90 border border-[var(--color-saffron)]/40 text-[var(--color-saffron)] text-[11px] font-bold uppercase tracking-wider">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                NeuraMorphix Access Portal
+              </div>
+              <h2 className="text-2xl font-black text-[var(--color-text-primary)] tracking-tight">Recruiter Sign In</h2>
+              <p className="text-xs text-[var(--color-text-muted)]">
+                Enter your authorized recruiter or employee credentials to access management dashboard.
+              </p>
             </div>
+
+            <div className="space-y-6 animate-fadeIn">
+                {/* Error Alert */}
+                {authError && (
+                  <div className="p-3.5 rounded-xl bg-rose-950/70 border border-rose-500/50 text-rose-200 text-xs flex items-start gap-2.5 animate-fadeIn">
+                    <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                    <span className="leading-snug">{authError}</span>
+                  </div>
+                )}
+
+                {/* Login Form */}
+                <form onSubmit={handleLoginSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[var(--color-text-primary)] mb-1.5">
+                      Employee / Admin Email Address
+                    </label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-[var(--color-text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="email"
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
+                        placeholder="you@neuramorphix.com"
+                        required
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] text-sm focus:outline-none focus:border-[var(--color-saffron)] focus:ring-1 focus:ring-cyan-400 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[var(--color-text-primary)] mb-1.5">
+                      Employee Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-[var(--color-text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        placeholder="Enter your admin password"
+                        required
+                        className="w-full pl-10 pr-10 py-2.5 rounded-xl glass-input text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] text-sm focus:outline-none focus:border-[var(--color-saffron)] focus:ring-1 focus:ring-cyan-400 transition-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isLoggingIn}
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-[var(--color-text-primary)] font-black text-sm shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {isLoggingIn ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin text-[var(--color-text-primary)]" />
+                        <span>Authenticating Employee...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Sign In as Employee</span>
+                        <ArrowRight className="w-4 h-4 text-[var(--color-text-primary)]" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen bg-[var(--color-bg-paper)] text-[var(--color-text-primary)] py-8 px-4 sm:px-6 lg:px-8 border-t-4 border-[#1E1B24]">
+      <div className="max-w-7xl mx-auto">
+
       {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl bg-slate-900 border border-cyan-500 text-cyan-200 text-xs font-semibold shadow-2xl flex items-center gap-3 animate-fadeIn">
-          <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-saffron)] text-[var(--color-saffron)] text-xs font-semibold shadow-2xl flex items-center gap-3 animate-fadeIn">
+          <Sparkles className="w-4 h-4 text-[var(--color-saffron)] shrink-0" />
           <span>{toastMsg}</span>
         </div>
       )}
 
       {/* Admin Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-800">
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-[var(--color-line)]">
+        <img src="/images/tiger.png" alt="Tiger" className="absolute -right-2 -top-14 w-32 h-32 object-contain rounded-3xl border-[3px] border-[#14100b] bg-white shadow-[6px_6px_0_0_#14100b] rotate-6 hidden lg:block hover:rotate-0 transition-transform" />
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-cyan-950 text-cyan-300 text-[10px] font-bold uppercase border border-cyan-500/30">
+            <span className="px-3 py-1 rounded-full bg-[var(--color-bg-dark)] text-[var(--color-saffron)] text-[10px] font-bold uppercase border border-[var(--color-saffron)]/30">
               Recruitment Team Portal
             </span>
-            <span className="text-xs text-slate-400">Logged in: <strong className="text-white">{adminUser}</strong></span>
+            <span className="text-xs text-[var(--color-text-muted)]">Logged in: <strong className="text-[var(--color-text-primary)]">{adminUser}</strong></span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">
+          <h1 className="text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mt-1">
             NeuraMorphix <span className="glow-text">Recruitment Dashboard</span>
           </h1>
         </div>
@@ -547,7 +499,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               refreshData();
               showToast('Reset database to default seed data.');
             }}
-            className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 flex items-center gap-1.5"
+            className="px-3 py-2 rounded-xl text-xs font-semibold bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] hover:bg-[var(--color-bg-dark)] border border-[var(--color-line)] flex items-center gap-1.5"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Reset Seed Data
@@ -565,14 +517,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex flex-wrap gap-2 mb-8 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800">
+      <div className="flex flex-wrap gap-2 mb-8 bg-[var(--color-bg-card)] p-1.5 rounded-2xl border border-[var(--color-line)]">
         <button
           type="button"
           onClick={() => setActiveTab('analytics')}
           className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
             activeTab === 'analytics'
-              ? 'bg-cyan-500 text-slate-950 shadow-md'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-[var(--color-saffron)] text-[var(--color-text-primary)] shadow-md'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
           }`}
         >
           <Sliders className="w-4 h-4" />
@@ -584,8 +536,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           onClick={() => setActiveTab('applicants')}
           className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
             activeTab === 'applicants'
-              ? 'bg-cyan-500 text-slate-950 shadow-md'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-[var(--color-saffron)] text-[var(--color-text-primary)] shadow-md'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
           }`}
         >
           <Users className="w-4 h-4" />
@@ -597,8 +549,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           onClick={() => setActiveTab('email_settings')}
           className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
             activeTab === 'email_settings'
-              ? 'bg-cyan-500 text-slate-950 shadow-md'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-[var(--color-saffron)] text-[var(--color-text-primary)] shadow-md'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
           }`}
         >
           <Mail className="w-4 h-4" />
@@ -610,8 +562,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           onClick={() => setActiveTab('config')}
           className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
             activeTab === 'config'
-              ? 'bg-cyan-500 text-slate-950 shadow-md'
-              : 'text-slate-400 hover:text-white'
+              ? 'bg-[var(--color-saffron)] text-[var(--color-text-primary)] shadow-md'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
           }`}
         >
           <Settings className="w-4 h-4" />
@@ -624,38 +576,38 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         <div className="space-y-8 animate-fadeIn">
           {/* Metric Cards Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div className="p-5 rounded-2xl glass-panel border-cyan-500/20">
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Total Applications</div>
-              <div className="text-3xl font-black text-white">{totalApps}</div>
-              <div className="text-[11px] text-cyan-400 mt-1 font-medium">Logged candidates</div>
+            <div className="p-5 rounded-2xl glass-panel border-[var(--color-saffron)]/20">
+              <div className="text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-1">Total Applications</div>
+              <div className="text-3xl font-black text-[var(--color-text-primary)]">{totalApps}</div>
+              <div className="text-[11px] text-[var(--color-saffron)] mt-1 font-medium">Logged candidates</div>
             </div>
 
             <div className="p-5 rounded-2xl glass-panel border-amber-500/20">
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Pending Review</div>
+              <div className="text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-1">Pending Review</div>
               <div className="text-3xl font-black text-amber-300">{pendingApps}</div>
               <div className="text-[11px] text-amber-400/80 mt-1 font-medium">Awaiting evaluation</div>
             </div>
 
             <div className="p-5 rounded-2xl glass-panel border-blue-500/20">
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Shortlisted</div>
+              <div className="text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-1">Shortlisted</div>
               <div className="text-3xl font-black text-blue-300">{shortlistedApps}</div>
               <div className="text-[11px] text-blue-400/80 mt-1 font-medium">Passed screening</div>
             </div>
 
             <div className="p-5 rounded-2xl glass-panel border-purple-500/20">
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Interview</div>
+              <div className="text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-1">Interview</div>
               <div className="text-3xl font-black text-purple-300">{interviewApps}</div>
               <div className="text-[11px] text-purple-400/80 mt-1 font-medium">Scheduled interaction</div>
             </div>
 
             <div className="p-5 rounded-2xl glass-panel border-emerald-500/20">
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Accepted</div>
+              <div className="text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-1">Accepted</div>
               <div className="text-3xl font-black text-emerald-300">{acceptedApps}</div>
               <div className="text-[11px] text-emerald-400/80 mt-1 font-medium">Selected members</div>
             </div>
 
             <div className="p-5 rounded-2xl glass-panel border-rose-500/20">
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Declined</div>
+              <div className="text-[10px] uppercase font-bold text-[var(--color-text-muted)] mb-1">Declined</div>
               <div className="text-3xl font-black text-rose-300">{declinedApps}</div>
               <div className="text-[11px] text-rose-400/80 mt-1 font-medium">Not selected</div>
             </div>
@@ -664,8 +616,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           {/* Role-Wise Statistics Breakdown for 10 Teams */}
           <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6">
             <div>
-              <h3 className="text-xl font-extrabold text-white">Role-Wise Applicant Statistics</h3>
-              <p className="text-xs text-slate-400 mt-1">Breakdown of applicant preference choices across all 10 NeuraMorphix recruitment teams.</p>
+              <h3 className="text-xl font-extrabold text-[var(--color-text-primary)]">Role-Wise Applicant Statistics</h3>
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">Breakdown of applicant preference choices across all 10 NeuraMorphix recruitment teams.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -673,15 +625,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 const count = getRoleApplicantCount(role.role_name);
                 const percent = totalApps > 0 ? Math.round((count / (totalApps * 2)) * 100) : 0;
                 return (
-                  <div key={role.role_id} className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+                  <div key={role.role_id} className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-slate-100">{role.role_name}</span>
-                      <span className="text-xs font-mono font-bold text-cyan-300 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">
+                      <span className="text-sm font-bold text-[var(--color-text-primary)]">{role.role_name}</span>
+                      <span className="text-xs font-mono font-bold text-[var(--color-saffron)] bg-[var(--color-bg-dark)] px-2.5 py-1 rounded-lg border border-[var(--color-line)]">
                         {count} applicants
                       </span>
                     </div>
 
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-[var(--color-bg-dark)] h-2 rounded-full overflow-hidden">
                       <div
                         className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500"
                         style={{ width: `${Math.min(100, Math.max(5, percent * 2))}%` }}
@@ -701,7 +653,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           {/* Search & Filters */}
           <div className="glass-panel p-4 sm:p-6 rounded-2xl flex flex-col md:flex-row gap-4 justify-between">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+              <Search className="w-4 h-4 text-[var(--color-text-muted)] absolute left-3.5 top-3.5" />
               <input
                 type="text"
                 placeholder="Search applicants by name, ID, email, college, or skills..."
@@ -715,7 +667,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2.5 rounded-xl glass-input text-xs bg-slate-900 text-white"
+                className="px-3 py-2.5 rounded-xl glass-input text-xs bg-[var(--color-bg-card)] text-[var(--color-text-primary)]"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="Application Received">Application Received</option>
@@ -731,7 +683,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="px-3 py-2.5 rounded-xl glass-input text-xs bg-slate-900 text-white"
+                className="px-3 py-2.5 rounded-xl glass-input text-xs bg-[var(--color-bg-card)] text-[var(--color-text-primary)]"
               >
                 <option value="ALL">All Teams</option>
                 {roles.map((r) => (
@@ -744,10 +696,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           </div>
 
           {/* Table of Applicants */}
-          <div className="glass-panel rounded-2xl overflow-hidden border-slate-800">
+          <div className="glass-panel rounded-2xl overflow-hidden border-[var(--color-line)]">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-900/90 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                <thead className="bg-[var(--color-bg-card)] text-[var(--color-text-muted)] uppercase font-semibold border-b border-[var(--color-line)]">
                   <tr>
                     <th className="px-6 py-4">Application ID & Name</th>
                     <th className="px-6 py-4">College & Dept</th>
@@ -760,24 +712,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 <tbody className="divide-y divide-slate-800/60">
                   {filteredApplicants.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-8 text-center text-slate-400">
+                      <td colSpan={6} className="px-6 py-8 text-center text-[var(--color-text-muted)]">
                         No applicants found matching the search criteria.
                       </td>
                     </tr>
                   ) : (
                     filteredApplicants.map((app) => (
-                      <tr key={app.id} className="hover:bg-slate-800/40 transition-colors">
+                      <tr key={app.id} className="hover:bg-[var(--color-bg-dark)]/40 transition-colors">
                         <td className="px-6 py-4">
-                          <div className="font-bold text-white text-sm">{app.full_name}</div>
-                          <div className="font-mono text-cyan-400 font-semibold">{app.application_id}</div>
-                          <div className="text-[11px] text-slate-400">{app.email}</div>
+                          <div className="font-bold text-[var(--color-text-primary)] text-sm">{app.full_name}</div>
+                          <div className="font-mono text-[var(--color-saffron)] font-semibold">{app.application_id}</div>
+                          <div className="text-[11px] text-[var(--color-text-muted)]">{app.email}</div>
                         </td>
                         <td className="px-6 py-4">
-                          <div className="text-slate-200 font-medium">{app.college}</div>
-                          <div className="text-[11px] text-slate-400">{app.department} ({app.year})</div>
+                          <div className="text-[var(--color-text-primary)] font-medium">{app.college}</div>
+                          <div className="text-[11px] text-[var(--color-text-muted)]">{app.department} ({app.year})</div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-semibold text-cyan-300">{app.first_preference}</span>
+                          <span className="font-semibold text-[var(--color-saffron)]">{app.first_preference}</span>
                         </td>
                         <td className="px-6 py-4">
                           <span className="font-semibold text-amber-300">{app.second_preference}</span>
@@ -793,7 +745,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                                 : app.status === 'Information Requested'
                                 ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
-                                : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40'
+                                : 'bg-[var(--color-saffron)]/20 text-[var(--color-saffron)] border-[var(--color-saffron)]/40'
                             }`}
                           >
                             {app.status}
@@ -803,7 +755,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                           <button
                             type="button"
                             onClick={() => setSelectedApplicant(app)}
-                            className="px-3.5 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-slate-950 font-bold border border-cyan-500/40 transition-all flex items-center gap-1 ml-auto"
+                            className="px-3.5 py-1.5 rounded-lg bg-[var(--color-saffron)]/20 hover:bg-[var(--color-saffron)] text-[var(--color-saffron)] hover:text-[var(--color-text-primary)] font-bold border border-[var(--color-saffron)]/40 transition-all flex items-center gap-1 ml-auto"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             Review
@@ -821,38 +773,38 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
       {/* APPLICANT DETAIL MODAL */}
       {selectedApplicant && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-          <div className="glass-panel w-full max-w-4xl rounded-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto border-cyan-500/30">
+        <div className="fixed inset-0 z-50 bg-[#241c13]/60 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="glass-panel w-full max-w-4xl rounded-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto border-[var(--color-saffron)]/30">
             {/* Modal Header */}
-            <div className="flex items-start justify-between pb-4 border-b border-slate-800">
+            <div className="flex items-start justify-between pb-4 border-b border-[var(--color-line)]">
               <div>
-                <span className="px-3 py-1 rounded-full bg-cyan-950 text-cyan-300 text-[10px] font-mono font-bold uppercase">
+                <span className="px-3 py-1 rounded-full bg-[var(--color-bg-dark)] text-[var(--color-saffron)] text-[10px] font-mono font-bold uppercase">
                   ID: {selectedApplicant.application_id}
                 </span>
-                <h2 className="text-2xl font-black text-white mt-1">{selectedApplicant.full_name}</h2>
-                <p className="text-xs text-slate-400">{selectedApplicant.college} • {selectedApplicant.department} ({selectedApplicant.year})</p>
+                <h2 className="text-2xl font-black text-[var(--color-text-primary)] mt-1">{selectedApplicant.full_name}</h2>
+                <p className="text-xs text-[var(--color-text-muted)]">{selectedApplicant.college} • {selectedApplicant.department} ({selectedApplicant.year})</p>
               </div>
 
               <button
                 type="button"
                 onClick={() => setSelectedApplicant(null)}
-                className="p-2 rounded-lg bg-slate-800 text-slate-400 hover:text-white"
+                className="p-2 rounded-lg bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
               >
                 ✕
               </button>
             </div>
 
             {/* Quick Action Bar */}
-            <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
-              <div className="text-xs font-semibold text-slate-300">
-                Current Status: <span className="text-cyan-300 font-bold">{selectedApplicant.status}</span>
+            <div className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] flex flex-wrap items-center justify-between gap-3">
+              <div className="text-xs font-semibold text-[var(--color-text-muted)]">
+                Current Status: <span className="text-[var(--color-saffron)] font-bold">{selectedApplicant.status}</span>
               </div>
 
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => handleShortlist(selectedApplicant)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-slate-950 border border-blue-500/40"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-[var(--color-text-primary)] border border-blue-500/40"
                 >
                   SHORTLIST
                 </button>
@@ -860,7 +812,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 <button
                   type="button"
                   onClick={() => setShowInterviewModal(true)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/40"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-[var(--color-text-primary)] border border-amber-500/40"
                 >
                   REQUEST INTERVIEW
                 </button>
@@ -868,7 +820,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 <button
                   type="button"
                   onClick={() => setShowReqInfoModal(true)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/20 hover:bg-purple-500 text-purple-300 hover:text-slate-950 border border-purple-500/40"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-500/20 hover:bg-purple-500 text-purple-300 hover:text-[var(--color-text-primary)] border border-purple-500/40"
                 >
                   REQUEST INFO
                 </button>
@@ -876,7 +828,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 <button
                   type="button"
                   onClick={() => setShowRoleAssignModal(true)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[var(--color-bg-dark)] hover:bg-[var(--color-bg-dark)] text-[var(--color-text-primary)] border border-[var(--color-line)]"
                 >
                   CHANGE ROLE
                 </button>
@@ -884,7 +836,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 <button
                   type="button"
                   onClick={() => setShowDeclineModal(true)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-slate-950 border border-rose-500/40"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-[var(--color-text-primary)] border border-rose-500/40"
                 >
                   DECLINE
                 </button>
@@ -892,7 +844,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 <button
                   type="button"
                   onClick={() => setShowAcceptModal(true)}
-                  className="px-4 py-1.5 rounded-lg text-xs font-black bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-md"
+                  className="px-4 py-1.5 rounded-lg text-xs font-black bg-emerald-500 hover:bg-emerald-400 text-[var(--color-text-primary)] shadow-md"
                 >
                   ACCEPT APPLICANT
                 </button>
@@ -902,42 +854,42 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             {/* Application Data Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-cyan-400 uppercase text-[10px]">Contact Information</h4>
-                  <div>Email: <strong className="text-white">{selectedApplicant.email}</strong></div>
-                  <div>Phone: <strong className="text-white">{selectedApplicant.phone}</strong></div>
-                  <div>Application Date: <strong className="text-white">{new Date(selectedApplicant.created_at).toLocaleDateString()}</strong></div>
+                <div className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] space-y-2">
+                  <h4 className="font-bold text-[var(--color-saffron)] uppercase text-[10px]">Contact Information</h4>
+                  <div>Email: <strong className="text-[var(--color-text-primary)]">{selectedApplicant.email}</strong></div>
+                  <div>Phone: <strong className="text-[var(--color-text-primary)]">{selectedApplicant.phone}</strong></div>
+                  <div>Application Date: <strong className="text-[var(--color-text-primary)]">{new Date(selectedApplicant.created_at).toLocaleDateString()}</strong></div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-cyan-400 uppercase text-[10px]">Role Preferences & Assigned Team</h4>
-                  <div>🥇 First Choice: <strong className="text-cyan-300">{selectedApplicant.first_preference}</strong></div>
+                <div className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] space-y-2">
+                  <h4 className="font-bold text-[var(--color-saffron)] uppercase text-[10px]">Role Preferences & Assigned Team</h4>
+                  <div>🥇 First Choice: <strong className="text-[var(--color-saffron)]">{selectedApplicant.first_preference}</strong></div>
                   <div>🥈 Second Choice: <strong className="text-amber-300">{selectedApplicant.second_preference}</strong></div>
-                  <div className="pt-2 border-t border-slate-800">
+                  <div className="pt-2 border-t border-[var(--color-line)]">
                     Final Assigned Team: <strong className="text-emerald-400">{selectedApplicant.final_assigned_team || 'Not assigned yet'}</strong>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-cyan-400 uppercase text-[10px]">Online Links</h4>
+                <div className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] space-y-2">
+                  <h4 className="font-bold text-[var(--color-saffron)] uppercase text-[10px]">Online Links</h4>
                   <div className="flex flex-wrap gap-2 pt-1">
                     {selectedApplicant.github_url && (
-                      <a href={selectedApplicant.github_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-slate-800 text-cyan-300 hover:underline flex items-center gap-1">
+                      <a href={selectedApplicant.github_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-[var(--color-bg-dark)] text-[var(--color-saffron)] hover:underline flex items-center gap-1">
                         GitHub <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
                     {selectedApplicant.linkedin_url && (
-                      <a href={selectedApplicant.linkedin_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-slate-800 text-blue-300 hover:underline flex items-center gap-1">
+                      <a href={selectedApplicant.linkedin_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-[var(--color-bg-dark)] text-blue-300 hover:underline flex items-center gap-1">
                         LinkedIn <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
                     {selectedApplicant.portfolio_url && (
-                      <a href={selectedApplicant.portfolio_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-slate-800 text-purple-300 hover:underline flex items-center gap-1">
+                      <a href={selectedApplicant.portfolio_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-[var(--color-bg-dark)] text-purple-300 hover:underline flex items-center gap-1">
                         Portfolio <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
                     {selectedApplicant.resume_url && (
-                      <a href={selectedApplicant.resume_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-slate-800 text-amber-300 hover:underline flex items-center gap-1">
+                      <a href={selectedApplicant.resume_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-[var(--color-bg-dark)] text-amber-300 hover:underline flex items-center gap-1">
                         Resume <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
@@ -946,42 +898,42 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               </div>
 
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-cyan-400 uppercase text-[10px]">Skills</h4>
+                <div className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] space-y-2">
+                  <h4 className="font-bold text-[var(--color-saffron)] uppercase text-[10px]">Skills</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {selectedApplicant.skills.map((s, i) => (
-                      <span key={i} className="px-2.5 py-1 rounded bg-slate-800 text-slate-200 border border-slate-700">
+                      <span key={i} className="px-2.5 py-1 rounded bg-[var(--color-bg-dark)] text-[var(--color-text-primary)] border border-[var(--color-line)]">
                         {s}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-cyan-400 uppercase text-[10px]">Projects / Experience</h4>
-                  <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">{selectedApplicant.experience}</p>
+                <div className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] space-y-2">
+                  <h4 className="font-bold text-[var(--color-saffron)] uppercase text-[10px]">Projects / Experience</h4>
+                  <p className="text-[var(--color-text-muted)] leading-relaxed whitespace-pre-wrap">{selectedApplicant.experience}</p>
                 </div>
               </div>
             </div>
 
             {/* Internal Admin Notes Thread */}
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
-              <h4 className="font-bold text-white text-xs uppercase flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-cyan-400" />
+            <div className="p-4 rounded-xl bg-[var(--color-bg-dark)] border border-[var(--color-line)] space-y-3">
+              <h4 className="font-bold text-[var(--color-text-primary)] text-xs uppercase flex items-center gap-2">
+                <MessageSquare className="w-4 h-4 text-[var(--color-saffron)]" />
                 Internal Recruiter Notes ({selectedApplicant.admin_notes?.length || 0})
               </h4>
 
               <div className="space-y-2 max-h-36 overflow-y-auto">
                 {selectedApplicant.admin_notes?.length === 0 ? (
-                  <p className="text-xs text-slate-500 italic">No internal notes added yet.</p>
+                  <p className="text-xs text-[var(--color-text-muted)] italic">No internal notes added yet.</p>
                 ) : (
                   selectedApplicant.admin_notes.map((note) => (
-                    <div key={note.id} className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs">
-                      <div className="flex justify-between text-[10px] text-slate-400 font-semibold mb-1">
+                    <div key={note.id} className="p-3 rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line)] text-xs">
+                      <div className="flex justify-between text-[10px] text-[var(--color-text-muted)] font-semibold mb-1">
                         <span>{note.author}</span>
                         <span>{new Date(note.created_at).toLocaleString()}</span>
                       </div>
-                      <p className="text-slate-200">{note.text}</p>
+                      <p className="text-[var(--color-text-primary)]">{note.text}</p>
                     </div>
                   ))
                 )}
@@ -998,7 +950,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 <button
                   type="button"
                   onClick={handleAddNote}
-                  className="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 text-xs font-bold"
+                  className="px-4 py-2 rounded-xl bg-[var(--color-saffron)] text-[var(--color-text-primary)] text-xs font-bold"
                 >
                   ADD NOTE
                 </button>
@@ -1010,10 +962,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
       {/* ACCEPT CONFIRMATION MODAL */}
       {showAcceptModal && selectedApplicant && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-[#241c13]/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="glass-panel w-full max-w-md rounded-2xl p-6 space-y-4 border-emerald-500/50">
-            <h3 className="text-xl font-bold text-white">Accept Applicant Confirmation</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <h3 className="text-xl font-bold text-[var(--color-text-primary)]">Accept Applicant Confirmation</h3>
+            <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
               Are you sure you want to accept <strong>{selectedApplicant.full_name}</strong> into NeuraMorphix?
             </p>
             <div className="p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 text-xs">
@@ -1024,14 +976,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <button
                 type="button"
                 onClick={() => setShowAcceptModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] text-xs font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleExecuteAccept}
-                className="px-6 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold"
+                className="px-6 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[var(--color-text-primary)] text-xs font-bold"
               >
                 CONFIRM ACCEPTANCE
               </button>
@@ -1042,19 +994,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
       {/* DECLINE CONFIRMATION MODAL */}
       {showDeclineModal && selectedApplicant && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-[#241c13]/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="glass-panel w-full max-w-md rounded-2xl p-6 space-y-4 border-rose-500/50">
-            <h3 className="text-xl font-bold text-white">Decline Application Confirmation</h3>
-            <p className="text-xs text-slate-300">
+            <h3 className="text-xl font-bold text-[var(--color-text-primary)]">Decline Application Confirmation</h3>
+            <p className="text-xs text-[var(--color-text-muted)]">
               Are you sure you want to decline the application for <strong>{selectedApplicant.full_name}</strong>?
             </p>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">Select Decline Reason (Internal)</label>
+              <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase mb-2">Select Decline Reason (Internal)</label>
               <select
                 value={declineReason}
                 onChange={(e) => setDeclineReason(e.target.value as DeclineReasonCategory)}
-                className="w-full p-2.5 rounded-xl glass-input text-xs bg-slate-900 text-white"
+                className="w-full p-2.5 rounded-xl glass-input text-xs bg-[var(--color-bg-card)] text-[var(--color-text-primary)]"
               >
                 <option value="Role capacity reached">Role capacity reached</option>
                 <option value="Skills mismatch">Skills mismatch</option>
@@ -1065,7 +1017,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Custom Note (Internal Only)</label>
+              <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase mb-1">Custom Note (Internal Only)</label>
               <textarea
                 rows={2}
                 placeholder="Optional internal note regarding decline decision..."
@@ -1075,7 +1027,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               />
             </div>
 
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[var(--color-text-muted)]">
               Note: The applicant will receive a polite email notification. Internal notes will <strong>NOT</strong> be exposed to the applicant.
             </p>
 
@@ -1083,14 +1035,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <button
                 type="button"
                 onClick={() => setShowDeclineModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] text-xs font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleExecuteDecline}
-                className="px-6 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-slate-950 text-xs font-bold"
+                className="px-6 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-[var(--color-text-primary)] text-xs font-bold"
               >
                 DECLINE APPLICATION
               </button>
@@ -1101,10 +1053,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
       {/* REQUEST INFO MODAL */}
       {showReqInfoModal && selectedApplicant && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-[#241c13]/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="glass-panel w-full max-w-md rounded-2xl p-6 space-y-4 border-purple-500/50">
-            <h3 className="text-xl font-bold text-white">Request Additional Information</h3>
-            <p className="text-xs text-slate-300">
+            <h3 className="text-xl font-bold text-[var(--color-text-primary)]">Request Additional Information</h3>
+            <p className="text-xs text-[var(--color-text-muted)]">
               Enter the specific information or code repository needed from <strong>{selectedApplicant.full_name}</strong>:
             </p>
 
@@ -1119,14 +1071,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <button
                 type="button"
                 onClick={() => setShowReqInfoModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] text-xs font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleExecuteRequestInfo}
-                className="px-6 py-2 rounded-xl bg-purple-500 text-slate-950 text-xs font-bold"
+                className="px-6 py-2 rounded-xl bg-purple-500 text-[var(--color-text-primary)] text-xs font-bold"
               >
                 SEND REQUEST EMAIL
               </button>
@@ -1137,10 +1089,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
       {/* REQUEST INTERVIEW MODAL */}
       {showInterviewModal && selectedApplicant && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-[#241c13]/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="glass-panel w-full max-w-md rounded-2xl p-6 space-y-4 border-amber-500/50">
-            <h3 className="text-xl font-bold text-white">Request Interview</h3>
-            <p className="text-xs text-slate-300">
+            <h3 className="text-xl font-bold text-[var(--color-text-primary)]">Request Interview</h3>
+            <p className="text-xs text-[var(--color-text-muted)]">
               Enter interview slot details / Google Meet link for <strong>{selectedApplicant.full_name}</strong>:
             </p>
 
@@ -1155,14 +1107,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <button
                 type="button"
                 onClick={() => setShowInterviewModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] text-xs font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleExecuteRequestInterview}
-                className="px-6 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold"
+                className="px-6 py-2 rounded-xl bg-amber-500 text-[var(--color-text-primary)] text-xs font-bold"
               >
                 SEND INTERVIEW INVITATION
               </button>
@@ -1173,24 +1125,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
       {/* ROLE ALLOCATION MODAL */}
       {showRoleAssignModal && selectedApplicant && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="glass-panel w-full max-w-md rounded-2xl p-6 space-y-4 border-cyan-500/50">
-            <h3 className="text-xl font-bold text-white">Role Allocation / Final Team</h3>
-            <p className="text-xs text-slate-300">
+        <div className="fixed inset-0 z-50 bg-[#241c13]/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-panel w-full max-w-md rounded-2xl p-6 space-y-4 border-[var(--color-saffron)]/50">
+            <h3 className="text-xl font-bold text-[var(--color-text-primary)]">Role Allocation / Final Team</h3>
+            <p className="text-xs text-[var(--color-text-muted)]">
               Assign a final team independently of the applicant's preferences.
             </p>
 
-            <div className="text-xs text-slate-400 space-y-1">
-              <div>🥇 1st Choice: <span className="text-cyan-300">{selectedApplicant.first_preference}</span></div>
+            <div className="text-xs text-[var(--color-text-muted)] space-y-1">
+              <div>🥇 1st Choice: <span className="text-[var(--color-saffron)]">{selectedApplicant.first_preference}</span></div>
               <div>🥈 2nd Choice: <span className="text-amber-300">{selectedApplicant.second_preference}</span></div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">Select Final Team Assignment</label>
+              <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase mb-2">Select Final Team Assignment</label>
               <select
                 value={assignedRoleChoice || selectedApplicant.first_preference}
                 onChange={(e) => setAssignedRoleChoice(e.target.value)}
-                className="w-full p-2.5 rounded-xl glass-input text-xs bg-slate-900 text-white"
+                className="w-full p-2.5 rounded-xl glass-input text-xs bg-[var(--color-bg-card)] text-[var(--color-text-primary)]"
               >
                 {roles.map((r) => (
                   <option key={r.role_id} value={r.role_name}>
@@ -1204,14 +1156,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <button
                 type="button"
                 onClick={() => setShowRoleAssignModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] text-xs font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleAssignFinalTeam}
-                className="px-6 py-2 rounded-xl bg-cyan-500 text-slate-950 text-xs font-bold"
+                className="px-6 py-2 rounded-xl bg-[var(--color-saffron)] text-[var(--color-text-primary)] text-xs font-bold"
               >
                 SAVE ROLE ASSIGNMENT
               </button>
@@ -1225,69 +1177,69 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         <div className="space-y-8 animate-fadeIn">
           {/* Toggles */}
           <div className="glass-panel p-6 rounded-2xl space-y-4">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Mail className="w-5 h-5 text-cyan-400" />
+            <h3 className="text-lg font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+              <Mail className="w-5 h-5 text-[var(--color-saffron)]" />
               Automated Email Event Triggers
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-              <label className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between cursor-pointer">
+              <label className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] flex items-center justify-between cursor-pointer">
                 <span>☑ Application received email</span>
                 <input
                   type="checkbox"
                   checked={emailSettings.enable_application_received}
                   onChange={() => handleToggleEmailSetting('enable_application_received')}
-                  className="w-4 h-4 rounded text-cyan-500"
+                  className="w-4 h-4 rounded text-[var(--color-saffron)]"
                 />
               </label>
 
-              <label className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between cursor-pointer">
+              <label className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] flex items-center justify-between cursor-pointer">
                 <span>☑ Shortlist email</span>
                 <input
                   type="checkbox"
                   checked={emailSettings.enable_shortlist}
                   onChange={() => handleToggleEmailSetting('enable_shortlist')}
-                  className="w-4 h-4 rounded text-cyan-500"
+                  className="w-4 h-4 rounded text-[var(--color-saffron)]"
                 />
               </label>
 
-              <label className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between cursor-pointer">
+              <label className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] flex items-center justify-between cursor-pointer">
                 <span>☑ Interview email</span>
                 <input
                   type="checkbox"
                   checked={emailSettings.enable_interview}
                   onChange={() => handleToggleEmailSetting('enable_interview')}
-                  className="w-4 h-4 rounded text-cyan-500"
+                  className="w-4 h-4 rounded text-[var(--color-saffron)]"
                 />
               </label>
 
-              <label className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between cursor-pointer">
+              <label className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] flex items-center justify-between cursor-pointer">
                 <span>☑ Information request email</span>
                 <input
                   type="checkbox"
                   checked={emailSettings.enable_info_requested}
                   onChange={() => handleToggleEmailSetting('enable_info_requested')}
-                  className="w-4 h-4 rounded text-cyan-500"
+                  className="w-4 h-4 rounded text-[var(--color-saffron)]"
                 />
               </label>
 
-              <label className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between cursor-pointer">
+              <label className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] flex items-center justify-between cursor-pointer">
                 <span>☑ Acceptance email</span>
                 <input
                   type="checkbox"
                   checked={emailSettings.enable_acceptance}
                   onChange={() => handleToggleEmailSetting('enable_acceptance')}
-                  className="w-4 h-4 rounded text-cyan-500"
+                  className="w-4 h-4 rounded text-[var(--color-saffron)]"
                 />
               </label>
 
-              <label className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between cursor-pointer">
+              <label className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] flex items-center justify-between cursor-pointer">
                 <span>☑ Decline email</span>
                 <input
                   type="checkbox"
                   checked={emailSettings.enable_decline}
                   onChange={() => handleToggleEmailSetting('enable_decline')}
-                  className="w-4 h-4 rounded text-cyan-500"
+                  className="w-4 h-4 rounded text-[var(--color-saffron)]"
                 />
               </label>
             </div>
@@ -1295,16 +1247,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
           {/* Template Editor */}
           <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-line)] pb-4">
               <div>
-                <h3 className="text-xl font-bold text-white">Email Template Editor</h3>
-                <p className="text-xs text-slate-400">Customize the subject and content for automated notification emails.</p>
+                <h3 className="text-xl font-bold text-[var(--color-text-primary)]">Email Template Editor</h3>
+                <p className="text-xs text-[var(--color-text-muted)]">Customize the subject and content for automated notification emails.</p>
               </div>
 
               <select
                 value={editingTemplateType}
                 onChange={(e) => setEditingTemplateType(e.target.value as EmailType)}
-                className="px-4 py-2 rounded-xl glass-input text-xs bg-slate-900 text-cyan-300 font-bold"
+                className="px-4 py-2 rounded-xl glass-input text-xs bg-[var(--color-bg-card)] text-[var(--color-saffron)] font-bold"
               >
                 <option value="application_received">Application Received Email</option>
                 <option value="shortlisted">Shortlisted Email</option>
@@ -1317,7 +1269,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">Subject Line</label>
+                <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase mb-2">Subject Line</label>
                 <input
                   type="text"
                   value={templateSubject}
@@ -1327,7 +1279,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">Body Template (Markdown/Text)</label>
+                <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase mb-2">Body Template (Markdown/Text)</label>
                 <textarea
                   rows={10}
                   value={templateBody}
@@ -1336,7 +1288,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 />
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400">
+              <div className="p-3 rounded-xl bg-[var(--color-bg-dark)] border border-[var(--color-line)] text-[11px] text-[var(--color-text-muted)]">
                 Available Placeholders: <code>{`{{name}}`}</code>, <code>{`{{application_id}}`}</code>, <code>{`{{first_preference}}`}</code>, <code>{`{{second_preference}}`}</code>, <code>{`{{final_assigned_team}}`}</code>, <code>{`{{requested_info_question}}`}</code>, <code>{`{{interview_details}}`}</code>
               </div>
 
@@ -1344,7 +1296,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 <button
                   type="button"
                   onClick={handleSaveEmailTemplate}
-                  className="px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold shadow-lg"
+                  className="px-6 py-2.5 rounded-xl bg-[var(--color-saffron)] hover:bg-[var(--color-saffron-hover)] text-[var(--color-text-primary)] text-xs font-bold shadow-lg"
                 >
                   SAVE EMAIL TEMPLATE
                 </button>
@@ -1358,16 +1310,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       {activeTab === 'config' && (
         <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6 animate-fadeIn">
           <div>
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <Sliders className="w-5 h-5 text-cyan-400" />
+            <h3 className="text-xl font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+              <Sliders className="w-5 h-5 text-[var(--color-saffron)]" />
               Recruitment Period & Deadline Control
             </h3>
-            <p className="text-xs text-slate-400 mt-1">Configure recruitment opening and closing dates or manually override window state.</p>
+            <p className="text-xs text-[var(--color-text-muted)] mt-1">Configure recruitment opening and closing dates or manually override window state.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">Start Date</label>
+              <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase mb-2">Start Date</label>
               <input
                 type="date"
                 value={config.start_date}
@@ -1377,7 +1329,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">End Date (Deadline)</label>
+              <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase mb-2">End Date (Deadline)</label>
               <input
                 type="date"
                 value={config.end_date}
@@ -1387,16 +1339,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-            <h4 className="font-bold text-xs text-white uppercase">Manual Override Options</h4>
+          <div className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] space-y-3">
+            <h4 className="font-bold text-xs text-[var(--color-text-primary)] uppercase">Manual Override Options</h4>
             <div className="flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={() => handleSaveConfig({ ...config, is_manually_open: true })}
                 className={`px-4 py-2 rounded-xl text-xs font-bold ${
                   config.is_manually_open === true
-                    ? 'bg-emerald-500 text-slate-950 ring-2 ring-emerald-400'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-emerald-500 text-[var(--color-text-primary)] ring-2 ring-emerald-400'
+                    : 'bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] hover:bg-[var(--color-bg-dark)]'
                 }`}
               >
                 FORCE OPEN RECRUITMENT
@@ -1407,8 +1359,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 onClick={() => handleSaveConfig({ ...config, is_manually_open: false })}
                 className={`px-4 py-2 rounded-xl text-xs font-bold ${
                   config.is_manually_open === false
-                    ? 'bg-rose-500 text-slate-950 ring-2 ring-rose-400'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-rose-500 text-[var(--color-text-primary)] ring-2 ring-rose-400'
+                    : 'bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] hover:bg-[var(--color-bg-dark)]'
                 }`}
               >
                 FORCE CLOSE RECRUITMENT
@@ -1419,8 +1371,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 onClick={() => handleSaveConfig({ ...config, is_manually_open: null })}
                 className={`px-4 py-2 rounded-xl text-xs font-bold ${
                   config.is_manually_open === null
-                    ? 'bg-cyan-500 text-slate-950 ring-2 ring-cyan-400'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-[var(--color-saffron)] text-[var(--color-text-primary)] ring-2 ring-cyan-400'
+                    : 'bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] hover:bg-[var(--color-bg-dark)]'
                 }`}
               >
                 USE AUTOMATIC DATES
@@ -1430,5 +1382,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         </div>
       )}
     </div>
+  </div>
   );
 };

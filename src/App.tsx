@@ -7,6 +7,7 @@ import { ApplicationForm } from './components/ApplicationForm';
 import { StatusTracker } from './components/StatusTracker';
 import { AdminDashboard } from './components/AdminDashboard';
 import { FAQSection } from './components/FAQSection';
+import { SelectionRoadmap } from './components/SelectionRoadmap';
 import {
   Code,
   GraduationCap,
@@ -16,10 +17,37 @@ import {
   Briefcase,
   Rocket,
   Lock,
+  Sparkles,
+  Zap,
+  CheckCircle2,
+  Award,
+  ArrowRight,
+  Cpu,
 } from 'lucide-react';
 
+type Tab = 'home' | 'apply' | 'track' | 'admin';
+
+function getInitialTab(): Tab {
+  if (typeof window === 'undefined') return 'home';
+  const path = window.location.pathname.replace(/\/+$/, '').toLowerCase();
+  if (path === '/admin') return 'admin';
+  return 'home';
+}
+
 export function App() {
-  const [currentTab, setCurrentTab] = useState<'home' | 'apply' | 'track' | 'admin'>('home');
+  const [currentTab, setCurrentTabState] = useState<Tab>(getInitialTab);
+
+  const setCurrentTab = (tab: Tab) => {
+    setCurrentTabState(tab);
+    try {
+      const nextPath = tab === 'admin' ? '/admin' : '/';
+      if (window.location.pathname !== nextPath) {
+        window.history.replaceState(null, '', nextPath);
+      }
+    } catch {
+      // ignore (e.g. non-browser environments)
+    }
+  };
 
   // Selected Preferences state
   const [firstChoice, setFirstChoice] = useState<string | null>(null);
@@ -68,18 +96,16 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7EE] text-[#1E1B24] font-outfit selection:bg-[#FFD93D] selection:text-[#1E1B24] relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-[var(--color-bg-paper)] text-[var(--color-text-primary)] font-body selection:bg-[var(--color-saffron)] selection:text-white relative overflow-x-hidden">
       {/* Navigation Header */}
       <Header currentTab={currentTab} onSelectTab={setCurrentTab} />
 
       {/* RECRUITMENT CLOSED BANNER IF APPLICABLE */}
       {!windowStatus.isOpen && (
-        <div className="bg-[#FF4B4B] text-white border-b-[3px] border-[#1E1B24] py-3 px-4 text-center font-rubik font-bold text-xs shadow-md">
+        <div className="bg-rose-600 text-white border-b border-rose-700 py-3 px-4 text-center font-rubik font-bold text-xs shadow-sm">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
-            <Lock className="w-4 h-4" />
+            <Lock className="w-4 h-4 text-white" />
             <span>{windowStatus.message} Existing applicants can still track status. Admins can manually reopen.</span>
           </div>
         </div>
@@ -89,33 +115,41 @@ export function App() {
       <main className="flex-1">
         {/* HOME & LANDING VIEW */}
         {currentTab === 'home' && (
-          <div>
-            {/* HERO SECTION - Electric Indigo Neo-Brutalist Canvas */}
-            <section className="relative w-full min-h-[85vh] flex flex-col lg:flex-row items-center justify-between px-6 md:px-16 py-16 lg:py-20 gap-12 overflow-hidden border-b-[4px] border-[#1E1B24] bg-[#4338CA]">
-              {/* Background Overlay Pattern */}
-              <div
-                className="absolute inset-0 z-0 opacity-20 pointer-events-none bg-repeat"
-                style={{
-                  backgroundImage:
-                    'radial-gradient(#ffffff 1.5px, transparent 1.5px)',
-                  backgroundSize: '24px 24px',
-                }}
-              ></div>
+          <div className="bg-[var(--color-bg-paper)]">
+            {/* LIVE ANNOUNCEMENT MARQUEE BANNER */}
+            <div className="bg-blue-600 py-2.5 font-mono text-[11px] font-bold uppercase tracking-widest text-white flex items-center overflow-hidden select-none shadow-xs">
+              <div className="animate-marquee whitespace-nowrap flex items-center gap-12 shrink-0">
+                <span className="flex items-center gap-2"><Zap className="w-3.5 h-3.5" /> NEURAMORPHIX 2026 RECRUITMENT IS LIVE</span>
+                <span className="flex items-center gap-2"><Sparkles className="w-3.5 h-3.5" /> 10 SPECIALIST TEAMS HIRING NOW</span>
+                <span className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5" /> SELECTION STAGE 1 ACTIVE</span>
+                <span className="flex items-center gap-2"><Award className="w-3.5 h-3.5" /> RESIDENCY STIPEND & HARDWARE PERKS</span>
+                <span className="flex items-center gap-2"><Zap className="w-3.5 h-3.5" /> NEURAMORPHIX 2026 RECRUITMENT IS LIVE</span>
+                <span className="flex items-center gap-2"><Sparkles className="w-3.5 h-3.5" /> 10 SPECIALIST TEAMS HIRING NOW</span>
+              </div>
+            </div>
+
+            {/* HERO SECTION - Crisp Uniform Light Mode Canvas */}
+            <section className="relative w-full min-h-[85vh] flex flex-col lg:flex-row items-center justify-between px-6 md:px-16 py-16 lg:py-24 gap-12 overflow-hidden border-b border-[var(--color-line)] bg-[var(--color-bg-paper)]">
+              {/* Soft Ambient Orbs */}
+              <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[var(--color-saffron)]/10 rounded-full blur-[140px] pointer-events-none -z-0"></div>
+              <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] pointer-events-none -z-0"></div>
 
               {/* Left Column Content */}
               <div className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl gap-6">
-                <div className="neo-badge bg-[#FFD93D] text-[#1E1B24] shadow-[3px_3px_0_#1E1B24]">
-                  <span>NEURAMORPHIX RECRUITMENT 2026 IS LIVE!</span>
+                <img src="/bears.png" alt="Bears mascot" className="absolute -left-6 -top-16 w-28 h-28 object-contain rounded-3xl border-[3px] border-[#14100b] bg-white shadow-[6px_6px_0_0_#14100b] -rotate-6 hidden lg:block hover:rotate-0 transition-transform" />
+                <div className="cyber-badge bg-[var(--color-saffron)]/10 border-[var(--color-saffron)]/30 text-[var(--color-saffron)]">
+                  <Cpu className="w-3.5 h-3.5 text-[var(--color-saffron)]" />
+                  <span>NEURAMORPHIX RECRUITMENT 2026 • OFFICIAL PORTAL</span>
                 </div>
 
-                <h1 className="font-overpass font-black text-5xl md:text-6xl lg:text-[72px] text-white leading-[105%] tracking-tight text-stroke-primary">
-                  Shape the <br />
-                  Next Era of AI & <br />
-                  Intelligence!
+                <h1 className="font-outfit font-black text-5xl md:text-6xl lg:text-[70px] text-[var(--color-text-primary)] leading-[108%] tracking-tight">
+                  Architect the <br />
+                  <span className="gradient-text-cyan glow-text">Next Frontier</span> of <br />
+                  Artificial Intelligence
                 </h1>
 
-                <p className="font-rubik text-white text-base md:text-lg max-w-lg opacity-95 leading-relaxed font-semibold">
-                  Join NeuraMorphix — a premier student community of AI researchers, developers, musicians, actors, and project leaders building high-impact work.
+                <p className="font-rubik text-[var(--color-text-muted)] text-base md:text-lg max-w-lg leading-relaxed font-normal">
+                  Join NeuraMorphix — SRMIST's elite student ecosystem of AI researchers, full-stack engineers, creative strategists, media directors, and startup builders.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-2 w-full">
@@ -125,9 +159,10 @@ export function App() {
                       const el = document.getElementById('domains');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="px-8 py-3.5 border-[3px] border-[#1E1B24] rounded-xl font-rubik font-bold text-lg shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_#1E1B24] transition-all flex items-center justify-center gap-2 bg-[#FF4B4B] text-white uppercase tracking-wide cursor-pointer w-full sm:w-auto"
+                    className="cyber-btn-primary w-full sm:w-auto text-sm py-4 px-8 shadow-blue-500/20"
                   >
-                    APPLY NOW →
+                    <span>APPLY NOW FOR 2026</span>
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                   <button
                     type="button"
@@ -135,93 +170,84 @@ export function App() {
                       const el = document.getElementById('domains');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="px-8 py-3.5 border-[3px] border-[#1E1B24] rounded-xl font-rubik font-bold text-lg shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_#1E1B24] transition-all flex items-center justify-center gap-2 bg-[#FFD93D] text-[#1E1B24] uppercase tracking-wide cursor-pointer w-full sm:w-auto"
+                    className="w-full sm:w-auto px-8 py-4 rounded-xl font-rubik font-bold text-xs uppercase tracking-wider bg-white text-[var(--color-text-muted)] border border-slate-300 hover:border-blue-500 hover:text-blue-600 transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs"
                   >
-                    EXPLORE DOMAINS
+                    <span>EXPLORE DOMAINS</span>
                   </button>
                 </div>
               </div>
 
-              {/* Right Column Character Mascot Graphic */}
-              <div className="relative z-10 flex flex-col items-center justify-center w-full lg:w-auto lg:min-w-[360px] gap-6">
-                <div className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] bg-white border-[4px] border-[#1E1B24] rounded-3xl shadow-[8px_8px_0_#1E1B24] flex items-center justify-center p-6 overflow-hidden">
-                  <img
-                    src="/bears.png"
-                    alt="We Bare Bears Mascot"
-                    className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="w-full max-w-[340px] p-4 bg-[#FFD93D] border-[3px] border-[#1E1B24] rounded-2xl shadow-[4px_4px_0_#1E1B24] font-rubik text-xs md:text-sm font-bold text-[#1E1B24] text-left">
-                  "Welcome Innovator! … Which domain aligns with your talent?"
-                </div>
+              {/* Right Column Mascot */}
+              <div className="relative z-10 flex flex-col items-center justify-center w-full lg:w-auto lg:min-w-[420px]">
+                <img src="/images/elephant.png" alt="Elephant mascot" className="w-full max-w-[380px] object-contain drop-shadow-2xl" />
               </div>
             </section>
 
             {/* CULTURE / ABOUT SECTION (`#about`) */}
-            <div id="about" className="w-full flex flex-col items-center bg-[#FAF7EE] border-t-[3px] border-[#1E1B24]">
+            <div id="about" className="w-full flex flex-col items-center bg-[var(--color-bg-paper)] border-t border-[var(--color-line)]">
               <section className="relative w-full max-w-7xl py-16 px-6 sm:px-8 lg:py-24 flex flex-col items-center gap-12">
                 <div className="flex flex-col items-center gap-4 text-center max-w-2xl">
-                  <div className="neo-badge bg-[#FF4B4B] text-white">
+                  <div className="cyber-badge bg-rose-50 border-rose-200 text-rose-700">
                     <span>CULTURE AT NEURAMORPHIX</span>
                   </div>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[#1E1B24] tracking-tight">
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[var(--color-text-primary)] tracking-tight">
                     Why You'll Thrive With Us
                   </h2>
-                  <p className="font-rubik text-base lg:text-lg font-medium text-[#5C5866] leading-relaxed">
-                    We blend high-impact AI research, software engineering, music jams, and stage performances into a collaborative ecosystem.
+                  <p className="font-rubik text-base lg:text-lg font-normal text-[var(--color-text-muted)] leading-relaxed">
+                    We combine high-impact AI research, full-stack software, creative production, and startup incubation into one collaborative environment.
                   </p>
                 </div>
 
                 {/* 4 Feature Cards Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                   {/* Innovate Card */}
-                  <div className="flex flex-col gap-5 bg-white rounded-3xl border-[3px] border-[#1E1B24] shadow-[6px_6px_0_#1E1B24] p-6 hover:-translate-y-1 transition-all">
-                    <div className="w-14 h-14 rounded-2xl border-[3px] border-[#1E1B24] bg-[#FF4B4B] text-white flex items-center justify-center shadow-[3px_3px_0_#1E1B24]">
-                      <Code className="w-7 h-7" />
+                  <div className="cyber-card p-6 flex flex-col gap-5">
+                    <div className="w-12 h-12 rounded-2xl bg-[var(--color-saffron)]/10 border border-[var(--color-saffron)]/30 text-[var(--color-saffron)] flex items-center justify-center shadow-xs">
+                      <Code className="w-6 h-6" />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <h3 className="text-2xl font-outfit font-black text-[#1E1B24]">Innovate</h3>
-                      <p className="font-rubik text-sm font-medium text-[#5C5866] leading-relaxed">
-                        Turn ambitious ideas into production-ready web apps, AI models, music tracks, and stage productions.
+                      <h3 className="text-xl font-outfit font-bold text-[var(--color-text-primary)]">Innovate</h3>
+                      <p className="font-rubik text-xs font-normal text-[var(--color-text-muted)] leading-relaxed">
+                        Turn ambitious ideas into production-ready web applications, machine learning pipelines, and creative media.
                       </p>
                     </div>
                   </div>
 
                   {/* Master Card */}
-                  <div className="flex flex-col gap-5 bg-white rounded-3xl border-[3px] border-[#1E1B24] shadow-[6px_6px_0_#1E1B24] p-6 hover:-translate-y-1 transition-all">
-                    <div className="w-14 h-14 rounded-2xl border-[3px] border-[#1E1B24] bg-[#FFD93D] text-[#1E1B24] flex items-center justify-center shadow-[3px_3px_0_#1E1B24]">
-                      <GraduationCap className="w-7 h-7" />
+                  <div className="cyber-card p-6 flex flex-col gap-5">
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center shadow-xs">
+                      <GraduationCap className="w-6 h-6" />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <h3 className="text-2xl font-outfit font-black text-[#1E1B24]">Master</h3>
-                      <p className="font-rubik text-sm font-medium text-[#5C5866] leading-relaxed">
-                        Learn full-stack frameworks, AI tools, event management, instrument playing, and stage acting.
+                      <h3 className="text-xl font-outfit font-bold text-[var(--color-text-primary)]">Master</h3>
+                      <p className="font-rubik text-xs font-normal text-[var(--color-text-muted)] leading-relaxed">
+                        Learn modern tech stacks, AI agent architecture, UI/UX design systems, public relations, and leadership.
                       </p>
                     </div>
                   </div>
 
                   {/* Collaborate Card */}
-                  <div className="flex flex-col gap-5 bg-white rounded-3xl border-[3px] border-[#1E1B24] shadow-[6px_6px_0_#1E1B24] p-6 hover:-translate-y-1 transition-all">
-                    <div className="w-14 h-14 rounded-2xl border-[3px] border-[#1E1B24] bg-[#3E9FFF] text-white flex items-center justify-center shadow-[3px_3px_0_#1E1B24]">
-                      <Users className="w-7 h-7" />
+                  <div className="cyber-card p-6 flex flex-col gap-5">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shadow-xs">
+                      <Users className="w-6 h-6" />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <h3 className="text-2xl font-outfit font-black text-[#1E1B24]">Collaborate</h3>
-                      <p className="font-rubik text-sm font-medium text-[#5C5866] leading-relaxed">
-                        Partner with top student talent across software, operations, music, and theatrical drama.
+                      <h3 className="text-xl font-outfit font-bold text-[var(--color-text-primary)]">Collaborate</h3>
+                      <p className="font-rubik text-xs font-normal text-[var(--color-text-muted)] leading-relaxed">
+                        Partner with top student talent across software engineering, graphic design, content writing, and event ops.
                       </p>
                     </div>
                   </div>
 
                   {/* Elevate Card */}
-                  <div className="flex flex-col gap-5 bg-white rounded-3xl border-[3px] border-[#1E1B24] shadow-[6px_6px_0_#1E1B24] p-6 hover:-translate-y-1 transition-all">
-                    <div className="w-14 h-14 rounded-2xl border-[3px] border-[#1E1B24] bg-[#4EC37B] text-white flex items-center justify-center shadow-[3px_3px_0_#1E1B24]">
-                      <TrendingUp className="w-7 h-7" />
+                  <div className="cyber-card p-6 flex flex-col gap-5">
+                    <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shadow-xs">
+                      <TrendingUp className="w-6 h-6" />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <h3 className="text-2xl font-outfit font-black text-[#1E1B24]">Elevate</h3>
-                      <p className="font-rubik text-sm font-medium text-[#5C5866] leading-relaxed">
-                        Lead projects, perform at major campus events, and build a standout professional portfolio.
+                      <h3 className="text-xl font-outfit font-bold text-[var(--color-text-primary)]">Elevate</h3>
+                      <p className="font-rubik text-xs font-normal text-[var(--color-text-muted)] leading-relaxed">
+                        Spearhead major projects, compete in hackathons, publish original research, and build a resume that stands out.
                       </p>
                     </div>
                   </div>
@@ -230,88 +256,89 @@ export function App() {
             </div>
 
             {/* DOMAINS & OPEN ROLES SECTION (`#domains`) */}
-            <div id="domains" className="w-full flex flex-col items-center bg-[#FFFEEF] border-t-[3px] border-[#1E1B24]">
+            <div id="domains" className="w-full flex flex-col items-center bg-[var(--color-bg-paper)] border-t border-[var(--color-line)]">
               <section className="relative w-full max-w-7xl py-16 px-6 sm:px-8 lg:py-24 flex flex-col items-center gap-12">
+                <img src="/images/vr_cow.png" alt="VR Cow mascot" className="absolute right-2 top-6 w-28 h-28 object-contain rounded-3xl border-[3px] border-[#14100b] bg-white shadow-[6px_6px_0_0_#14100b] rotate-6 hidden lg:block hover:rotate-0 transition-transform" />
                 <div className="flex flex-col items-center gap-4 text-center max-w-2xl">
-                  <div className="neo-badge bg-[#3E9FFF] text-white">
-                    <span>JOB BOARD</span>
+                  <div className="cyber-badge bg-blue-50 border-blue-200 text-blue-700">
+                    <span>JOB BOARD & DOMAIN EXPLORER</span>
                   </div>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[#1E1B24] tracking-tight">
-                    Open Roles
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[var(--color-text-primary)] tracking-tight">
+                    Explore Specialist Tracks
                   </h2>
-                  <p className="font-rubik text-base lg:text-lg font-medium text-[#5C5866] leading-relaxed">
-                    Explore available positions across Technical, Non-Technical, and Entrepreneurship & Startups!
+                  <p className="font-rubik text-base lg:text-lg font-normal text-[var(--color-text-muted)] leading-relaxed">
+                    Select positions across Technical, Non-Technical, and Entrepreneurship & Startups!
                   </p>
                 </div>
 
                 {/* 3 Core Domain Overview Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-4">
                   {/* 1. TECHNICAL DOMAIN */}
-                  <div className="bg-white rounded-3xl border-[3px] border-[#1E1B24] shadow-[6px_6px_0_#1E1B24] p-6 flex flex-col justify-between gap-6 hover:-translate-y-1 transition-all">
+                  <div className="cyber-card p-6 flex flex-col justify-between gap-6">
                     <div className="space-y-4">
-                      <div className="neo-badge bg-[#FF4B4B] text-white text-xs">
+                      <div className="cyber-badge bg-blue-50 border-blue-200 text-blue-700">
                         <span>TECHNICAL</span>
                       </div>
-                      <h3 className="text-xl font-outfit font-black text-[#1E1B24] flex items-center gap-2">
-                        <Terminal className="w-6 h-6 text-[#FF4B4B] shrink-0" />
-                        Web / App / AI / Cloud / IoT
+                      <h3 className="text-xl font-outfit font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+                        <Terminal className="w-5 h-5 text-blue-600 shrink-0" />
+                        Web / App / AI / Cloud
                       </h3>
-                      <p className="font-rubik text-xs text-[#5C5866] font-medium leading-relaxed">
-                        Frontend, backend, mobile apps, AI models, hardware microcontrollers, cybersecurity, and deep learning.
+                      <p className="font-rubik text-xs text-[var(--color-text-muted)] leading-relaxed">
+                        Frontend, backend, mobile apps, AI models, microcontrollers, cybersecurity, and deep learning.
                       </p>
                     </div>
                     <button
                       type="button"
                       onClick={() => handleDomainApply('technical')}
-                      className="w-full py-3 border-[3px] border-[#1E1B24] rounded-xl font-rubik font-bold text-xs shadow-[3px_3px_0_#1E1B24] bg-[#FF4B4B] text-white uppercase tracking-wider hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all cursor-pointer"
+                      className="w-full py-3 rounded-xl font-rubik font-bold text-xs uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-600 hover:text-white transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
-                      APPLY TECHNICAL →
+                      <span>VIEW TECHNICAL ROLES →</span>
                     </button>
                   </div>
 
                   {/* 2. NON-TECHNICAL DOMAIN */}
-                  <div className="bg-white rounded-3xl border-[3px] border-[#1E1B24] shadow-[6px_6px_0_#1E1B24] p-6 flex flex-col justify-between gap-6 hover:-translate-y-1 transition-all">
+                  <div className="cyber-card p-6 flex flex-col justify-between gap-6">
                     <div className="space-y-4">
-                      <div className="neo-badge bg-[#FFD93D] text-[#1E1B24] text-xs">
+                      <div className="cyber-badge bg-indigo-50 border-indigo-200 text-indigo-700">
                         <span>NON-TECHNICAL</span>
                       </div>
-                      <h3 className="text-xl font-outfit font-black text-[#1E1B24] flex items-center gap-2">
-                        <Briefcase className="w-6 h-6 text-[#1E1B24] shrink-0" />
-                        Creatives / PR / Events / Content
+                      <h3 className="text-xl font-outfit font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+                        <Briefcase className="w-5 h-5 text-indigo-600 shrink-0" />
+                        Creatives / PR / Events
                       </h3>
-                      <p className="font-rubik text-xs text-[#5C5866] font-medium leading-relaxed">
+                      <p className="font-rubik text-xs text-[var(--color-text-muted)] leading-relaxed">
                         UI/UX design, corporate sponsorships, public relations, event management, media production, and HR.
                       </p>
                     </div>
                     <button
                       type="button"
                       onClick={() => handleDomainApply('non-technical')}
-                      className="w-full py-3 border-[3px] border-[#1E1B24] rounded-xl font-rubik font-bold text-xs shadow-[3px_3px_0_#1E1B24] bg-[#FFD93D] text-[#1E1B24] uppercase tracking-wider hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all cursor-pointer"
+                      className="w-full py-3 rounded-xl font-rubik font-bold text-xs uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-600 hover:text-white transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
-                      APPLY NON-TECH →
+                      <span>VIEW NON-TECH ROLES →</span>
                     </button>
                   </div>
 
                   {/* 3. ENTREPRENEURSHIP & STARTUPS DOMAIN */}
-                  <div className="bg-white rounded-3xl border-[3px] border-[#1E1B24] shadow-[6px_6px_0_#1E1B24] p-6 flex flex-col justify-between gap-6 hover:-translate-y-1 transition-all">
+                  <div className="cyber-card p-6 flex flex-col justify-between gap-6">
                     <div className="space-y-4">
-                      <div className="neo-badge bg-[#4EC37B] text-white text-xs">
-                        <span>ENTREPRENEURSHIP & STARTUPS</span>
+                      <div className="cyber-badge bg-emerald-50 border-emerald-200 text-emerald-700">
+                        <span>STARTUPS</span>
                       </div>
-                      <h3 className="text-xl font-outfit font-black text-[#1E1B24] flex items-center gap-2">
-                        <Rocket className="w-6 h-6 text-[#4EC37B] shrink-0" />
-                        Pitch Decks / Product / Growth
+                      <h3 className="text-xl font-outfit font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+                        <Rocket className="w-5 h-5 text-emerald-600 shrink-0" />
+                        Pitch Decks / Product
                       </h3>
-                      <p className="font-rubik text-xs text-[#5C5866] font-medium leading-relaxed">
+                      <p className="font-rubik text-xs text-[var(--color-text-muted)] leading-relaxed">
                         Incubating tech startups, investor pitch decks, product strategy, market research, and business models.
                       </p>
                     </div>
                     <button
                       type="button"
                       onClick={() => handleDomainApply('entrepreneurship')}
-                      className="w-full py-3 border-[3px] border-[#1E1B24] rounded-xl font-rubik font-bold text-xs shadow-[3px_3px_0_#1E1B24] bg-[#4EC37B] text-white uppercase tracking-wider hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all cursor-pointer"
+                      className="w-full py-3 rounded-xl font-rubik font-bold text-xs uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-600 hover:text-white transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
-                      APPLY STARTUPS →
+                      <span>VIEW STARTUP ROLES →</span>
                     </button>
                   </div>
                 </div>
@@ -333,86 +360,8 @@ export function App() {
             </div>
 
             {/* ROADMAP SECTION (`#process`) */}
-            <div id="process" className="w-full flex flex-col items-center bg-[#FAF7EE] border-t-[3px] border-[#1E1B24]">
-              <section className="relative w-full max-w-7xl py-16 px-6 sm:px-8 lg:py-24 flex flex-col items-center gap-12">
-                <div className="flex flex-col items-center gap-4 text-center max-w-2xl">
-                  <div className="neo-badge bg-[#4EC37B] text-white">
-                    <span>RECRUITMENT ROADMAP</span>
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[#1E1B24] tracking-tight">
-                    4 Steps to Join NeuraMorphix
-                  </h2>
-                  <p className="font-rubik text-base lg:text-lg font-medium text-[#5C5866] leading-relaxed">
-                    A streamlined recruitment cycle designed for speed, fairness, and transparency!
-                  </p>
-                </div>
-
-                {/* 4 Process Steps */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-                  {/* Step 01 */}
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl border-[3px] border-[#1E1B24] bg-[#FF4B4B] text-white flex items-center justify-center font-outfit font-black text-xl shadow-[3px_3px_0_#1E1B24]">
-                        01
-                      </div>
-                      <div className="flex-1 h-1.5 bg-[#1E1B24] rounded-full"></div>
-                    </div>
-                    <div className="bg-white border-[3px] border-[#1E1B24] rounded-2xl p-6 shadow-[4px_4px_0_#1E1B24] min-h-[140px] flex flex-col justify-center">
-                      <h3 className="text-xl font-outfit font-black text-[#1E1B24]">01. DISCOVER</h3>
-                      <p className="font-rubik text-sm font-medium text-[#5C5866] mt-2">
-                        Explore domain tracks and choose your 1st & 2nd role preferences.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Step 02 */}
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl border-[3px] border-[#1E1B24] bg-[#FFD93D] text-[#1E1B24] flex items-center justify-center font-outfit font-black text-xl shadow-[3px_3px_0_#1E1B24]">
-                        02
-                      </div>
-                      <div className="flex-1 h-1.5 bg-[#1E1B24] rounded-full"></div>
-                    </div>
-                    <div className="bg-white border-[3px] border-[#1E1B24] rounded-2xl p-6 shadow-[4px_4px_0_#1E1B24] min-h-[140px] flex flex-col justify-center">
-                      <h3 className="text-xl font-outfit font-black text-[#1E1B24]">02. SUBMIT</h3>
-                      <p className="font-rubik text-sm font-medium text-[#5C5866] mt-2">
-                        Fill out your applicant details, portfolio links, and skill summaries.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Step 03 */}
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl border-[3px] border-[#1E1B24] bg-[#3E9FFF] text-white flex items-center justify-center font-outfit font-black text-xl shadow-[3px_3px_0_#1E1B24]">
-                        03
-                      </div>
-                      <div className="flex-1 h-1.5 bg-[#1E1B24] rounded-full"></div>
-                    </div>
-                    <div className="bg-white border-[3px] border-[#1E1B24] rounded-2xl p-6 shadow-[4px_4px_0_#1E1B24] min-h-[140px] flex flex-col justify-center">
-                      <h3 className="text-xl font-outfit font-black text-[#1E1B24]">03. INTERACT</h3>
-                      <p className="font-rubik text-sm font-medium text-[#5C5866] mt-2">
-                        Shortlisted applicants engage in interactive domain discussions with team leads.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Step 04 */}
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl border-[3px] border-[#1E1B24] bg-[#4EC37B] text-white flex items-center justify-center font-outfit font-black text-xl shadow-[3px_3px_0_#1E1B24]">
-                        04
-                      </div>
-                    </div>
-                    <div className="bg-white border-[3px] border-[#1E1B24] rounded-2xl p-6 shadow-[4px_4px_0_#1E1B24] min-h-[140px] flex flex-col justify-center">
-                      <h3 className="text-xl font-outfit font-black text-[#1E1B24]">04. ONBOARD</h3>
-                      <p className="font-rubik text-sm font-medium text-[#5C5866] mt-2">
-                        Receive your acceptance badge, meet your team, and begin building!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </section>
+            <div id="process" className="w-full bg-[var(--color-bg-paper)] border-t border-[var(--color-line)]">
+              <SelectionRoadmap />
             </div>
 
             {/* FAQS SECTION (`#faqs`) */}
@@ -422,18 +371,18 @@ export function App() {
 
         {/* APPLICATION FORM VIEW (`/apply`) */}
         {currentTab === 'apply' && (
-          <div>
+          <div className="bg-[var(--color-bg-paper)] min-h-[80vh]">
             {!firstChoice ? (
               <div className="max-w-2xl mx-auto py-16 px-4 text-center space-y-6">
-                <div className="bg-white border-[3px] border-[#1E1B24] rounded-3xl p-8 shadow-[6px_6px_0_#1E1B24] space-y-4">
-                  <span className="neo-badge bg-[#FFD93D] text-[#1E1B24]">
+                <div className="cyber-card p-8 rounded-3xl space-y-4">
+                  <span className="cyber-badge bg-rose-50 border-rose-200 text-rose-700">
                     1st Choice Role Required
                   </span>
-                  <h2 className="text-2xl font-outfit font-black text-[#1E1B24]">
-                    Please Select Your Compulsory 1st Role Choice
+                  <h2 className="text-2xl font-outfit font-bold text-[var(--color-text-primary)]">
+                    Please Select Your 1st Role Choice
                   </h2>
-                  <p className="font-rubik text-sm text-[#5C5866] font-medium">
-                    Before filling out your personal details, select your 🥇 1st Choice domain role preference.
+                  <p className="font-rubik text-sm text-[var(--color-text-muted)]">
+                    Before filling out your personal details, select your compulsory 🥇 1st Choice domain role preference.
                   </p>
                   <button
                     type="button"
@@ -444,9 +393,10 @@ export function App() {
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                       }, 100);
                     }}
-                    className="px-6 py-3 rounded-xl bg-[#3E9FFF] text-white font-rubik font-bold text-sm border-[3px] border-[#1E1B24] shadow-[4px_4px_0_#1E1B24] inline-flex items-center gap-2 cursor-pointer uppercase"
+                    className="cyber-btn-primary text-xs"
                   >
-                    Go to Domain Selector →
+                    <span>GO TO DOMAIN SELECTOR</span>
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -472,10 +422,18 @@ export function App() {
         )}
 
         {/* STATUS TRACKER VIEW (`/track`) */}
-        {currentTab === 'track' && <StatusTracker initialAppId={trackedAppId} />}
+        {currentTab === 'track' && (
+          <div className="bg-[var(--color-bg-paper)] min-h-[80vh]">
+            <StatusTracker initialAppId={trackedAppId} />
+          </div>
+        )}
 
         {/* ADMIN PORTAL VIEW (`/admin`) */}
-        {currentTab === 'admin' && <AdminDashboard onSelectTab={setCurrentTab} />}
+        {currentTab === 'admin' && (
+          <div className="bg-[var(--color-bg-paper)] min-h-[80vh]">
+            <AdminDashboard onSelectTab={setCurrentTab} />
+          </div>
+        )}
       </main>
 
       {/* FOOTER */}
@@ -483,5 +441,4 @@ export function App() {
     </div>
   );
 }
-
 export default App;

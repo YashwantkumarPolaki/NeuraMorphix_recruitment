@@ -17,14 +17,14 @@ export const SelectionRoadmap: React.FC = () => {
       phase: '01',
       title: 'Registration Begins',
       date: '05 September 2026',
-      description: 'Applications open for all 6 core multidisciplinary teams. Choose 1st and 2nd preference roles.',
+      description: 'Applications open for all 10 core multidisciplinary teams. Choose 1st and 2nd preference roles.',
       status: 'Active',
     },
     {
       phase: '02',
       title: 'Open Trials & Builder Tasks',
       date: '08 September 2026',
-      description: 'Skill-based challenges open to all applicants: Photo ID Generator, Voice RAG, and Blockchain Face ID.',
+      description: 'Skill-based challenges open to all applicants: Photo ID Generator, Voice RAG, and AI Agent Dev.',
       status: 'Active',
     },
     {
@@ -45,14 +45,14 @@ export const SelectionRoadmap: React.FC = () => {
       phase: '05',
       title: 'Charlie Interviews',
       date: '17 September 2026',
-      description: '1-on-1 interview and team-fit evaluation with Lead Recruiter Dr. Sarah Vance & tech leads.',
+      description: '1-on-1 interview and team-fit evaluation with team leads.',
       status: 'Upcoming',
     },
     {
       phase: '06',
-      title: 'Final Cohort Residency',
+      title: 'Final Cohort Onboarding',
       date: '18 September 2026',
-      description: 'Final team placement confirmation, hardware kit dispatch, and cohort residency onboarding.',
+      description: 'Final team placement confirmation, hardware kit dispatch, and cohort onboarding.',
       status: 'Upcoming',
     },
   ];
@@ -85,31 +85,32 @@ export const SelectionRoadmap: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900">
+    <section className="py-16 lg:py-24 px-6 md:px-12 w-full max-w-7xl mx-auto bg-[var(--color-bg-paper)]">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 relative z-10">
+        <img src="/images/startup_bear.png" alt="Startup Bear" className="absolute -left-6 -top-16 w-36 h-36 object-contain rounded-3xl border-[3px] border-[#14100b] bg-white shadow-[6px_6px_0_0_#14100b] -rotate-6 hidden md:block hover:rotate-0 transition-transform" />
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-[11px] font-bold uppercase tracking-wider mb-3">
-            <Compass className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Selection & Residency Journey</span>
+          <div className="cyber-badge bg-emerald-50 border-emerald-200 text-emerald-700 mb-3">
+            <Compass className="w-3.5 h-3.5" />
+            <span>Selection & Onboarding Journey</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-            The Roadmap <span className="glow-text">at a Glance</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[var(--color-text-primary)] tracking-tight">
+            The Roadmap <span className="gradient-text-cyan">at a Glance</span>
           </h2>
-          <p className="text-slate-400 text-sm mt-2 max-w-xl">
-            From initial registration and trial tasks to final team residency — every milestone engineered for clarity.
+          <p className="font-rubik text-[var(--color-text-muted)] font-normal text-sm sm:text-base mt-2 max-w-xl leading-relaxed">
+            From initial registration and trial tasks to final team onboarding — every milestone engineered for clarity.
           </p>
         </div>
 
         {/* Tab Toggle */}
-        <div className="bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 flex items-center gap-1.5 shrink-0">
+        <div className="bg-white p-1.5 rounded-2xl border border-[var(--color-line)] shadow-xs flex items-center gap-1.5 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('roadmap')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl text-xs font-rubik font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'roadmap'
-                ? 'bg-cyan-500 text-slate-950 shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
             }`}
           >
             <Layers className="w-4 h-4" />
@@ -118,10 +119,10 @@ export const SelectionRoadmap: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('rhythm')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl text-xs font-rubik font-bold transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'rhythm'
-                ? 'bg-cyan-500 text-slate-950 shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
             }`}
           >
             <Zap className="w-4 h-4" />
@@ -136,22 +137,18 @@ export const SelectionRoadmap: React.FC = () => {
           {roadmapSteps.map((step) => (
             <div
               key={step.phase}
-              className={`p-6 rounded-3xl border transition-all relative overflow-hidden flex flex-col justify-between ${
-                step.status === 'Active'
-                  ? 'bg-slate-900/90 border-cyan-500/50 shadow-xl shadow-cyan-500/10'
-                  : 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700'
-              }`}
+              className="cyber-card p-6 flex flex-col justify-between gap-6"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-3xl font-black text-cyan-400 font-mono">
+                  <span className="text-2xl font-black text-blue-600 font-outfit px-3 py-1 rounded-xl bg-blue-50 border border-blue-200">
                     #{step.phase}
                   </span>
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border ${
+                    className={`px-3 py-1 rounded-full text-[10px] font-rubik font-bold uppercase tracking-wider border ${
                       step.status === 'Active'
-                        ? 'bg-cyan-950 text-cyan-300 border-cyan-500/40 animate-pulse'
-                        : 'bg-slate-900 text-slate-400 border-slate-800'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-[var(--color-bg-dark)] text-slate-500 border-[var(--color-line)]'
                     }`}
                   >
                     {step.status}
@@ -159,21 +156,21 @@ export const SelectionRoadmap: React.FC = () => {
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-                    <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold mb-1">
+                    <Calendar className="w-3.5 h-3.5 text-blue-600" />
                     <span>{step.date}</span>
                   </div>
-                  <h3 className="text-lg font-extrabold text-white">{step.title}</h3>
+                  <h3 className="text-lg font-outfit font-bold text-[var(--color-text-primary)]">{step.title}</h3>
                 </div>
 
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs font-rubik text-[var(--color-text-muted)] leading-relaxed">
                   {step.description}
                 </p>
               </div>
 
-              <div className="mt-6 pt-3 border-t border-slate-900 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-bold font-mono">
                 <span>PHASE {step.phase}</span>
-                <span>NEURAMOPRHIX 2026</span>
+                <span>NEURAMORPHIX 2026</span>
               </div>
             </div>
           ))}
@@ -184,32 +181,32 @@ export const SelectionRoadmap: React.FC = () => {
           {rhythmDays.map((item, idx) => (
             <div
               key={item.day}
-              className="glass-panel p-6 rounded-3xl border border-slate-800 relative overflow-hidden space-y-4 flex flex-col justify-between hover:border-cyan-500/40 transition-all group"
+              className="cyber-card p-6 flex flex-col justify-between gap-6"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-xl bg-cyan-950 text-cyan-300 text-xs font-mono font-bold border border-cyan-500/30">
+                  <span className="px-3 py-1 rounded-xl bg-blue-50 text-blue-700 text-xs font-mono font-bold border border-blue-200">
                     {item.day}
                   </span>
-                  <span className="text-xs font-bold text-slate-500 font-mono">0{idx + 1} / 04</span>
+                  <span className="text-xs font-bold text-slate-400 font-mono">0{idx + 1} / 04</span>
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-black text-white group-hover:text-cyan-300 transition-colors">
+                  <h3 className="text-xl font-outfit font-bold text-[var(--color-text-primary)]">
                     {item.subtitle}
                   </h3>
-                  <div className="text-xs font-semibold text-cyan-400 mt-0.5 italic">
+                  <div className="text-xs font-rubik font-bold text-slate-500 mt-0.5">
                     "{item.tagline}"
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs font-rubik text-[var(--color-text-muted)] leading-relaxed">
                   {item.desc}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-slate-900 flex items-center gap-1.5 text-xs text-slate-400 font-semibold">
-                <Target className="w-3.5 h-3.5 text-cyan-400" />
+              <div className="pt-3 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-500 font-bold">
+                <Target className="w-3.5 h-3.5 text-blue-600" />
                 <span>Sprint Milestone</span>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NeuraMorphixLogo } from './NeuraMorphixLogo';
-import { ChevronDown, Search, ShieldCheck } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 
 interface HeaderProps {
   currentTab: 'home' | 'apply' | 'track' | 'admin';
@@ -22,7 +22,7 @@ export function Header({ currentTab, onSelectTab }: HeaderProps) {
   };
 
   return (
-    <nav className="sticky top-0 p-4 bg-[#FAF7EE] w-full flex justify-between items-center md:px-8 z-50 border-b-[3px] border-[#1E1B24] shadow-sm">
+    <nav className="sticky top-0 p-4 bg-[var(--color-bg-paper)]/95 backdrop-blur-md w-full flex justify-between items-center md:px-8 z-50 border-b border-[var(--color-line)] shadow-xs text-[var(--color-text-primary)]">
       {/* Brand Logo */}
       <button
         type="button"
@@ -32,12 +32,13 @@ export function Header({ currentTab, onSelectTab }: HeaderProps) {
         }}
         className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity bg-transparent border-none text-left"
       >
-        <NeuraMorphixLogo size={44} />
+        <NeuraMorphixLogo size={42} />
         <div className="flex flex-col">
-          <span className="font-outfit font-black text-xl tracking-tight text-[#1E1B24]">
+          <span className="font-display font-bold text-xl tracking-tight text-[var(--color-text-primary)] flex items-center gap-1.5">
             NeuraMorphix
+            <span className="w-2 h-2 rounded-full bg-[var(--color-saffron)] animate-pulse"></span>
           </span>
-          <span className="font-rubik font-bold text-[10px] uppercase tracking-widest text-[#3E9FFF]">
+          <span className="font-mono-label font-bold text-[10px] uppercase tracking-widest text-[var(--color-saffron)]">
             Recruitment 2026
           </span>
         </div>
@@ -48,28 +49,28 @@ export function Header({ currentTab, onSelectTab }: HeaderProps) {
         <button
           type="button"
           onClick={() => handleNavClick('#about')}
-          className="font-montserrat font-bold text-[#1E1B24] hover:text-[#3E9FFF] transition-colors text-base tracking-wide cursor-pointer bg-transparent border-none"
+          className="font-body font-medium text-[var(--color-text-muted)] hover:text-[var(--color-saffron)] transition-colors text-sm tracking-wide cursor-pointer bg-transparent border-none"
         >
           About
         </button>
         <button
           type="button"
           onClick={() => handleNavClick('#domains')}
-          className="font-montserrat font-bold text-[#1E1B24] hover:text-[#3E9FFF] transition-colors text-base tracking-wide cursor-pointer bg-transparent border-none"
+          className="font-body font-medium text-[var(--color-text-muted)] hover:text-[var(--color-saffron)] transition-colors text-sm tracking-wide cursor-pointer bg-transparent border-none"
         >
           Domains
         </button>
         <button
           type="button"
           onClick={() => handleNavClick('#process')}
-          className="font-montserrat font-bold text-[#1E1B24] hover:text-[#3E9FFF] transition-colors text-base tracking-wide cursor-pointer bg-transparent border-none"
+          className="font-body font-medium text-[var(--color-text-muted)] hover:text-[var(--color-saffron)] transition-colors text-sm tracking-wide cursor-pointer bg-transparent border-none"
         >
           Process
         </button>
         <button
           type="button"
           onClick={() => handleNavClick('#faqs')}
-          className="font-montserrat font-bold text-[#1E1B24] hover:text-[#3E9FFF] transition-colors text-base tracking-wide cursor-pointer bg-transparent border-none"
+          className="font-body font-medium text-[var(--color-text-muted)] hover:text-[var(--color-saffron)] transition-colors text-sm tracking-wide cursor-pointer bg-transparent border-none"
         >
           FAQs
         </button>
@@ -80,10 +81,10 @@ export function Header({ currentTab, onSelectTab }: HeaderProps) {
         <button
           type="button"
           onClick={() => onSelectTab('track')}
-          className={`px-4 py-2 rounded-xl font-rubik font-bold text-xs uppercase border-[2px] border-[#1E1B24] flex items-center gap-1.5 transition-all cursor-pointer ${
+          className={`px-4 py-2 rounded-[3px] font-body font-bold text-xs uppercase border transition-all cursor-pointer flex items-center gap-1.5 ${
             currentTab === 'track'
-              ? 'bg-[#FFD93D] text-[#1E1B24] shadow-[2px_2px_0_#1E1B24]'
-              : 'bg-white text-[#1E1B24] hover:bg-[#FAF7EE]'
+              ? 'bg-[var(--color-saffron)] text-white border-[var(--color-saffron)] shadow-md shadow-orange-500/20'
+              : 'bg-transparent text-[var(--color-text-muted)] border-[var(--color-line)] hover:border-white hover:bg-[var(--color-line)]'
           }`}
         >
           <Search className="w-3.5 h-3.5" />
@@ -92,24 +93,11 @@ export function Header({ currentTab, onSelectTab }: HeaderProps) {
 
         <button
           type="button"
-          onClick={() => onSelectTab('admin')}
-          className={`px-3 py-2 rounded-xl font-rubik font-bold text-xs uppercase border-[2px] border-[#1E1B24] flex items-center gap-1.5 transition-all cursor-pointer ${
-            currentTab === 'admin'
-              ? 'bg-[#FF4B4B] text-white shadow-[2px_2px_0_#1E1B24]'
-              : 'bg-white text-[#1E1B24] hover:bg-[#FAF7EE]'
-          }`}
-        >
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Admin</span>
-        </button>
-
-        <button
-          type="button"
           onClick={() => {
             onSelectTab('apply');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="inline-flex items-center justify-center px-7 py-2.5 rounded-full border-[3px] border-[#1E1B24] font-rubik font-bold text-white tracking-wider uppercase shadow-[4px_4px_0_#1E1B24] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#1E1B24] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none bg-[#3E9FFF] text-sm cursor-pointer"
+          className="cyber-btn-primary text-xs py-2.5 px-6"
         >
           JOIN US
         </button>
@@ -120,39 +108,39 @@ export function Header({ currentTab, onSelectTab }: HeaderProps) {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="flex justify-between items-center gap-2 px-4 py-2 border-[3px] border-[#1E1B24] rounded-xl text-white font-rubik text-sm font-bold shadow-[3px_3px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all cursor-pointer bg-[#3E9FFF]"
+          className="flex justify-between items-center gap-2 px-4 py-2 border border-[var(--color-saffron)] rounded-[3px] text-[var(--color-text-primary)] font-body text-sm font-bold bg-[var(--color-saffron)] transition-all cursor-pointer"
         >
-          <span>Go to</span>
+          <span>Menu</span>
           <ChevronDown className={`w-4 h-4 transition-transform ${mobileMenuOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {mobileMenuOpen && (
-          <div className="absolute top-[calc(100%+12px)] right-0 w-[240px] flex flex-col gap-2.5 p-3 bg-[#FAF7EE] border-[3px] border-[#1E1B24] rounded-2xl shadow-[6px_6px_0_#1E1B24] z-50 animate-in fade-in zoom-in-95">
+          <div className="absolute top-[calc(100%+12px)] right-0 w-[240px] flex flex-col gap-2.5 p-3 bg-[var(--color-bg-paper)] border border-[var(--color-line)] rounded-[6px] shadow-xl z-50 animate-in fade-in zoom-in-95">
             <button
               type="button"
               onClick={() => handleNavClick('#about')}
-              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+              className="w-full text-center py-2 px-4 border border-[var(--color-line)] rounded-[3px] bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] font-body font-bold text-sm cursor-pointer hover:bg-[var(--color-line)]"
             >
               About
             </button>
             <button
               type="button"
               onClick={() => handleNavClick('#domains')}
-              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+              className="w-full text-center py-2 px-4 border border-[var(--color-line)] rounded-[3px] bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] font-body font-bold text-sm cursor-pointer hover:bg-[var(--color-line)]"
             >
               Domains
             </button>
             <button
               type="button"
               onClick={() => handleNavClick('#process')}
-              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+              className="w-full text-center py-2 px-4 border border-[var(--color-line)] rounded-[3px] bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] font-body font-bold text-sm cursor-pointer hover:bg-[var(--color-line)]"
             >
               Process
             </button>
             <button
               type="button"
               onClick={() => handleNavClick('#faqs')}
-              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+              className="w-full text-center py-2 px-4 border border-[var(--color-line)] rounded-[3px] bg-[var(--color-bg-dark)] text-[var(--color-text-muted)] font-body font-bold text-sm cursor-pointer hover:bg-[var(--color-line)]"
             >
               FAQs
             </button>
@@ -162,19 +150,9 @@ export function Header({ currentTab, onSelectTab }: HeaderProps) {
                 onSelectTab('track');
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-[#FFD93D] text-[#1E1B24] font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
+              className="w-full text-center py-2 px-4 border border-[var(--color-saffron)]/30 rounded-[3px] bg-[var(--color-saffron)]/10 text-[var(--color-saffron)] font-body font-bold text-sm cursor-pointer hover:bg-[var(--color-saffron)]/20"
             >
               Track Status
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                onSelectTab('admin');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full text-center py-2 px-4 border-[2px] border-[#1E1B24] rounded-xl bg-[#FF4B4B] text-white font-rubik font-bold text-sm shadow-[2px_2px_0_#1E1B24] cursor-pointer"
-            >
-              Admin Portal
             </button>
             <button
               type="button"
@@ -182,7 +160,7 @@ export function Header({ currentTab, onSelectTab }: HeaderProps) {
                 onSelectTab('apply');
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-center py-2.5 px-4 border-[3px] border-[#1E1B24] rounded-full bg-[#3E9FFF] text-white font-rubik font-bold text-sm shadow-[3px_3px_0_#1E1B24] cursor-pointer uppercase mt-1"
+              className="w-full text-center py-2.5 px-4 rounded-[3px] bg-[var(--color-saffron)] text-white font-display font-bold text-sm uppercase cursor-pointer hover:bg-[var(--color-saffron-hover)]"
             >
               JOIN US NOW
             </button>

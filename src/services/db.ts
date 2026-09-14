@@ -460,19 +460,11 @@ export const MOCK_APPLICANTS: Applicant[] = [
 
 export const INITIAL_ADMINS: AdminUser[] = [
   {
-    admin_id: 'admin-moni-1',
-    name: 'Moni',
-    email: 'moni@neuramophrix.com',
+    admin_id: 'admin-ykp-1',
+    name: 'YKP',
+    email: 'ykpmusic502@gmail.com',
     role: 'Admin',
-    password: 'admin123',
-    created_at: '2026-01-01T00:00:00Z',
-  },
-  {
-    admin_id: 'admin-moni-2',
-    name: 'Moni (NeuraMorphix)',
-    email: 'moni@neuramorphix.com',
-    role: 'Admin',
-    password: 'admin123',
+    password: 'ykp1234567',
     created_at: '2026-01-01T00:00:00Z',
   },
 ];
@@ -597,8 +589,7 @@ export class DatabaseService {
 
     if (!matchedAdmin) return null;
 
-    const validPassword = matchedAdmin.password || 'admin123';
-    if (cleanPassword === validPassword || cleanPassword === 'admin123' || cleanPassword === 'moni123') {
+    if (matchedAdmin.password && cleanPassword === matchedAdmin.password) {
       return matchedAdmin;
     }
 
@@ -637,5 +628,6 @@ export class DatabaseService {
     localStorage.removeItem(STORAGE_KEYS.EMAIL_LOGS);
     localStorage.removeItem(STORAGE_KEYS.EMAIL_SETTINGS);
     localStorage.removeItem(STORAGE_KEYS.CONFIG);
+    localStorage.removeItem(STORAGE_KEYS.ADMINS);
   }
 }

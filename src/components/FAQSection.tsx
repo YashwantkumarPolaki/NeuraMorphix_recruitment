@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, HelpCircle } from 'lucide-react';
 
 interface FAQItem {
   question: string;
@@ -37,16 +37,18 @@ export function FAQSection() {
   };
 
   return (
-    <section id="faqs" className="w-full bg-[#FFFEEF] border-t-[3px] border-[#1E1B24] py-16 lg:py-24 px-6 md:px-12 flex flex-col items-center">
-      <div className="max-w-4xl w-full flex flex-col items-center gap-4 text-center mb-12">
-        <div className="neo-badge bg-[#A855F7] text-white">
+    <section id="faqs" className="w-full bg-[var(--color-bg-paper)] border-t border-[var(--color-line)] py-16 lg:py-24 px-6 md:px-12 flex flex-col items-center">
+      <div className="relative max-w-4xl w-full flex flex-col items-center gap-4 text-center mb-12">
+        <img src="/images/artist_elephant.png" alt="Artist Elephant" className="absolute -right-4 -top-10 w-32 h-32 object-contain rounded-3xl border-[3px] border-[#14100b] bg-white shadow-[6px_6px_0_0_#14100b] rotate-6 hidden md:block hover:rotate-0 transition-transform" />
+        <div className="cyber-badge bg-indigo-50 border-indigo-200 text-indigo-700">
+          <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
           <span>GOT QUESTIONS?</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[#1E1B24] tracking-tight">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-outfit font-black text-[var(--color-text-primary)] tracking-tight">
           Frequently Asked Questions
         </h2>
-        <p className="font-rubik text-base sm:text-lg text-[#5C5866] max-w-xl font-medium">
-          Everything you need to know about the NeuraMorphix 2026 recruitment process and team roles.
+        <p className="font-rubik text-base sm:text-lg text-[var(--color-text-muted)] max-w-xl leading-relaxed">
+          Everything you need to know about the NeuraMorphix recruitment process and team tracks.
         </p>
       </div>
 
@@ -56,31 +58,37 @@ export function FAQSection() {
           return (
             <div
               key={index}
-              className="bg-white border-[3px] border-[#1E1B24] rounded-2xl shadow-[4px_4px_0_#1E1B24] overflow-hidden transition-all"
+              className={`rounded-2xl border transition-all overflow-hidden ${
+                isOpen
+                  ? 'bg-white border-blue-600 shadow-md'
+                  : 'bg-white border-[var(--color-line)] hover:border-[var(--color-saffron)]'
+              }`}
             >
               <button
                 type="button"
                 onClick={() => toggleIndex(index)}
                 className="w-full p-5 sm:p-6 flex items-center justify-between gap-4 text-left cursor-pointer bg-transparent border-none"
               >
-                <span className="font-outfit font-extrabold text-lg sm:text-xl text-[#1E1B24]">
+                <span className="font-outfit font-bold text-base sm:text-lg text-[var(--color-text-primary)]">
                   {faq.question}
                 </span>
                 <div
-                  className={`w-8 h-8 rounded-full border-[2px] border-[#1E1B24] flex items-center justify-center shrink-0 transition-transform ${
-                    isOpen ? 'bg-[#FFD93D] rotate-180' : 'bg-[#FAF7EE]'
+                  className={`w-7 h-7 rounded-xl border flex items-center justify-center shrink-0 transition-transform ${
+                    isOpen
+                      ? 'bg-blue-50 border-blue-200 text-blue-600 rotate-180'
+                      : 'bg-slate-100 border-[var(--color-line)] text-slate-500'
                   }`}
                 >
                   {isOpen ? (
-                    <Minus className="w-5 h-5 text-[#1E1B24] stroke-[3]" />
+                    <Minus className="w-4 h-4" />
                   ) : (
-                    <Plus className="w-5 h-5 text-[#1E1B24] stroke-[3]" />
+                    <Plus className="w-4 h-4" />
                   )}
                 </div>
               </button>
 
               {isOpen && (
-                <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-base font-rubik font-medium text-[#5C5866] leading-relaxed border-t-[2px] border-dashed border-[#1E1B24] mt-1 pt-4">
+                <div className="px-5 sm:px-6 pb-6 pt-4 text-xs sm:text-sm font-rubik text-[var(--color-text-muted)] leading-relaxed border-t border-slate-100">
                   {faq.answer}
                 </div>
               )}

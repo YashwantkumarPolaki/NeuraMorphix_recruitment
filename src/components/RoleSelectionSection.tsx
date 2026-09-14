@@ -63,38 +63,39 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
     <section id="roles-section" className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {warningMsg && (
         <div className="mb-6 flex items-center justify-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FFD93D] border-[2px] border-[#1E1B24] text-[#1E1B24] text-xs font-bold shadow-[2px_2px_0_#1E1B24]">
-            <AlertCircle className="w-4 h-4 text-[#1E1B24] shrink-0" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold shadow-xs">
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
             {warningMsg}
           </div>
         </div>
       )}
 
-      {/* Selected Preferences Summary Banner (Image 2) */}
-      <div className="mb-8 p-6 bg-white border-[3px] border-[#1E1B24] rounded-2xl shadow-[6px_6px_0_#1E1B24] relative overflow-hidden">
+      {/* Selected Preferences Summary Banner */}
+      <div className="mb-8 p-6 glass-panel bg-white border border-[var(--color-line)] shadow-sm rounded-2xl relative">
+        <img src="/images/running_cheetah.png" alt="Running Cheetah" className="absolute -right-4 -top-12 w-28 h-28 object-contain rounded-2xl border-2 border-[#14100b] bg-white shadow-[3px_3px_0_0_#14100b] rotate-6 hidden sm:block hover:rotate-0 transition-transform z-20" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <h3 className="text-xs font-outfit font-extrabold uppercase tracking-wider text-[#3E9FFF] flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#3E9FFF]" />
-              Your Chosen Preferences
+            <h3 className="text-xs font-outfit font-extrabold uppercase tracking-wider text-blue-600 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-blue-600" />
+              Your Selected Preferences
             </h3>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-1">
-              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-[#FAF7EE] border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24]">
+              <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[var(--color-bg-dark)] border border-[var(--color-line)]">
                 <span className="text-xl">🥇</span>
                 <div>
-                  <div className="text-[10px] font-outfit font-extrabold text-[#FF4B4B] uppercase">First Choice (Compulsory) *</div>
-                  <div className="text-sm font-rubik font-bold text-[#1E1B24]">
-                    {firstChoice || <span className="text-[#FF4B4B] italic">Select 1st choice role below...</span>}
+                  <div className="text-[10px] font-outfit font-extrabold text-blue-700 uppercase tracking-wider">First Choice (Compulsory) *</div>
+                  <div className="text-sm font-rubik font-bold text-[var(--color-text-primary)]">
+                    {firstChoice || <span className="text-slate-400 italic font-normal">Select 1st choice role below...</span>}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-[#FAF7EE] border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24]">
+              <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[var(--color-bg-dark)] border border-[var(--color-line)]">
                 <span className="text-xl">🥈</span>
                 <div>
-                  <div className="text-[10px] font-outfit font-extrabold text-[#5C5866] uppercase">Second Choice (Optional)</div>
-                  <div className="text-sm font-rubik font-bold text-[#1E1B24]">
-                    {secondChoice || <span className="text-[#5C5866] italic">Select 2nd choice role...</span>}
+                  <div className="text-[10px] font-outfit font-extrabold text-indigo-700 uppercase tracking-wider">Second Choice (Optional)</div>
+                  <div className="text-sm font-rubik font-bold text-[var(--color-text-primary)]">
+                    {secondChoice || <span className="text-slate-400 italic font-normal">Select 2nd choice role...</span>}
                   </div>
                 </div>
               </div>
@@ -107,7 +108,7 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
               <button
                 type="button"
                 onClick={onClearPreferences}
-                className="px-4 py-2.5 rounded-xl text-xs font-rubik font-bold bg-white hover:bg-[#FAF7EE] text-[#1E1B24] border-[2px] border-[#1E1B24] shadow-[2px_2px_0_#1E1B24] transition-all flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2.5 rounded-xl text-xs font-rubik font-bold bg-slate-100 text-[var(--color-text-muted)] border border-[var(--color-line)] hover:bg-slate-200 hover:text-[var(--color-text-primary)] transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Clear
@@ -118,10 +119,10 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
               type="button"
               disabled={!firstChoice}
               onClick={onProceedToForm}
-              className={`px-6 py-3 rounded-xl text-sm font-rubik font-bold flex items-center gap-2 transition-all border-[3px] border-[#1E1B24] ${
+              className={`px-6 py-3 rounded-xl text-xs font-rubik font-bold flex items-center gap-2 transition-all uppercase tracking-wider ${
                 firstChoice
-                  ? 'bg-[#3E9FFF] text-white shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_#1E1B24] cursor-pointer'
-                  : 'bg-gray-200 text-gray-500 shadow-none cursor-not-allowed opacity-60'
+                  ? 'cyber-btn-primary'
+                  : 'bg-slate-100 text-slate-400 border border-[var(--color-line)] cursor-not-allowed opacity-50'
               }`}
             >
               Fill Application Form
@@ -132,17 +133,17 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
       </div>
 
       {/* Domain Filter Pills */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-2 border-b-[2px] border-dashed border-[#1E1B24]">
-        <div className="flex items-center gap-2 text-xs font-outfit font-black text-[#1E1B24] uppercase">
-          <Filter className="w-4 h-4 text-[#3E9FFF]" />
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-[var(--color-line)]">
+        <div className="flex items-center gap-2 text-xs font-outfit font-bold text-[var(--color-text-muted)] uppercase tracking-wider">
+          <Filter className="w-4 h-4 text-blue-600" />
           <span>Filter Roles by Domain:</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {[
-            { id: 'all', label: 'All Sub-Domains (15)', color: '#1E1B24' },
-            { id: 'technical', label: '💻 Technical', color: '#FF4B4B' },
-            { id: 'non-technical', label: '🎨 Non-Technical', color: '#FFD93D' },
-            { id: 'entrepreneurship', label: '🚀 Entrepreneurship & Startups', color: '#4EC37B' },
+            { id: 'all', label: 'All Sub-Domains (15)' },
+            { id: 'technical', label: '💻 Technical' },
+            { id: 'non-technical', label: '🎨 Non-Technical' },
+            { id: 'entrepreneurship', label: '🚀 Entrepreneurship & Startups' },
           ].map((tab) => {
             const isActive = activeFilter === tab.id;
             return (
@@ -150,15 +151,11 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveFilter(tab.id)}
-                className={`px-3.5 py-1.5 rounded-xl border-[2px] border-[#1E1B24] font-rubik font-bold text-xs transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl border text-xs font-rubik font-bold transition-all cursor-pointer ${
                   isActive
-                    ? 'text-white shadow-[2px_2px_0_#1E1B24]'
-                    : 'bg-white text-[#1E1B24] hover:bg-[#FAF7EE]'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                    : 'bg-white text-[var(--color-text-muted)] border-[var(--color-line)] hover:bg-[var(--color-bg-dark)] hover:text-[var(--color-text-primary)]'
                 }`}
-                style={{
-                  backgroundColor: isActive ? tab.color : undefined,
-                  color: isActive && tab.id === 'non-technical' ? '#1E1B24' : undefined,
-                }}
               >
                 {tab.label}
               </button>
@@ -184,27 +181,28 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
       {/* BOTTOM CTA — shown after selecting 1st choice */}
       {firstChoice && (
         <div className="mt-12">
-          <div className="max-w-2xl mx-auto p-6 bg-white border-[3px] border-[#1E1B24] rounded-3xl shadow-[8px_8px_0_#1E1B24] text-center space-y-4">
+          <div className="max-w-2xl mx-auto p-8 glass-panel bg-white border border-[var(--color-line)] shadow-sm rounded-3xl text-center space-y-4">
             <div className="flex justify-center">
-              <span className="neo-badge bg-[#4EC37B] text-white">
+              <span className="cyber-badge bg-emerald-50 border border-emerald-200 text-emerald-700">
                 ROLE SELECTION COMPLETE
               </span>
             </div>
 
-            <h3 className="text-2xl font-outfit font-black text-[#1E1B24]">
+            <h3 className="text-2xl font-outfit font-bold text-[var(--color-text-primary)]">
               Ready to Fill Your Details!
             </h3>
 
-            <p className="font-rubik text-sm text-[#5C5866] max-w-md mx-auto font-medium">
-              Click below to enter your information, skills, and portfolio links to complete your recruitment application.
+            <p className="font-rubik text-sm text-[var(--color-text-muted)] max-w-md mx-auto leading-relaxed">
+              Click below to enter your contact details, portfolio links, and skills to finalize your submission.
             </p>
 
             <button
               type="button"
               onClick={onProceedToForm}
-              className="px-10 py-3.5 rounded-xl bg-[#FF4B4B] text-white font-rubik font-bold text-base border-[3px] border-[#1E1B24] shadow-[4px_4px_0_#1E1B24] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1E1B24] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_#1E1B24] transition-all cursor-pointer inline-flex items-center justify-center gap-2 uppercase tracking-wide"
+              className="cyber-btn-primary text-xs py-3.5 px-8"
             >
-              Fill Application Details NOW →
+              <span>FILL APPLICATION DETAILS NOW</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>

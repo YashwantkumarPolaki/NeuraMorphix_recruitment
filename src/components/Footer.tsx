@@ -7,23 +7,24 @@ export function Footer() {
   };
 
   return (
-    <footer className="w-full bg-[#FAF7EE] border-t-[4px] border-[#1E1B24] pt-12 pb-8 px-6 md:px-12 mt-auto">
+    <footer className="w-full bg-[var(--color-bg-paper)] border-t border-[var(--color-line)] pt-12 pb-8 px-6 md:px-12 mt-auto text-[var(--color-text-primary)]">
       <div className="max-w-7xl mx-auto flex flex-col gap-10">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8 border-b-[3px] border-[#1E1B24]">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8 border-b border-[var(--color-line)]">
           {/* Brand Info */}
           <div className="flex flex-col gap-3 max-w-md">
             <div className="flex items-center gap-3">
               <NeuraMorphixLogo size={40} />
-              <span className="font-outfit font-black text-2xl tracking-tight text-[#1E1B24]">
+              <span className="font-outfit font-black text-2xl tracking-tight text-[var(--color-text-primary)]">
                 NeuraMorphix
               </span>
+              <img src="/images/smart_lion.png" alt="Smart Lion mascot" className="w-16 h-16 object-contain rounded-xl border-2 border-[#14100b] bg-white shadow-[3px_3px_0_0_#14100b] -rotate-6 hover:rotate-0 transition-transform -translate-y-4" />
             </div>
-            <p className="font-rubik text-sm text-[#5C5866] leading-relaxed font-medium">
-              Join the NeuraMorphix Community — your path to building real-world AI, Web, Creative, and Operations projects.
+            <p className="font-rubik text-xs text-[var(--color-text-muted)] leading-relaxed">
+              Join the NeuraMorphix Community — SRMIST's elite student platform for building real-world AI, Web, Creative, and Leadership initiatives.
             </p>
-            <p className="font-rubik text-xs text-[#1E1B24] font-bold flex flex-wrap items-center gap-1.5 mt-1">
+            <p className="font-rubik text-xs text-[var(--color-text-muted)] font-bold flex flex-wrap items-center gap-1.5 mt-1">
               <span>Contact & Partnerships:</span>
-              <a href="mailto:partnerships@neuramorphix.com" className="text-[#3E9FFF] hover:underline">
+              <a href="mailto:partnerships@neuramorphix.com" className="text-blue-600 hover:underline">
                 partnerships@neuramorphix.com
               </a>
             </p>
@@ -35,7 +36,7 @@ export function Footer() {
               href="https://www.linkedin.com/company/neuramorphix"
               target="_blank"
               rel="noreferrer"
-              className="p-3 bg-white border-[3px] border-[#1E1B24] rounded-xl shadow-[3px_3px_0_#1E1B24] hover:-translate-y-1 hover:shadow-[5px_5px_0_#1E1B24] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all text-[#1E1B24]"
+              className="p-3 bg-white border border-[var(--color-line)] rounded-xl text-[var(--color-text-muted)] hover:text-blue-600 hover:border-blue-300 transition-all shadow-xs"
               aria-label="LinkedIn"
             >
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -46,7 +47,7 @@ export function Footer() {
               href="https://www.instagram.com/neuramorphix/"
               target="_blank"
               rel="noreferrer"
-              className="p-3 bg-white border-[3px] border-[#1E1B24] rounded-xl shadow-[3px_3px_0_#1E1B24] hover:-translate-y-1 hover:shadow-[5px_5px_0_#1E1B24] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all text-[#1E1B24]"
+              className="p-3 bg-white border border-[var(--color-line)] rounded-xl text-[var(--color-text-muted)] hover:text-pink-600 hover:border-pink-300 transition-all shadow-xs"
               aria-label="Instagram"
             >
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -55,7 +56,7 @@ export function Footer() {
             </a>
             <a
               href="mailto:partnerships@neuramorphix.com"
-              className="p-3 bg-white border-[3px] border-[#1E1B24] rounded-xl shadow-[3px_3px_0_#1E1B24] hover:-translate-y-1 hover:shadow-[5px_5px_0_#1E1B24] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all text-[#1E1B24]"
+              className="p-3 bg-white border border-[var(--color-line)] rounded-xl text-[var(--color-text-muted)] hover:text-emerald-600 hover:border-emerald-300 transition-all shadow-xs"
               aria-label="Email Us"
             >
               <Mail className="w-5 h-5" />
@@ -63,20 +64,20 @@ export function Footer() {
             <button
               type="button"
               onClick={scrollToTop}
-              className="p-3 bg-[#FFD93D] border-[3px] border-[#1E1B24] rounded-xl shadow-[3px_3px_0_#1E1B24] hover:-translate-y-1 hover:shadow-[5px_5px_0_#1E1B24] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all text-[#1E1B24] cursor-pointer ml-2"
+              className="p-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-xs cursor-pointer ml-2"
               aria-label="Scroll to top"
             >
-              <ArrowUp className="w-5 h-5 stroke-[3]" />
+              <ArrowUp className="w-5 h-5 stroke-[2.5]" />
             </button>
           </div>
         </div>
 
         {/* Footer Bottom */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-rubik font-bold text-[#5C5866]">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-rubik text-[var(--color-text-muted)]">
           <p>© 2026 NeuraMorphix Recruitment Portal · All rights reserved.</p>
           <p className="flex items-center gap-2">
-            <span>Made with mischief, code & creativity</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-[#4EC37B] border-[1px] border-[#1E1B24]"></span>
+            <span>Built with code & intelligence</span>
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
           </p>
         </div>
       </div>
