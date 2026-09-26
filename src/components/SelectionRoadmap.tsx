@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Calendar, Compass, Layers, Zap, Target } from 'lucide-react';
+import { Compass, Layers, Zap, Target } from 'lucide-react';
 
 interface TimelineStep {
   phase: string;
   title: string;
-  date: string;
   description: string;
   status: 'Completed' | 'Active' | 'Upcoming';
 }
@@ -16,42 +15,36 @@ export const SelectionRoadmap: React.FC = () => {
     {
       phase: '01',
       title: 'Registration Begins',
-      date: '05 September 2026',
       description: 'Applications open for all 10 core multidisciplinary teams. Choose 1st and 2nd preference roles.',
       status: 'Active',
     },
     {
       phase: '02',
       title: 'Open Trials & Builder Tasks',
-      date: '08 September 2026',
       description: 'Skill-based challenges open to all applicants: Photo ID Generator, Voice RAG, and AI Agent Dev.',
       status: 'Active',
     },
     {
       phase: '03',
       title: 'Alpha Shortlisting',
-      date: '12 September 2026',
       description: 'First screening based on Open Trial task submissions, GitHub repositories, and portfolio work.',
       status: 'Upcoming',
     },
     {
       phase: '04',
       title: 'Beta Technical Review',
-      date: '15 September 2026',
       description: 'Deep technical architecture review and code quality assessment by domain engineering leads.',
       status: 'Upcoming',
     },
     {
       phase: '05',
       title: 'Charlie Interviews',
-      date: '17 September 2026',
       description: '1-on-1 interview and team-fit evaluation with team leads.',
       status: 'Upcoming',
     },
     {
       phase: '06',
       title: 'Final Cohort Onboarding',
-      date: '18 September 2026',
       description: 'Final team placement confirmation, hardware kit dispatch, and cohort onboarding.',
       status: 'Upcoming',
     },
@@ -156,10 +149,6 @@ export const SelectionRoadmap: React.FC = () => {
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold mb-1">
-                    <Calendar className="w-3.5 h-3.5 text-blue-600" />
-                    <span>{step.date}</span>
-                  </div>
                   <h3 className="text-lg font-outfit font-bold text-[var(--color-text-primary)]">{step.title}</h3>
                 </div>
 
