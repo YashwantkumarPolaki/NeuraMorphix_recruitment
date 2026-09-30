@@ -20,6 +20,7 @@ import {
   Music,
   Film,
   Clapperboard,
+  Crown,
 } from 'lucide-react';
 
 interface TeamIconProps extends LucideProps {
@@ -66,6 +67,8 @@ export const TeamIcon: React.FC<TeamIconProps> = ({ name, className = 'w-6 h-6',
       return <Film className={className} {...props} />;
     case 'Clapperboard':
       return <Clapperboard className={className} {...props} />;
+    case 'Crown':
+      return <Crown className={className} {...props} />;
     default:
       return <Cpu className={className} {...props} />;
   }

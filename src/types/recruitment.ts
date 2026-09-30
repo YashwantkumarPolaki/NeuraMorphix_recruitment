@@ -22,6 +22,42 @@ export interface AdminNote {
   created_at: string;
 }
 
+// Answers collected by the Startup & Entrepreneurship assessment page.
+// Keys correspond to `id` fields in src/data/startupAssessmentQuestions.ts.
+export interface StartupAssessmentAnswers {
+  linkedin_url: string;
+  github_portfolio_url: string;
+  why_join_neuramorphix: string;
+  why_startup_environment: string;
+  why_hire_you: string;
+  what_contribute: string;
+  startup_attraction: string;
+  incomplete_instructions: string;
+  idea_rejected: string;
+  project_fails: string;
+  unassigned_problem: string;
+  important_quality: string;
+  unknown_task: string;
+  teammate_struggling: string;
+  ownership_meaning: string;
+  new_initiative_first_step: string;
+  leadership_approach: string;
+  disagree_with_senior: string;
+  little_market_info: string;
+  negative_feedback: string;
+  limited_resources_priority: string;
+  two_ideas_investigate: string;
+  missed_deadline: string;
+  founding_team_reason: string;
+  improve_or_build: string;
+  first_three_steps: string;
+  real_world_problem: string;
+  first_idea_failed: string;
+  comfort_with_uncertainty: string;
+  willing_to_commit: string;
+  completion_sentence: string;
+}
+
 export interface Applicant {
   id: string;
   application_id: string;
@@ -54,6 +90,7 @@ export interface Applicant {
   declined_at: string | null;
   accepted_by?: string;
   declined_by?: string;
+  startup_assessment?: StartupAssessmentAnswers;
 }
 
 export interface Role {
@@ -63,6 +100,7 @@ export interface Role {
   skills: string[];
   icon_name: string;
   is_active: boolean;
+  eligibility_note?: string;
 }
 
 export type EmailType =

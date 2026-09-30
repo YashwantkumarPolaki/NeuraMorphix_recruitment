@@ -61,13 +61,18 @@ export const RoleCard: React.FC<RoleCardProps> = ({
           >
             <TeamIcon name={role.icon_name} className="w-6 h-6" />
           </div>
-          <div>
+          <div className="flex flex-col items-start gap-1">
             <h3 className="text-lg font-outfit font-bold text-[var(--color-text-primary)] leading-snug">
               {role.role_name}
             </h3>
             <span className="text-[11px] font-rubik font-semibold text-slate-500 uppercase tracking-wider">
               NeuraMorphix Team
             </span>
+            {role.eligibility_note && (
+              <span className="inline-flex w-fit items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-outfit font-extrabold bg-amber-50 border border-amber-200 text-amber-700 uppercase tracking-wider">
+                {role.eligibility_note}
+              </span>
+            )}
           </div>
         </div>
 

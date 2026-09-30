@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { RoleSelectionSection } from './components/RoleSelectionSection';
 import { ApplicationForm } from './components/ApplicationForm';
+import { StartupAssessmentForm } from './components/StartupAssessmentForm';
 import { StatusTracker } from './components/StatusTracker';
 import { AdminDashboard } from './components/AdminDashboard';
 import { FAQSection } from './components/FAQSection';
@@ -23,15 +24,27 @@ import {
   Award,
   ArrowRight,
   Cpu,
+  Flame,
+  Timer,
 } from 'lucide-react';
 
-type Tab = 'home' | 'apply' | 'track' | 'admin';
+type Tab = 'home' | 'apply' | 'track' | 'admin' | 'startup';
+
+const FOUNDING_TEAM_ROLE_NAME = 'Entrepreneurship - Founding Team';
 
 function getInitialTab(): Tab {
   if (typeof window === 'undefined') return 'home';
   const path = window.location.pathname.replace(/\/+$/, '').toLowerCase();
   if (path === '/admin') return 'admin';
+  if (path === '/startup') return 'startup';
   return 'home';
+}
+
+function getInitialFirstChoice(): string | null {
+  if (typeof window === 'undefined') return null;
+  const path = window.location.pathname.replace(/\/+$/, '').toLowerCase();
+  if (path === '/startup') return FOUNDING_TEAM_ROLE_NAME;
+  return null;
 }
 
 export function App() {
@@ -40,7 +53,7 @@ export function App() {
   const setCurrentTab = (tab: Tab) => {
     setCurrentTabState(tab);
     try {
-      const nextPath = tab === 'admin' ? '/admin' : '/';
+      const nextPath = tab === 'admin' ? '/admin' : tab === 'startup' ? '/startup' : '/';
       if (window.location.pathname !== nextPath) {
         window.history.replaceState(null, '', nextPath);
       }
@@ -50,7 +63,7 @@ export function App() {
   };
 
   // Selected Preferences state
-  const [firstChoice, setFirstChoice] = useState<string | null>(null);
+  const [firstChoice, setFirstChoice] = useState<string | null>(getInitialFirstChoice);
   const [secondChoice, setSecondChoice] = useState<string | null>(null);
   const [trackedAppId, setTrackedAppId] = useState<string | null>(null);
   const [selectedDomainFilter, setSelectedDomainFilter] = useState<string>('all');
@@ -64,6 +77,12 @@ export function App() {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleJoinStartupTrack = () => {
+    setFirstChoice(FOUNDING_TEAM_ROLE_NAME);
+    setCurrentTab('startup');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectFirstChoice = (roleName: string) => {
@@ -86,7 +105,7 @@ export function App() {
   };
 
   const handleProceedToForm = () => {
-    setCurrentTab('apply');
+    setCurrentTab(firstChoice === FOUNDING_TEAM_ROLE_NAME ? 'startup' : 'apply');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -255,6 +274,48 @@ export function App() {
               </section>
             </div>
 
+            {/* JOIN OUR STARTUP URGENCY CTA (`#join-startup`) */}
+            <div id="join-startup" className="w-full flex flex-col items-center bg-[var(--color-bg-paper)] border-t border-[var(--color-line)]">
+              <section className="relative w-full max-w-7xl mx-6 sm:mx-8 my-12 lg:my-16 rounded-[28px] overflow-hidden border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-amber-50 shadow-[0_12px_40px_-8px_rgba(5,150,105,0.15)]">
+                <div className="absolute -top-16 -right-16 w-64 h-64 bg-emerald-400/10 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-[var(--color-saffron)]/10 rounded-full blur-[100px] pointer-events-none" />
+
+                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 px-6 sm:px-10 py-10 lg:py-12">
+                  <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-4 max-w-2xl">
+                    <div className="cyber-badge bg-rose-50 border-rose-200 text-rose-600 animate-pulse">
+                      <Flame className="w-3.5 h-3.5" />
+                      <span>LIMITED SLOTS · CLOSING SOON</span>
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-outfit font-black text-[var(--color-text-primary)] tracking-tight leading-tight">
+                      Want to Join Our Startup?
+                    </h2>
+                    <p className="font-rubik text-sm sm:text-base font-normal text-[var(--color-text-muted)] leading-relaxed">
+                      We're onboarding founding team members for the NeuraMorphix startup track right now — pitch decks, product, and go-to-market. Seats are limited and filling fast, so don't wait until the window closes.
+                    </p>
+                    <div className="flex items-center gap-2 text-xs font-rubik font-bold uppercase tracking-wider text-emerald-700">
+                      <Timer className="w-4 h-4" />
+                      <span>Only a few founding seats remain this cycle</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-center gap-3 shrink-0">
+                    <button
+                      type="button"
+                      onClick={handleJoinStartupTrack}
+                      className="cyber-btn-primary text-sm py-4 px-8 bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-emerald-500/30"
+                    >
+                      <Rocket className="w-4 h-4" />
+                      <span>JOIN THE STARTUP TRACK</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                    <span className="font-rubik text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">
+                      Limited slots · Apply before they're gone
+                    </span>
+                  </div>
+                </div>
+              </section>
+            </div>
+
             {/* DOMAINS & OPEN ROLES SECTION (`#domains`) */}
             <div id="domains" className="w-full flex flex-col items-center bg-[var(--color-bg-paper)] border-t border-[var(--color-line)]">
               <section className="relative w-full max-w-7xl py-16 px-6 sm:px-8 lg:py-24 flex flex-col items-center gap-12">
@@ -418,6 +479,28 @@ export function App() {
                 onTrackStatusDirectly={handleTrackStatusDirectly}
               />
             )}
+          </div>
+        )}
+
+        {/* STARTUP & ENTREPRENEURSHIP FOUNDING TEAM ASSESSMENT (`/startup`) */}
+        {currentTab === 'startup' && (
+          <div className="bg-[var(--color-bg-paper)] min-h-[80vh]">
+            <StartupAssessmentForm
+              firstChoice={firstChoice || FOUNDING_TEAM_ROLE_NAME}
+              secondChoice={secondChoice}
+              roles={roles}
+              onChangePreferences={() => {
+                setCurrentTab('home');
+                setTimeout(() => {
+                  const el = document.getElementById('domains');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+              onApplicationSubmitted={(applicant) => {
+                setTrackedAppId(applicant.application_id);
+              }}
+              onTrackStatusDirectly={handleTrackStatusDirectly}
+            />
           </div>
         )}
 

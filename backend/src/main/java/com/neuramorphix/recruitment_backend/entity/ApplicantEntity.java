@@ -44,6 +44,9 @@ public class ApplicantEntity {
     @Column(name = "why_join", columnDefinition = "TEXT")
     private String whyJoin;
 
+    @Column(name = "assessment_responses", columnDefinition = "TEXT")
+    private String assessmentResponses;
+
     @Column(name = "github_url")
     private String githubUrl;
 
@@ -119,6 +122,9 @@ public class ApplicantEntity {
 
     public String getWhyJoin() { return whyJoin; }
     public void setWhyJoin(String whyJoin) { this.whyJoin = whyJoin; }
+
+    public String getAssessmentResponses() { return assessmentResponses; }
+    public void setAssessmentResponses(String assessmentResponses) { this.assessmentResponses = assessmentResponses; }
 
     public String getGithubUrl() { return githubUrl; }
     public void setGithubUrl(String githubUrl) { this.githubUrl = githubUrl; }

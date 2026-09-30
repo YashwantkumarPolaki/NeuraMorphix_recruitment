@@ -12,6 +12,8 @@ import { DatabaseService } from '../services/db';
 import { EmailService } from '../services/email';
 import { BackendApiService } from '../services/api';
 import { NeuraMorphixLogo } from './NeuraMorphixLogo';
+import { STARTUP_ASSESSMENT_SECTIONS } from '../data/startupAssessmentQuestions';
+import type { StartupAssessmentAnswers } from '../types/recruitment';
 import {
   Users,
   Search,
@@ -29,6 +31,7 @@ import {
   AlertCircle,
   ArrowRight,
   ShieldCheck,
+  Rocket,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -915,6 +918,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                 </div>
               </div>
             </div>
+
+            {/* Startup & Entrepreneurship Assessment (only present for that track) */}
+            {selectedApplicant.startup_assessment && (
+              <div className="p-4 rounded-xl bg-[var(--color-bg-dark)] border border-emerald-200 space-y-4">
+                <h4 className="font-bold text-emerald-600 text-xs uppercase flex items-center gap-2">
+                  <Rocket className="w-4 h-4 text-emerald-600" />
+                  Startup & Entrepreneurship Assessment
+                </h4>
+                <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
+                  {STARTUP_ASSESSMENT_SECTIONS.map((section) => (
+                    <div key={section.id} className="space-y-2">
+                      <div className="text-[10px] font-bold text-[var(--color-saffron)] uppercase tracking-wider">{section.title}</div>
+                      {section.questions.map((q) => (
+                        <div key={q.id} className="p-3 rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line)] text-xs space-y-1">
+                          <div className="font-semibold text-[var(--color-text-primary)]">{q.number}. {q.label}</div>
+                          <div className="text-[var(--color-text-muted)] whitespace-pre-wrap">
+                            {selectedApplicant.startup_assessment?.[q.id as keyof StartupAssessmentAnswers] || (
+                              <span className="italic">Not answered</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Internal Admin Notes Thread */}
             <div className="p-4 rounded-xl bg-[var(--color-bg-dark)] border border-[var(--color-line)] space-y-3">

@@ -73,12 +73,15 @@ export class BackendApiService {
           secondPreference: applicant.second_preference,
           skills: applicant.skills?.join(', '),
           experienceSummary: applicant.experience,
-          whyJoin: '',
+          whyJoin: applicant.startup_assessment?.why_join_neuramorphix || '',
           githubUrl: applicant.github_url,
           linkedinUrl: applicant.linkedin_url,
           portfolioUrl: applicant.portfolio_url,
           status: applicant.status,
           finalAssignedTeam: applicant.final_assigned_team,
+          assessmentResponses: applicant.startup_assessment
+            ? JSON.stringify(applicant.startup_assessment)
+            : '',
         }),
       });
     } catch {

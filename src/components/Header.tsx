@@ -3,8 +3,8 @@ import { NeuraMorphixLogo } from './NeuraMorphixLogo';
 import { ChevronDown, Search } from 'lucide-react';
 
 interface HeaderProps {
-  currentTab: 'home' | 'apply' | 'track' | 'admin';
-  onSelectTab: (tab: 'home' | 'apply' | 'track' | 'admin') => void;
+  currentTab: 'home' | 'apply' | 'track' | 'admin' | 'startup';
+  onSelectTab: (tab: 'home' | 'apply' | 'track' | 'admin' | 'startup') => void;
 }
 
 export function Header({ currentTab, onSelectTab }: HeaderProps) {
