@@ -230,7 +230,7 @@ export const INITIAL_ROLES: Role[] = [
   },
   {
     role_id: 'role-startup-founding',
-    role_name: 'Entrepreneurship - Founding Team',
+    role_name: 'Entrepreneurship - Startup Track',
     description:
       "Join the founding team shaping NeuraMorphix's startup ventures from day one — ownership, ambiguity, and real equity in outcomes. Open for 2nd year students only.",
     skills: [

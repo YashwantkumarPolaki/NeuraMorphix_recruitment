@@ -289,7 +289,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
               {progressLabel}
             </div>
             <div className="text-base font-display font-bold text-[var(--color-text-primary)]">
-              {step === 'eligibility' && 'Founding Team Eligibility'}
+              {step === 'eligibility' && 'Startup Track Eligibility'}
               {step === 'ineligible' && 'Not Open This Cycle'}
               {step === 1 && 'Personal Details'}
               {typeof step === 'number' && step > 1 && currentSection?.title}

@@ -49,8 +49,12 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
     onSelectSecondChoice(roleName);
   };
 
+  // Roles with a special eligibility note (e.g. Startup Track) are invite-only —
+  // reached via the dedicated /startup page, not browsable in the general club role grid.
+  const browsableRoles = roles.filter((role) => !role.eligibility_note);
+
   // Filter roles based on active 3 Core Domains
-  const filteredRoles = roles.filter((role) => {
+  const filteredRoles = browsableRoles.filter((role) => {
     if (activeFilter === 'all') return true;
     const lowerName = role.role_name.toLowerCase();
     if (activeFilter === 'technical') return lowerName.startsWith('technical');
@@ -140,7 +144,7 @@ export const RoleSelectionSection: React.FC<RoleSelectionSectionProps> = ({
         </div>
         <div className="flex flex-wrap gap-2">
           {[
-            { id: 'all', label: 'All Sub-Domains (15)' },
+            { id: 'all', label: `All Sub-Domains (${browsableRoles.length})` },
             { id: 'technical', label: '💻 Technical' },
             { id: 'non-technical', label: '🎨 Non-Technical' },
             { id: 'entrepreneurship', label: '🚀 Entrepreneurship & Startups' },

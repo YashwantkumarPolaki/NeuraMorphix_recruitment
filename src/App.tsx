@@ -30,7 +30,7 @@ import {
 
 type Tab = 'home' | 'apply' | 'track' | 'admin' | 'startup';
 
-const FOUNDING_TEAM_ROLE_NAME = 'Entrepreneurship - Founding Team';
+const FOUNDING_TEAM_ROLE_NAME = 'Entrepreneurship - Startup Track';
 
 function getInitialTab(): Tab {
   if (typeof window === 'undefined') return 'home';
