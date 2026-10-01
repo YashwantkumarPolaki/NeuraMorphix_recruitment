@@ -68,6 +68,7 @@ export interface Applicant {
   college: string;
   department: string;
   year: string;
+  registration_number?: string;
   skills: string[];
   experience: string;
   first_preference: string;

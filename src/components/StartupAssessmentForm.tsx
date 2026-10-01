@@ -37,6 +37,7 @@ type PersonalDetails = {
   email: string;
   phone: string;
   college: string;
+  registrationNumber: string;
   courseAndBranch: string;
   year: string;
   linkedinUrl: string;
@@ -49,6 +50,7 @@ const EMPTY_PERSONAL: PersonalDetails = {
   email: '',
   phone: '',
   college: '',
+  registrationNumber: '',
   courseAndBranch: '',
   year: '2nd Year',
   linkedinUrl: '',
@@ -124,6 +126,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
       !personal.email.trim() ||
       !personal.phone.trim() ||
       !personal.college.trim() ||
+      !personal.registrationNumber.trim() ||
       !personal.courseAndBranch.trim()
     ) {
       return 'Please fill in all required personal detail fields.';
@@ -214,6 +217,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
         email: personal.email.trim(),
         phone: personal.phone.trim(),
         college: personal.college.trim(),
+        registration_number: personal.registrationNumber.trim(),
         department: personal.courseAndBranch.trim(),
         year: personal.year,
         skills: [],
@@ -497,6 +501,20 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
 
             <div>
               <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
+                Registration Number <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="RA25XXXXXXXXXX"
+                value={personal.registrationNumber}
+                onChange={(e) => setPersonal({ ...personal, registrationNumber: e.target.value.toUpperCase() })}
+                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)] uppercase placeholder:normal-case"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
                 Course & Branch <span className="text-rose-500">*</span>
               </label>
               <input
@@ -673,6 +691,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
               <div><strong>Email:</strong> {personal.email}</div>
               <div><strong>Phone:</strong> {personal.phone}</div>
               <div><strong>College:</strong> {personal.college}</div>
+              <div><strong>Registration Number:</strong> {personal.registrationNumber}</div>
               <div><strong>Course & Branch:</strong> {personal.courseAndBranch}</div>
               <div><strong>Year:</strong> {personal.year}</div>
               {personal.linkedinUrl && <div><strong>LinkedIn:</strong> {personal.linkedinUrl}</div>}

@@ -1074,7 +1074,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   ID: {selectedApplicant.application_id}
                 </span>
                 <h2 className="text-2xl font-black text-[var(--color-text-primary)] mt-1">{selectedApplicant.full_name}</h2>
-                <p className="text-xs text-[var(--color-text-muted)]">{selectedApplicant.college} • {selectedApplicant.department} ({selectedApplicant.year})</p>
+                <p className="text-xs text-[var(--color-text-muted)]">
+                  {selectedApplicant.college} • {selectedApplicant.department} ({selectedApplicant.year})
+                  {selectedApplicant.registration_number && ` • ${selectedApplicant.registration_number}`}
+                </p>
               </div>
 
               <button
