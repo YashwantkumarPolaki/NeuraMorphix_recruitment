@@ -66,6 +66,12 @@ function stripSecrets(admin) {
   return rest;
 }
 
+async function recordLogin(adminData) {
+  const updated = { ...adminData, last_login_at: new Date().toISOString() };
+  await sql`UPDATE admins SET data = ${JSON.stringify(updated)}::jsonb WHERE admin_id = ${updated.admin_id}`;
+  return updated;
+}
+
 function getSubPath(path) {
   const match = path.match(/\/admins\/?(.*)$/);
   return match ? match[1].replace(/\/+$/, '') : '';
@@ -163,7 +169,8 @@ export const handler = async (event) => {
       if (rows.length === 0 || rows[0].data.password !== password.trim()) {
         return { statusCode: 401, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Invalid credentials' }) };
       }
-      return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(stripSecrets(rows[0].data)) };
+      const loggedIn = await recordLogin(rows[0].data);
+      return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(stripSecrets(loggedIn)) };
     }
 
     if (event.httpMethod === 'POST' && subPath === 'login-passcode') {
@@ -175,7 +182,8 @@ export const handler = async (event) => {
       if (rows.length === 0) {
         return { statusCode: 401, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Invalid passcode' }) };
       }
-      return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(stripSecrets(rows[0].data)) };
+      const loggedIn = await recordLogin(rows[0].data);
+      return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(stripSecrets(loggedIn)) };
     }
 
     if (event.httpMethod === 'DELETE' && subPath) {

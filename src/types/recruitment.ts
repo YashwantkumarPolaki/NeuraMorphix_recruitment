@@ -130,6 +130,7 @@ export interface AdminUser {
   password?: string;
   passcode?: string;
   invited_by?: string | null;
+  last_login_at?: string | null;
   created_at: string;
 }
 

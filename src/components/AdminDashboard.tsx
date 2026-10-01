@@ -46,6 +46,18 @@ interface AdminDashboardProps {
 // Only this account may remove other admins.
 const PRIMARY_ADMIN_EMAIL = 'ykpmusic502@gmail.com';
 
+function formatLastActive(isoString?: string | null): string {
+  if (!isoString) return 'Never logged in';
+  const diffMs = Date.now() - new Date(isoString).getTime();
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 1) return 'Active just now';
+  if (minutes < 60) return `Active ${minutes} min${minutes === 1 ? '' : 's'} ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `Active ${hours} hour${hours === 1 ? '' : 's'} ago`;
+  const days = Math.floor(hours / 24);
+  return `Active ${days} day${days === 1 ? '' : 's'} ago`;
+}
+
 export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   // Admin auth state
   const [sessionUser, setSessionUser] = useState<AdminUser | null>(() => {
@@ -1789,6 +1801,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   <div>
                     <div className="font-bold text-[var(--color-text-primary)]">{a.name}</div>
                     <div className="text-[var(--color-text-muted)]">{a.email}</div>
+                    <div className={`flex items-center gap-1.5 mt-1 ${a.last_login_at ? 'text-emerald-500' : 'text-[var(--color-text-muted)]'}`}>
+                      {a.last_login_at && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />}
+                      <span>{formatLastActive(a.last_login_at)}</span>
+                    </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="px-2.5 py-1 rounded-lg bg-[var(--color-bg-dark)] border border-[var(--color-line)] text-[var(--color-text-muted)] font-bold">
