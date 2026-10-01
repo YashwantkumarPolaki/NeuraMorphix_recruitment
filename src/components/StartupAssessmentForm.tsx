@@ -39,7 +39,6 @@ type PersonalDetails = {
   college: string;
   courseAndBranch: string;
   year: string;
-  yearOther: string;
   linkedinUrl: string;
   githubPortfolioUrl: string;
   instagramUrl: string;
@@ -51,8 +50,7 @@ const EMPTY_PERSONAL: PersonalDetails = {
   phone: '',
   college: '',
   courseAndBranch: '',
-  year: '1st Year',
-  yearOther: '',
+  year: '2nd Year',
   linkedinUrl: '',
   githubPortfolioUrl: '',
   instagramUrl: '',
@@ -133,9 +131,6 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
     if (!isPhoneValid) {
       return 'Please enter a valid 10-digit phone number.';
     }
-    if (personal.year === 'Other' && !personal.yearOther.trim()) {
-      return 'Please specify your year of study.';
-    }
     return null;
   };
 
@@ -204,7 +199,6 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
     try {
       const randomNum = Math.floor(10000 + Math.random() * 90000);
       const appId = `NM-2026-${randomNum}`;
-      const resolvedYear = personal.year === 'Other' ? `Other: ${personal.yearOther.trim()}` : personal.year;
 
       const finalAnswers: StartupAssessmentAnswers = {
         ...answers,
@@ -221,7 +215,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
         phone: personal.phone.trim(),
         college: personal.college.trim(),
         department: personal.courseAndBranch.trim(),
-        year: resolvedYear,
+        year: personal.year,
         skills: [],
         experience: finalAnswers.why_hire_you,
         first_preference: firstChoice,
@@ -521,25 +515,12 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
               </label>
               <select
                 value={personal.year}
-                onChange={(e) => setPersonal({ ...personal, year: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)] cursor-pointer"
+                disabled
+                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)] opacity-70 cursor-not-allowed"
               >
-                <option value="1st Year">1st Year</option>
                 <option value="2nd Year">2nd Year</option>
-                <option value="3rd Year">3rd Year</option>
-                <option value="4th Year">4th Year</option>
-                <option value="Other">Other</option>
               </select>
-              {personal.year === 'Other' && (
-                <input
-                  type="text"
-                  required
-                  placeholder="Please specify..."
-                  value={personal.yearOther}
-                  onChange={(e) => setPersonal({ ...personal, yearOther: e.target.value })}
-                  className="w-full mt-2 px-4 py-2.5 rounded-xl glass-input text-xs text-[var(--color-text-primary)]"
-                />
-              )}
+              <p className="mt-1.5 text-[11px] text-[var(--color-text-muted)]">This track is open to 2nd year students only.</p>
             </div>
 
             <div>
@@ -693,7 +674,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
               <div><strong>Phone:</strong> {personal.phone}</div>
               <div><strong>College:</strong> {personal.college}</div>
               <div><strong>Course & Branch:</strong> {personal.courseAndBranch}</div>
-              <div><strong>Year:</strong> {personal.year === 'Other' ? `Other: ${personal.yearOther}` : personal.year}</div>
+              <div><strong>Year:</strong> {personal.year}</div>
               {personal.linkedinUrl && <div><strong>LinkedIn:</strong> {personal.linkedinUrl}</div>}
               {personal.githubPortfolioUrl && <div><strong>GitHub/Portfolio:</strong> {personal.githubPortfolioUrl}</div>}
               {personal.instagramUrl && <div><strong>Instagram:</strong> {personal.instagramUrl}</div>}
