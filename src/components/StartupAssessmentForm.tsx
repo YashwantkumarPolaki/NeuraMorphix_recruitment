@@ -5,6 +5,7 @@ import { EmailService } from '../services/email';
 import { BackendApiService } from '../services/api';
 import { INDIAN_COLLEGES } from '../data/indianColleges';
 import { STARTUP_ASSESSMENT_SECTIONS, STARTUP_ASSESSMENT_TOTAL_STEPS } from '../data/startupAssessmentQuestions';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import confetti from 'canvas-confetti';
 
 import {
@@ -18,7 +19,6 @@ import {
   Pencil,
   ShieldQuestion,
   Camera,
-  MessageCircle,
 } from 'lucide-react';
 
 const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/LMDhxAl2TLR31hNTeKUG7E';
@@ -778,7 +778,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
             rel="noopener noreferrer"
             className="max-w-md mx-auto flex items-center justify-center gap-3 p-4 bg-[#25D366] text-white border-[3px] border-[#14100b] rounded-2xl shadow-[4px_4px_0_0_#14100b] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0_0_#14100b] transition-all"
           >
-            <MessageCircle className="w-6 h-6 shrink-0 stroke-[2.5]" />
+            <WhatsAppIcon className="w-6 h-6 shrink-0" />
             <span className="font-display font-bold text-sm uppercase tracking-wide">
               Join Our WhatsApp Group for Further Information
             </span>
