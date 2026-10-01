@@ -8,6 +8,8 @@ import { readFileSync } from 'fs';
 // @ts-ignore
 import { resolve } from 'path';
 
+const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/LMDhxAl2TLR31hNTeKUG7E';
+
 // Load .env manually for Vite plugins (they run in Node context)
 function loadDotEnv(): Record<string, string> {
   try {
@@ -101,6 +103,15 @@ function buildHtml({ applicantName, applicationId, phone, firstPreference, secon
               <p style="margin:0 0 12px 0;color:#475569;font-size:13px;line-height:1.7;">
                 Please <strong style="color:#0f172a;">save your Application ID</strong> — you will need it to track your recruitment status on our portal at any time.
               </p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px 0;">
+                <tr>
+                  <td align="center">
+                    <a href="${WHATSAPP_GROUP_URL}" target="_blank" style="display:inline-block;background:#25D366;color:#ffffff;font-size:13px;font-weight:700;text-decoration:none;padding:12px 28px;border-radius:10px;">
+                      💬 Join Our WhatsApp Group for Further Information
+                    </a>
+                  </td>
+                </tr>
+              </table>
               <p style="margin:0 0 24px 0;color:#475569;font-size:13px;line-height:1.7;">
                 Our recruitment team will review all applications and update your status accordingly. You will receive further updates at this email address.
               </p>
