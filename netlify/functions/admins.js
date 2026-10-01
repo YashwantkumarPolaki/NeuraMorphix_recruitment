@@ -4,10 +4,13 @@ const sql = neon(process.env.DATABASE_URL);
 
 const JSON_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
   'Content-Type': 'application/json',
 };
+
+// Only this account may remove other admins.
+const PRIMARY_ADMIN_EMAIL = 'ykpmusic502@gmail.com';
 
 let schemaReady = false;
 
@@ -142,6 +145,24 @@ export const handler = async (event) => {
         return { statusCode: 401, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Invalid passcode' }) };
       }
       return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(stripSecrets(rows[0].data)) };
+    }
+
+    if (event.httpMethod === 'DELETE' && subPath) {
+      const requestedBy = (event.queryStringParameters || {}).requested_by;
+      if (!requestedBy || requestedBy.trim().toLowerCase() !== PRIMARY_ADMIN_EMAIL) {
+        return { statusCode: 403, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Only the primary admin can remove admins' }) };
+      }
+
+      const rows = await sql`SELECT email FROM admins WHERE admin_id = ${subPath} LIMIT 1`;
+      if (rows.length === 0) {
+        return { statusCode: 404, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Admin not found' }) };
+      }
+      if (rows[0].email === PRIMARY_ADMIN_EMAIL) {
+        return { statusCode: 400, headers: JSON_HEADERS, body: JSON.stringify({ error: 'The primary admin account cannot be removed' }) };
+      }
+
+      await sql`DELETE FROM admins WHERE admin_id = ${subPath}`;
+      return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify({ success: true }) };
     }
 
     return { statusCode: 404, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Not found' }) };

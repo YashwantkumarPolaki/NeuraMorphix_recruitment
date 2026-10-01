@@ -102,6 +102,22 @@ export class BackendApiService {
   }
 
   /**
+   * Remove an admin. Server-side restricted to the primary admin's email.
+   */
+  static async removeAdmin(adminId: string, requestedBy: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const response = await fetch(`${ADMINS_API}/${encodeURIComponent(adminId)}?requested_by=${encodeURIComponent(requestedBy)}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (!response.ok) return { success: false, error: data.error || 'Failed to remove admin' };
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Backend unreachable. Could not remove admin.' };
+    }
+  }
+
+  /**
    * Fetch every applicant from the shared Postgres-backed API.
    * Returns null (not []) on failure so callers can distinguish "offline" from "empty".
    */

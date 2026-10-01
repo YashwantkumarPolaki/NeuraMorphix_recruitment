@@ -36,11 +36,15 @@ import {
   UserPlus,
   Copy,
   Crown,
+  Trash2,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
   onSelectTab?: (tab: 'home' | 'apply' | 'track' | 'admin') => void;
 }
+
+// Only this account may remove other admins.
+const PRIMARY_ADMIN_EMAIL = 'ykpmusic502@gmail.com';
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   // Admin auth state
@@ -174,6 +178,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     passcode: string;
     emailSent: boolean;
   } | null>(null);
+  const [removingAdminId, setRemovingAdminId] = useState<string | null>(null);
 
   // Search & Filters for Applicants Table
   const [searchQuery, setSearchQuery] = useState('');
@@ -303,6 +308,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     } finally {
       setIsInviting(false);
     }
+  };
+
+  const handleRemoveAdmin = async (admin: AdminUser) => {
+    if (!sessionUser || sessionUser.email.toLowerCase() !== PRIMARY_ADMIN_EMAIL) return;
+    if (!window.confirm(`Remove ${admin.name} (${admin.email}) as an admin? This can't be undone.`)) return;
+
+    setRemovingAdminId(admin.admin_id);
+    const result = await BackendApiService.removeAdmin(admin.admin_id, sessionUser.email);
+    if (result.success) {
+      const refreshedAdmins = await BackendApiService.getAllAdmins();
+      if (refreshedAdmins) {
+        DatabaseService.saveAdmins(refreshedAdmins);
+        setAdmins(refreshedAdmins);
+      }
+      showToast(`Removed ${admin.name} as an admin.`);
+    } else {
+      showToast(result.error || 'Could not remove admin.');
+    }
+    setRemovingAdminId(null);
   };
 
   useEffect(() => {
@@ -1772,6 +1796,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                     </span>
                     {a.invited_by && (
                       <span className="text-[var(--color-text-muted)]">Invited by {a.invited_by}</span>
+                    )}
+                    {sessionUser?.email.toLowerCase() === PRIMARY_ADMIN_EMAIL && a.email.toLowerCase() !== PRIMARY_ADMIN_EMAIL && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveAdmin(a)}
+                        disabled={removingAdminId === a.admin_id}
+                        className="p-2 rounded-lg bg-rose-950/60 text-rose-300 hover:bg-rose-900 border border-rose-800 disabled:opacity-50 cursor-pointer"
+                        title={`Remove ${a.name}`}
+                      >
+                        {removingAdminId === a.admin_id ? (
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-3.5 h-3.5" />
+                        )}
+                      </button>
                     )}
                   </div>
                 </div>
