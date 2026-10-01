@@ -46,7 +46,16 @@ interface AdminDashboardProps {
 // Only this account may remove other admins.
 const PRIMARY_ADMIN_EMAIL = 'ykpmusic502@gmail.com';
 
-function formatLastActive(isoString?: string | null): string {
+const HEARTBEAT_INTERVAL_MS = 30000;
+const ONLINE_THRESHOLD_MS = 90000; // 3x heartbeat interval, allows for network jitter
+
+function isAdminOnline(admin: AdminUser): boolean {
+  if (!admin.last_seen_at) return false;
+  return Date.now() - new Date(admin.last_seen_at).getTime() < ONLINE_THRESHOLD_MS;
+}
+
+function formatLastActive(admin: AdminUser): string {
+  const isoString = admin.last_seen_at || admin.last_login_at;
   if (!isoString) return 'Never logged in';
   const diffMs = Date.now() - new Date(isoString).getTime();
   const minutes = Math.floor(diffMs / 60000);
@@ -260,6 +269,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       cancelled = true;
     };
   }, [isAuthenticated]);
+
+  // Presence: ping a heartbeat while this admin has the dashboard open, and
+  // periodically re-pull the admin list so everyone's online/offline status
+  // stays live for whoever's looking at the Admin Management tab.
+  useEffect(() => {
+    if (!isAuthenticated || !sessionUser) return;
+
+    const pingAndRefresh = async () => {
+      await BackendApiService.sendHeartbeat(sessionUser.admin_id);
+      const remoteAdmins = await BackendApiService.getAllAdmins();
+      if (remoteAdmins) {
+        DatabaseService.saveAdmins(remoteAdmins);
+        setAdmins(remoteAdmins);
+      }
+    };
+
+    pingAndRefresh();
+    const interval = setInterval(pingAndRefresh, HEARTBEAT_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [isAuthenticated, sessionUser]);
 
   const handleInviteAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1801,9 +1830,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                   <div>
                     <div className="font-bold text-[var(--color-text-primary)]">{a.name}</div>
                     <div className="text-[var(--color-text-muted)]">{a.email}</div>
-                    <div className={`flex items-center gap-1.5 mt-1 ${a.last_login_at ? 'text-emerald-500' : 'text-[var(--color-text-muted)]'}`}>
-                      {a.last_login_at && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />}
-                      <span>{formatLastActive(a.last_login_at)}</span>
+                    <div className={`flex items-center gap-1.5 mt-1 ${isAdminOnline(a) || a.last_login_at ? 'text-emerald-500' : 'text-[var(--color-text-muted)]'}`}>
+                      {isAdminOnline(a) ? (
+                        <span className="relative flex w-2 h-2 shrink-0">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full w-2 h-2 bg-emerald-500" />
+                        </span>
+                      ) : (
+                        a.last_login_at && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                      )}
+                      <span>{isAdminOnline(a) ? 'Online now' : formatLastActive(a)}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">

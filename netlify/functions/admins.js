@@ -186,6 +186,21 @@ export const handler = async (event) => {
       return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(stripSecrets(loggedIn)) };
     }
 
+    if (event.httpMethod === 'POST' && subPath === 'heartbeat') {
+      const { admin_id } = JSON.parse(event.body || '{}');
+      if (!admin_id) {
+        return { statusCode: 400, headers: JSON_HEADERS, body: JSON.stringify({ error: 'admin_id is required' }) };
+      }
+      // Compute the ISO timestamp in JS (not Postgres' NOW()::text) so it parses
+      // reliably with `new Date(...)` on the frontend, matching recordLogin's format.
+      const nowIso = new Date().toISOString();
+      await sql`
+        UPDATE admins SET data = jsonb_set(data, '{last_seen_at}', to_jsonb(${nowIso}::text))
+        WHERE admin_id = ${admin_id}
+      `;
+      return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify({ success: true }) };
+    }
+
     if (event.httpMethod === 'DELETE' && subPath) {
       const requestedBy = (event.queryStringParameters || {}).requested_by;
       if (!requestedBy || requestedBy.trim().toLowerCase() !== PRIMARY_ADMIN_EMAIL) {

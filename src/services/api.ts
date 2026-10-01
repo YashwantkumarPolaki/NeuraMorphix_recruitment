@@ -118,6 +118,22 @@ export class BackendApiService {
   }
 
   /**
+   * Presence ping — call periodically while an admin is active in the dashboard
+   * so other admins can see who's online right now, not just who's logged in before.
+   */
+  static async sendHeartbeat(adminId: string): Promise<void> {
+    try {
+      await fetch(`${ADMINS_API}/heartbeat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_id: adminId }),
+      });
+    } catch {
+      // best-effort, ignore failures
+    }
+  }
+
+  /**
    * Fetch every applicant from the shared Postgres-backed API.
    * Returns null (not []) on failure so callers can distinguish "offline" from "empty".
    */

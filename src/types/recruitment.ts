@@ -131,6 +131,7 @@ export interface AdminUser {
   passcode?: string;
   invited_by?: string | null;
   last_login_at?: string | null;
+  last_seen_at?: string | null;
   created_at: string;
 }
 
