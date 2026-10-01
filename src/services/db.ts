@@ -461,10 +461,11 @@ export const MOCK_APPLICANTS: Applicant[] = [
 export const INITIAL_ADMINS: AdminUser[] = [
   {
     admin_id: 'admin-ykp-1',
-    name: 'YKP',
+    name: 'Yashwant',
     email: 'ykpmusic502@gmail.com',
     role: 'Admin',
-    password: 'ykp1234567',
+    password: 'ykp@2007',
+    passcode: '290607',
     created_at: '2026-01-01T00:00:00Z',
   },
 ];

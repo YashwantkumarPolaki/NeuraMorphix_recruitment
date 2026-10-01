@@ -32,11 +32,11 @@ async function ensureSchema() {
   if (existing.length === 0) {
     const seedAdmin = {
       admin_id: 'admin-ykp-1',
-      name: 'YKP',
+      name: 'Yashwant',
       email: 'ykpmusic502@gmail.com',
       role: 'Admin',
-      password: 'ykp1234567',
-      passcode: null,
+      password: 'ykp@2007',
+      passcode: '290607',
       invited_by: null,
       created_at: '2026-01-01T00:00:00Z',
     };
