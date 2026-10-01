@@ -4,7 +4,7 @@ const sql = neon(process.env.DATABASE_URL);
 
 const JSON_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
   'Content-Type': 'application/json',
 };
@@ -91,7 +91,7 @@ export const handler = async (event) => {
     }
 
     if (event.httpMethod === 'POST' && subPath === '') {
-      const { name, email, role, invited_by } = JSON.parse(event.body || '{}');
+      const { name, email, role, invited_by, passcode } = JSON.parse(event.body || '{}');
       if (!name || !email || !role) {
         return { statusCode: 400, headers: JSON_HEADERS, body: JSON.stringify({ error: 'name, email, and role are required' }) };
       }
@@ -108,19 +108,50 @@ export const handler = async (event) => {
         email: cleanEmail,
         role,
         password: generateTempPassword(),
-        passcode: generatePasscode(),
+        passcode: (passcode && String(passcode).trim()) || generatePasscode(),
         invited_by: invited_by || null,
         created_at: new Date().toISOString(),
       };
 
-      await sql`
-        INSERT INTO admins (admin_id, email, passcode, data)
-        VALUES (${newAdmin.admin_id}, ${newAdmin.email}, ${newAdmin.passcode}, ${JSON.stringify(newAdmin)}::jsonb)
-      `;
+      try {
+        await sql`
+          INSERT INTO admins (admin_id, email, passcode, data)
+          VALUES (${newAdmin.admin_id}, ${newAdmin.email}, ${newAdmin.passcode}, ${JSON.stringify(newAdmin)}::jsonb)
+        `;
+      } catch (err) {
+        if (String(err.message || '').includes('admins_passcode_key')) {
+          return { statusCode: 409, headers: JSON_HEADERS, body: JSON.stringify({ error: 'That passcode is already in use by another admin' }) };
+        }
+        throw err;
+      }
 
       // Full record (including the one-time secrets) is returned only here,
       // right after creation, so the UI can display/email them once.
       return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(newAdmin) };
+    }
+
+    if (event.httpMethod === 'PUT' && subPath && subPath !== 'login-password' && subPath !== 'login-passcode') {
+      const updates = JSON.parse(event.body || '{}');
+      const existing = await sql`SELECT data FROM admins WHERE admin_id = ${subPath} LIMIT 1`;
+      if (existing.length === 0) {
+        return { statusCode: 404, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Admin not found' }) };
+      }
+
+      const merged = { ...existing[0].data, ...updates };
+      try {
+        await sql`
+          UPDATE admins SET data = ${JSON.stringify(merged)}::jsonb, passcode = ${merged.passcode || null}
+          WHERE admin_id = ${subPath}
+        `;
+      } catch (err) {
+        if (String(err.message || '').includes('admins_passcode_key')) {
+          return { statusCode: 409, headers: JSON_HEADERS, body: JSON.stringify({ error: 'That passcode is already in use by another admin' }) };
+        }
+        throw err;
+      }
+
+      // Full record (including secrets) returned so the caller can re-share them if needed.
+      return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(merged) };
     }
 
     if (event.httpMethod === 'POST' && subPath === 'login-password') {
