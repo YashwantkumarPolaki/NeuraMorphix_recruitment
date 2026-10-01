@@ -1185,6 +1185,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                         Resume <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
+                    {selectedApplicant.instagram_url && (
+                      <a href={selectedApplicant.instagram_url} target="_blank" rel="noreferrer" className="px-2.5 py-1 rounded bg-[var(--color-bg-dark)] text-rose-300 hover:underline flex items-center gap-1">
+                        Instagram <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

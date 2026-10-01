@@ -221,6 +221,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
         github_url: githubUrl.trim(),
         linkedin_url: linkedinUrl.trim(),
         portfolio_url: portfolioUrl.trim(),
+        instagram_url: '',
         admin_notes: [],
         decline_reason: null,
         decline_note: null,

@@ -27,6 +27,7 @@ export interface AdminNote {
 export interface StartupAssessmentAnswers {
   linkedin_url: string;
   github_portfolio_url: string;
+  instagram_url: string;
   why_join_neuramorphix: string;
   why_startup_environment: string;
   why_hire_you: string;
@@ -77,6 +78,7 @@ export interface Applicant {
   github_url: string;
   linkedin_url: string;
   portfolio_url: string;
+  instagram_url: string;
   admin_notes: AdminNote[];
   decline_reason: DeclineReasonCategory | null;
   decline_note: string | null;

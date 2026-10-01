@@ -404,6 +404,7 @@ export const MOCK_APPLICANTS: Applicant[] = [
     github_url: 'https://github.com/aaravsharma-ai',
     linkedin_url: 'https://linkedin.com/in/aaravsharma-ai',
     portfolio_url: 'https://aaravsharma.dev',
+    instagram_url: '',
     admin_notes: [
       {
         id: 'note-1',
@@ -444,6 +445,7 @@ export const MOCK_APPLICANTS: Applicant[] = [
     github_url: '',
     linkedin_url: 'https://linkedin.com/in/priyasundaram',
     portfolio_url: 'https://soundcloud.com/priyasundaram',
+    instagram_url: '',
     admin_notes: [],
     decline_reason: null,
     decline_note: null,

@@ -42,6 +42,7 @@ type PersonalDetails = {
   yearOther: string;
   linkedinUrl: string;
   githubPortfolioUrl: string;
+  instagramUrl: string;
 };
 
 const EMPTY_PERSONAL: PersonalDetails = {
@@ -54,11 +55,13 @@ const EMPTY_PERSONAL: PersonalDetails = {
   yearOther: '',
   linkedinUrl: '',
   githubPortfolioUrl: '',
+  instagramUrl: '',
 };
 
 const EMPTY_ANSWERS: StartupAssessmentAnswers = {
   linkedin_url: '',
   github_portfolio_url: '',
+  instagram_url: '',
   why_join_neuramorphix: '',
   why_startup_environment: '',
   why_hire_you: '',
@@ -207,6 +210,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
         ...answers,
         linkedin_url: personal.linkedinUrl.trim(),
         github_portfolio_url: personal.githubPortfolioUrl.trim(),
+        instagram_url: personal.instagramUrl.trim(),
       };
 
       const newApplicant: Applicant = {
@@ -228,6 +232,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
         github_url: '',
         linkedin_url: personal.linkedinUrl.trim(),
         portfolio_url: personal.githubPortfolioUrl.trim(),
+        instagram_url: personal.instagramUrl.trim(),
         admin_notes: [],
         decline_reason: null,
         decline_note: null,
@@ -562,6 +567,19 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
                 className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)]"
               />
             </div>
+
+            <div>
+              <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
+                Instagram Profile URL
+              </label>
+              <input
+                type="url"
+                placeholder="https://instagram.com/username"
+                value={personal.instagramUrl}
+                onChange={(e) => setPersonal({ ...personal, instagramUrl: e.target.value })}
+                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)]"
+              />
+            </div>
           </div>
 
           <div className="flex justify-end pt-4">
@@ -678,6 +696,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
               <div><strong>Year:</strong> {personal.year === 'Other' ? `Other: ${personal.yearOther}` : personal.year}</div>
               {personal.linkedinUrl && <div><strong>LinkedIn:</strong> {personal.linkedinUrl}</div>}
               {personal.githubPortfolioUrl && <div><strong>GitHub/Portfolio:</strong> {personal.githubPortfolioUrl}</div>}
+              {personal.instagramUrl && <div><strong>Instagram:</strong> {personal.instagramUrl}</div>}
             </div>
           </div>
 
