@@ -171,6 +171,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     setConfig(DatabaseService.getConfig());
   };
 
+  // Hydrate from the shared backend on login so the admin sees every applicant
+  // across all devices/browsers, not just whatever is cached in this browser's
+  // localStorage. Falls back silently to the local cache if the backend is unreachable.
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    let cancelled = false;
+    (async () => {
+      const remote = await BackendApiService.getAllApplicants();
+      if (!cancelled && remote) {
+        DatabaseService.saveApplicants(remote);
+        setApplicants(remote);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated]);
+
   useEffect(() => {
     if (selectedApplicant) {
       const current = applicants.find((a) => a.id === selectedApplicant.id);
@@ -233,6 +251,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       reviewed_at: new Date().toISOString(),
     });
     if (updated) {
+      BackendApiService.updateApplicant(updated.application_id, { status: updated.status, reviewed_at: updated.reviewed_at });
       EmailService.sendEmail('shortlisted', updated);
       refreshData();
       showToast(`Applicant ${applicant.full_name} moved to Shortlisted.`);
@@ -247,6 +266,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       reviewed_at: new Date().toISOString(),
     });
     if (updated) {
+      BackendApiService.updateApplicant(updated.application_id, { status: updated.status, interview_details: updated.interview_details, reviewed_at: updated.reviewed_at });
       EmailService.sendEmail('interview', updated, { interview_details: interviewDetailsInput.trim() });
       refreshData();
       setShowInterviewModal(false);
@@ -262,6 +282,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       reviewed_at: new Date().toISOString(),
     });
     if (updated) {
+      BackendApiService.updateApplicant(updated.application_id, { status: updated.status, requested_info_question: updated.requested_info_question, reviewed_at: updated.reviewed_at });
       EmailService.sendEmail('info_requested', updated, { requested_info_question: reqInfoQuestion.trim() });
       refreshData();
       setShowReqInfoModal(false);
@@ -280,6 +301,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       accepted_by: adminUser,
     });
     if (updated) {
+      BackendApiService.updateApplicant(updated.application_id, { status: updated.status, final_assigned_team: updated.final_assigned_team, accepted_at: updated.accepted_at, accepted_by: updated.accepted_by });
       EmailService.sendEmail('accepted', updated);
       refreshData();
       setShowAcceptModal(false);
@@ -297,6 +319,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       declined_by: adminUser,
     });
     if (updated) {
+      BackendApiService.updateApplicant(updated.application_id, { status: updated.status, decline_reason: updated.decline_reason, decline_note: updated.decline_note, declined_at: updated.declined_at, declined_by: updated.declined_by });
       EmailService.sendEmail('declined', updated);
       refreshData();
       setShowDeclineModal(false);
@@ -317,6 +340,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       admin_notes: updatedNotes,
     });
     if (updated) {
+      BackendApiService.updateApplicant(updated.application_id, { admin_notes: updated.admin_notes });
       setNoteInput('');
       refreshData();
       showToast('Internal note saved.');
@@ -329,6 +353,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
       final_assigned_team: assignedRoleChoice,
     });
     if (updated) {
+      BackendApiService.updateApplicant(updated.application_id, { final_assigned_team: updated.final_assigned_team });
       refreshData();
       setShowRoleAssignModal(false);
       showToast(`Assigned final team to ${assignedRoleChoice}.`);

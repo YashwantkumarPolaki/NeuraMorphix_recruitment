@@ -520,6 +520,20 @@ export class DatabaseService {
     this.saveApplicants(applicants);
   }
 
+  /** Inserts, or replaces by application_id, into the local cache (e.g. a record fetched from the backend). */
+  static upsertApplicant(applicant: Applicant): void {
+    const applicants = this.getApplicants();
+    const index = applicants.findIndex(
+      (a) => a.application_id.toUpperCase() === applicant.application_id.toUpperCase()
+    );
+    if (index !== -1) {
+      applicants[index] = applicant;
+    } else {
+      applicants.unshift(applicant);
+    }
+    this.saveApplicants(applicants);
+  }
+
   static updateApplicant(id: string, updates: Partial<Applicant>): Applicant | undefined {
     const applicants = this.getApplicants();
     const index = applicants.findIndex((a) => a.id === id);

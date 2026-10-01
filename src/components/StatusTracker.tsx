@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Applicant, ApplicationStatus } from '../types/recruitment';
 import { DatabaseService } from '../services/db';
+import { BackendApiService } from '../services/api';
 import {
   Search,
   CheckCircle2,
@@ -24,34 +25,57 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
     return initialAppId ? DatabaseService.getApplicantById(initialAppId) || null : null;
   });
   const [notFound, setNotFound] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const [infoReplyInput, setInfoReplyInput] = useState('');
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [replySuccessMsg, setReplySuccessMsg] = useState<string | null>(null);
 
+  // Looks up an application ID locally first (instant), then falls back to the
+  // shared backend — needed when the applicant is checking status from a
+  // different browser/device than the one they applied from.
+  const lookupApplicant = async (appId: string): Promise<Applicant | null> => {
+    const local = DatabaseService.getApplicantById(appId);
+    if (local) return local;
+
+    const remote = await BackendApiService.getApplicantById(appId);
+    if (remote) {
+      DatabaseService.upsertApplicant(remote);
+      return remote;
+    }
+    return null;
+  };
+
   useEffect(() => {
-    if (initialAppId) {
-      const found = DatabaseService.getApplicantById(initialAppId);
-      if (found) {
+    if (!initialAppId) return;
+    let cancelled = false;
+    (async () => {
+      const found = await lookupApplicant(initialAppId);
+      if (!cancelled && found) {
         setAppIdInput(initialAppId);
         setSearchedApplicant(found);
         setNotFound(false);
       }
-    }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [initialAppId]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setNotFound(false);
     setReplySuccessMsg(null);
+    setIsSearching(true);
 
-    const found = DatabaseService.getApplicantById(appIdInput);
+    const found = await lookupApplicant(appIdInput);
     if (found) {
       setSearchedApplicant(found);
     } else {
       setSearchedApplicant(null);
       setNotFound(true);
     }
+    setIsSearching(false);
   };
 
   const handleInfoReplySubmit = (e: React.FormEvent) => {
@@ -66,6 +90,10 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
     });
 
     if (updated) {
+      BackendApiService.updateApplicant(updated.application_id, {
+        requested_info_response: updated.requested_info_response,
+        status: updated.status,
+      });
       setSearchedApplicant(updated);
       setReplySuccessMsg('Thank you! Your response has been submitted to the recruitment team.');
       setInfoReplyInput('');
@@ -142,10 +170,11 @@ export const StatusTracker: React.FC<StatusTrackerProps> = ({ initialAppId }) =>
 
           <button
             type="submit"
-            className="w-full sm:w-auto cyber-btn-primary text-xs py-3.5 px-8 uppercase shrink-0"
+            disabled={isSearching}
+            className="w-full sm:w-auto cyber-btn-primary text-xs py-3.5 px-8 uppercase shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <Search className="w-4 h-4" />
-            <span>TRACK STATUS</span>
+            <span>{isSearching ? 'SEARCHING...' : 'TRACK STATUS'}</span>
           </button>
         </form>
       </div>
