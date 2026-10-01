@@ -126,7 +126,10 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
       !personal.phone.trim() ||
       !personal.college.trim() ||
       !personal.registrationNumber.trim() ||
-      !personal.courseAndBranch.trim()
+      !personal.courseAndBranch.trim() ||
+      !personal.linkedinUrl.trim() ||
+      !personal.githubPortfolioUrl.trim() ||
+      !personal.instagramUrl.trim()
     ) {
       return 'Please fill in all required personal detail fields.';
     }
@@ -534,10 +537,11 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
 
             <div>
               <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
-                LinkedIn Profile URL
+                LinkedIn Profile URL <span className="text-rose-500">*</span>
               </label>
               <input
                 type="url"
+                required
                 placeholder="https://linkedin.com/in/username"
                 value={personal.linkedinUrl}
                 onChange={(e) => setPersonal({ ...personal, linkedinUrl: e.target.value })}
@@ -547,10 +551,11 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
 
             <div>
               <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
-                GitHub / Portfolio URL
+                GitHub / Portfolio URL <span className="text-rose-500">*</span>
               </label>
               <input
                 type="url"
+                required
                 placeholder="https://github.com/username or portfolio link"
                 value={personal.githubPortfolioUrl}
                 onChange={(e) => setPersonal({ ...personal, githubPortfolioUrl: e.target.value })}
@@ -560,10 +565,11 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
 
             <div>
               <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
-                Instagram Profile URL
+                Instagram Profile URL <span className="text-rose-500">*</span>
               </label>
               <input
                 type="url"
+                required
                 placeholder="https://instagram.com/username"
                 value={personal.instagramUrl}
                 onChange={(e) => setPersonal({ ...personal, instagramUrl: e.target.value })}
