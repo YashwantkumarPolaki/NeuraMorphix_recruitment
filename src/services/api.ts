@@ -2,13 +2,103 @@ import type { Applicant, AdminUser } from '../types/recruitment';
 import { DatabaseService } from './db';
 
 const APPLICANTS_API = '/api/applicants';
+const ADMINS_API = '/api/admins';
 
 export class BackendApiService {
   /**
-   * Admin login is local-only (fixed admin list in DatabaseService) — no remote auth backend exists.
+   * Admin login via email + password against the shared backend.
+   * Falls back to the local hardcoded admin if the backend is unreachable.
    */
   static async loginUser(email: string, password: string): Promise<AdminUser | null> {
+    try {
+      const response = await fetch(`${ADMINS_API}/login-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (response.ok) return (await response.json()) as AdminUser;
+      if (response.status === 401) return null;
+    } catch {
+      console.log('[BackendApiService] Admin backend unreachable, trying local fallback.');
+    }
     return DatabaseService.authenticateAdmin(email, password);
+  }
+
+  /**
+   * Quick admin login using only a passcode (no email required).
+   */
+  static async loginWithPasscode(passcode: string): Promise<AdminUser | null> {
+    try {
+      const response = await fetch(`${ADMINS_API}/login-passcode`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passcode }),
+      });
+      if (!response.ok) return null;
+      return (await response.json()) as AdminUser;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Fetch every admin (without passwords/passcodes) for the Admin Management list.
+   */
+  static async getAllAdmins(): Promise<AdminUser[] | null> {
+    try {
+      const response = await fetch(ADMINS_API);
+      if (!response.ok) return null;
+      return (await response.json()) as AdminUser[];
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Invite a new admin by email. The returned record includes the one-time
+   * temp password and passcode — only ever exposed here, right after creation.
+   */
+  static async inviteAdmin(
+    name: string,
+    email: string,
+    role: AdminUser['role'],
+    invitedBy: string
+  ): Promise<AdminUser | { error: string } | null> {
+    try {
+      const response = await fetch(ADMINS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, role, invited_by: invitedBy }),
+      });
+      const data = await response.json();
+      if (!response.ok) return { error: data.error || 'Failed to invite admin' };
+      return data as AdminUser;
+    } catch {
+      return { error: 'Backend unreachable. Could not invite admin.' };
+    }
+  }
+
+  /**
+   * Send the invite email containing the new admin's login details.
+   */
+  static async sendAdminInviteEmail(admin: {
+    name: string;
+    email: string;
+    role: string;
+    tempPassword: string;
+    passcode: string;
+    invitedBy?: string | null;
+  }): Promise<boolean> {
+    try {
+      const response = await fetch('/api/send-admin-invite-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(admin),
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
   }
 
   /**

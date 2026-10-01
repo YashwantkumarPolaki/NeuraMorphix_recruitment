@@ -128,6 +128,8 @@ export interface AdminUser {
   email: string;
   role: 'Lead Recruiter' | 'Technical Reviewer' | 'Admin';
   password?: string;
+  passcode?: string;
+  invited_by?: string | null;
   created_at: string;
 }
 

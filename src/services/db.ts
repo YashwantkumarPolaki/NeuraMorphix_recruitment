@@ -591,6 +591,10 @@ export class DatabaseService {
     return this.getItem<AdminUser[]>(STORAGE_KEYS.ADMINS, INITIAL_ADMINS);
   }
 
+  static saveAdmins(admins: AdminUser[]): void {
+    this.setItem(STORAGE_KEYS.ADMINS, admins);
+  }
+
   static authenticateAdmin(email: string, password: string): AdminUser | null {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
