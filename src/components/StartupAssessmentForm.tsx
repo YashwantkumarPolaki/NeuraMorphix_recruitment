@@ -3,7 +3,6 @@ import type { Applicant, Role, StartupAssessmentAnswers } from '../types/recruit
 import { DatabaseService } from '../services/db';
 import { EmailService } from '../services/email';
 import { BackendApiService } from '../services/api';
-import { INDIAN_COLLEGES } from '../data/indianColleges';
 import { STARTUP_ASSESSMENT_SECTIONS, STARTUP_ASSESSMENT_TOTAL_STEPS } from '../data/startupAssessmentQuestions';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import confetti from 'canvas-confetti';
@@ -49,7 +48,7 @@ const EMPTY_PERSONAL: PersonalDetails = {
   fullName: '',
   email: '',
   phone: '',
-  college: '',
+  college: 'SRM Institute of Science and Technology, Kattankulathur',
   registrationNumber: '',
   courseAndBranch: '',
   year: '2nd Year',
@@ -484,19 +483,11 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
               </label>
               <input
                 type="text"
-                required
-                list="startup-college-suggestions"
-                autoComplete="off"
-                placeholder="Search college..."
                 value={personal.college}
-                onChange={(e) => setPersonal({ ...personal, college: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)]"
+                disabled
+                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)] opacity-70 cursor-not-allowed"
               />
-              <datalist id="startup-college-suggestions">
-                {INDIAN_COLLEGES.map((name) => (
-                  <option key={name} value={name} />
-                ))}
-              </datalist>
+              <p className="mt-1.5 text-[11px] text-[var(--color-text-muted)]">This track is open to SRMIST Kattankulathur students only.</p>
             </div>
 
             <div>
