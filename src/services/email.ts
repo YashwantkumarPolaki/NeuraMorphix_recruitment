@@ -25,6 +25,30 @@ export const EmailService = {
     window.open(url, '_blank', 'noopener,noreferrer');
   },
 
+  /** Alert every admin that a new candidate registered. Fire-and-forget. */
+  async notifyAdminsOfRegistration(applicant: Applicant): Promise<void> {
+    try {
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          emailType: 'admin_new_application',
+          applicantName: applicant.full_name,
+          applicationId: applicant.application_id,
+          email: applicant.email,
+          phone: applicant.phone,
+          college: applicant.college,
+          department: applicant.department,
+          year: applicant.year,
+          firstPreference: applicant.first_preference,
+          secondPreference: applicant.second_preference,
+        }),
+      });
+    } catch (error) {
+      console.error('Admin notification error:', error);
+    }
+  },
+
   async sendEmail(
     emailType: EmailType,
     applicant: Applicant,

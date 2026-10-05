@@ -251,6 +251,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
       BackendApiService.syncApplicant(newApplicant);
 
       await EmailService.sendEmail('application_received', newApplicant);
+      void EmailService.notifyAdminsOfRegistration(newApplicant);
 
       try {
         confetti({

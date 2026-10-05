@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { neon } from '@neondatabase/serverless';
 
 const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/LMDhxAl2TLR31hNTeKUG7E';
 
@@ -8,6 +9,56 @@ const JSON_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
   'Content-Type': 'application/json',
 };
+
+const escapeHtml = (t) =>
+  String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// Plain-text template -> HTML with clickable links and line breaks.
+function textToHtml(text) {
+  return escapeHtml(text)
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#2563eb;font-weight:700;">$1</a>')
+    .replace(/\r?\n/g, '<br/>');
+}
+
+function wrapShell(label, innerHtml) {
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/></head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 16px;"><tr><td align="center">
+    <table width="100%" style="max-width:580px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;">
+      <tr><td style="background:linear-gradient(135deg,#0284c7,#2563eb);padding:28px;text-align:center;">
+        <p style="margin:0 0 6px 0;color:#e0f2fe;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">NeuraMorphix · Recruitment 2026</p>
+        <p style="margin:0;color:#ffffff;font-size:20px;font-weight:900;">${label}</p>
+      </td></tr>
+      <tr><td style="padding:28px;color:#334155;font-size:14px;line-height:1.7;">${innerHtml}</td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+}
+
+function buildAdminAlertHtml(d) {
+  const row = (k, v) => `<tr><td style="padding:5px 0;color:#64748b;font-size:12px;font-weight:600;width:140px;">${k}</td><td style="padding:5px 0;color:#0f172a;font-size:13px;font-weight:600;">${escapeHtml(v || 'N/A')}</td></tr>`;
+  return wrapShell('New Candidate Registration', `
+    <p style="margin:0 0 16px 0;"><strong>${escapeHtml(d.applicantName)}</strong> just registered. Review and schedule an interview from the admin portal.</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px 16px;">
+      ${row('Application ID', d.applicationId)}${row('Email', d.email)}${row('Phone', d.phone)}
+      ${row('College', d.college)}${row('Department / Year', [d.department, d.year].filter(Boolean).join(' · '))}
+      ${row('1st Preference', d.firstPreference)}${row('2nd Preference', d.secondPreference)}
+    </table>
+    <p style="margin:20px 0 0 0;text-align:center;"><a href="https://neuramorphix.live/admin" style="background:#2563eb;color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:12px 28px;border-radius:10px;display:inline-block;">Open Admin Portal</a></p>`);
+}
+
+async function getAdminRecipients(systemEmail) {
+  const emails = new Set([systemEmail]);
+  try {
+    const sql = neon(process.env.DATABASE_URL);
+    const rows = await sql`SELECT email FROM admins`;
+    rows.forEach((r) => r.email && emails.add(r.email));
+  } catch (err) {
+    console.error('[send-email function] could not load admin emails:', err);
+  }
+  return [...emails];
+}
 
 function buildHtml({ applicantName, applicationId, phone, firstPreference, secondPreference, emailType }) {
   const typeLabel = {
@@ -145,9 +196,21 @@ export const handler = async (event) => {
       return { statusCode: 500, headers: JSON_HEADERS, body: JSON.stringify({ success: false, error: 'Email is not configured on the server' }) };
     }
 
-    const recipientEmail = to || systemEmail;
-    const emailSubject = subject || `NeuraMorphix Recruitment — Application Received (${applicationId || 'N/A'})`;
-    const htmlContent = buildHtml({ applicantName, applicationId, phone, firstPreference, secondPreference, emailType });
+    let recipientEmail = to || systemEmail;
+    let emailSubject = subject || `NeuraMorphix Recruitment — Application Received (${applicationId || 'N/A'})`;
+    let htmlContent;
+
+    if (emailType === 'admin_new_application') {
+      recipientEmail = (await getAdminRecipients(systemEmail)).join(',');
+      emailSubject = `New registration: ${applicantName || 'Candidate'} (${applicationId || 'N/A'})`;
+      htmlContent = buildAdminAlertHtml(body);
+    } else if (emailType && emailType !== 'application_received' && body.bodyHtml) {
+      // Status emails (interview, accepted, ...) use the admin-edited template text.
+      const labels = { shortlisted: 'Shortlisted', interview: 'Interview Scheduled', info_requested: 'Additional Information Requested', accepted: 'Application Accepted', declined: 'Application Update' };
+      htmlContent = wrapShell(labels[emailType] || 'Recruitment Update', textToHtml(body.bodyHtml));
+    } else {
+      htmlContent = buildHtml({ applicantName, applicationId, phone, firstPreference, secondPreference, emailType });
+    }
 
     const info = await getGmailTransporter().sendMail({
       from: `"NeuraMorphix Recruitment" <${systemEmail}>`,
