@@ -44,7 +44,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [college, setCollege] = useState('SRM Institute of Science and Technology, Kattankulathur');
+  const [college] = useState('SRM Institute of Science and Technology, Kattankulathur');
   const [department, setDepartment] = useState('');
   const [year, setYear] = useState('1st Year');
 
