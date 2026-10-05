@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { Applicant, Role } from '../types/recruitment';
 import { DatabaseService } from '../services/db';
 import { EmailService } from '../services/email';
 import { BackendApiService } from '../services/api';
-import { INDIAN_COLLEGES } from '../data/indianColleges';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import confetti from 'canvas-confetti';
 
@@ -58,37 +57,6 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const phoneDigits = phone.replace(/\D/g, '');
   const isPhoneValid = phoneDigits.length === 10;
   const phoneHasInput = phone.trim().length > 0;
-
-  // COLLEGE AUTOCOMPLETE
-  const [collegeQuery, setCollegeQuery] = useState('SRM Institute of Science and Technology, Kattankulathur');
-  const [showCollegeSuggestions, setShowCollegeSuggestions] = useState(false);
-  const collegeRef = useRef<HTMLDivElement>(null);
-
-  const collegeSuggestions =
-    collegeQuery.trim().length >= 2
-      ? INDIAN_COLLEGES.filter((c) =>
-          c.toLowerCase().includes(collegeQuery.toLowerCase())
-        ).slice(0, 6)
-      : [];
-
-  useEffect(() => {
-    const handleOutside = (e: MouseEvent) => {
-      if (
-        collegeRef.current &&
-        !collegeRef.current.contains(e.target as Node)
-      ) {
-        setShowCollegeSuggestions(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOutside);
-    return () => document.removeEventListener('mousedown', handleOutside);
-  }, []);
-
-  const handleCollegeSelect = (name: string) => {
-    setCollege(name);
-    setCollegeQuery(name);
-    setShowCollegeSuggestions(false);
-  };
 
   // SKILLS & EXPERIENCE
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -382,7 +350,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
               </div>
             </div>
 
-            <div ref={collegeRef} className="relative">
+            <div className="relative">
               <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
                 College / Institution <span className="text-rose-500">*</span>
               </label>
@@ -390,30 +358,10 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 type="text"
                 required
                 autoComplete="off"
-                placeholder="Search college..."
-                value={collegeQuery}
-                onFocus={() => setShowCollegeSuggestions(true)}
-                onChange={(e) => {
-                  setCollegeQuery(e.target.value);
-                  setCollege(e.target.value);
-                  setShowCollegeSuggestions(true);
-                }}
-                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)]"
+                readOnly
+                value={college}
+                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)] cursor-not-allowed opacity-80"
               />
-              {showCollegeSuggestions && collegeSuggestions.length > 0 && (
-                <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-[var(--color-line)] rounded-xl shadow-xl max-h-48 overflow-y-auto">
-                  {collegeSuggestions.map((name, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => handleCollegeSelect(name)}
-                      className="w-full text-left px-4 py-2.5 hover:bg-[var(--color-line)] font-body text-xs text-slate-800 border-b border-slate-100 last:border-none cursor-pointer"
-                    >
-                      {name}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
             <div>

@@ -4,7 +4,7 @@ const sql = neon(process.env.DATABASE_URL);
 
 const JSON_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
   'Content-Type': 'application/json',
 };
@@ -83,6 +83,16 @@ export const handler = async (event) => {
         WHERE UPPER(application_id) = UPPER(${applicationId})
       `;
       return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify(merged) };
+    }
+
+    if (event.httpMethod === 'DELETE' && applicationId) {
+      const deleted = await sql`
+        DELETE FROM applicants WHERE UPPER(application_id) = UPPER(${applicationId}) RETURNING application_id
+      `;
+      if (deleted.length === 0) {
+        return { statusCode: 404, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Not found' }) };
+      }
+      return { statusCode: 200, headers: JSON_HEADERS, body: JSON.stringify({ success: true }) };
     }
 
     return { statusCode: 404, headers: JSON_HEADERS, body: JSON.stringify({ error: 'Not found' }) };

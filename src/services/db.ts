@@ -537,6 +537,10 @@ export class DatabaseService {
     this.saveApplicants(applicants);
   }
 
+  static deleteApplicant(id: string): void {
+    this.saveApplicants(this.getApplicants().filter((a) => a.id !== id));
+  }
+
   static updateApplicant(id: string, updates: Partial<Applicant>): Applicant | undefined {
     const applicants = this.getApplicants();
     const index = applicants.findIndex((a) => a.id === id);

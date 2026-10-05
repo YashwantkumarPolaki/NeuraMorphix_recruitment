@@ -195,4 +195,19 @@ export class BackendApiService {
       return null;
     }
   }
+
+  /**
+   * Permanently delete an applicant from the shared backend.
+   * A 404 counts as success (already gone).
+   */
+  static async deleteApplicant(applicationId: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${APPLICANTS_API}/${encodeURIComponent(applicationId)}`, {
+        method: 'DELETE',
+      });
+      return response.ok || response.status === 404;
+    } catch {
+      return false;
+    }
+  }
 }

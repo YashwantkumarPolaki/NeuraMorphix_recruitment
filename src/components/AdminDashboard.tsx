@@ -351,6 +351,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
     }
   };
 
+  const handleDeleteApplicant = async (app: Applicant) => {
+    if (!window.confirm(`Permanently delete ${app.full_name} (${app.application_id})? This can't be undone.`)) return;
+    const ok = await BackendApiService.deleteApplicant(app.application_id);
+    if (!ok) {
+      showToast('Could not delete candidate. Backend unreachable.');
+      return;
+    }
+    DatabaseService.deleteApplicant(app.id);
+    setApplicants((prev) => prev.filter((a) => a.id !== app.id));
+    if (selectedApplicant?.id === app.id) setSelectedApplicant(null);
+    showToast(`Deleted ${app.full_name}.`);
+  };
+
   const handleRemoveAdmin = async (admin: AdminUser) => {
     if (!sessionUser || sessionUser.email.toLowerCase() !== PRIMARY_ADMIN_EMAIL) return;
     if (!window.confirm(`Remove ${admin.name} (${admin.email}) as an admin? This can't be undone.`)) return;
@@ -1047,10 +1060,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
                           <button
                             type="button"
                             onClick={() => setSelectedApplicant(app)}
-                            className="px-3.5 py-1.5 rounded-lg bg-[var(--color-saffron)]/20 hover:bg-[var(--color-saffron)] text-[var(--color-saffron)] hover:text-[var(--color-text-primary)] font-bold border border-[var(--color-saffron)]/40 transition-all flex items-center gap-1 ml-auto"
+                            className="px-3.5 py-1.5 rounded-lg bg-[var(--color-saffron)]/20 hover:bg-[var(--color-saffron)] text-[var(--color-saffron)] hover:text-[var(--color-text-primary)] font-bold border border-[var(--color-saffron)]/40 transition-all inline-flex items-center gap-1"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             Review
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteApplicant(app)}
+                            title={`Delete ${app.full_name}`}
+                            className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/40 transition-all inline-flex items-center ml-2"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </td>
                       </tr>
