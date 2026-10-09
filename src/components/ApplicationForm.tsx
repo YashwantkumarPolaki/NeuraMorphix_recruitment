@@ -42,10 +42,12 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
   // FORM FIELDS
   const [fullName, setFullName] = useState('');
+  const [gender, setGender] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [college] = useState('SRM Institute of Science and Technology, Kattankulathur');
   const [department, setDepartment] = useState('');
+  const [registrationNumber, setRegistrationNumber] = useState('');
   const [year, setYear] = useState('1st Year');
 
   const [resumeUrl, setResumeUrl] = useState('');
@@ -110,9 +112,11 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
     if (
       !fullName.trim() ||
+      !gender.trim() ||
       !email.trim() ||
       !phone.trim() ||
       !college.trim() ||
+      !registrationNumber.trim() ||
       !department.trim()
     ) {
       setErrorMsg('Please fill in all required personal information fields.');
@@ -174,9 +178,11 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
         id: `app-${Date.now()}`,
         application_id: appId,
         full_name: fullName.trim(),
+        gender: gender.trim(),
         email: email.trim(),
         phone: phone.trim(),
         college: college.trim(),
+        registration_number: registrationNumber.trim(),
         department: department.trim(),
         year,
         skills: selectedSkills,
@@ -313,6 +319,24 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
             <div>
               <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
+                Gender <span className="text-rose-500">*</span>
+              </label>
+              <select
+                required
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)] cursor-pointer"
+              >
+                <option value="" disabled className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Select Gender</option>
+                <option value="Male" className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Male</option>
+                <option value="Female" className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Female</option>
+                <option value="Other" className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Other</option>
+                <option value="Prefer not to say" className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Prefer not to say</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
                 Email Address <span className="text-rose-500">*</span>
               </label>
               <input
@@ -322,6 +346,20 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
+                Registration Number <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="RA25XXXXXXXXXX"
+                value={registrationNumber}
+                onChange={(e) => setRegistrationNumber(e.target.value.toUpperCase())}
+                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)] uppercase placeholder:normal-case"
               />
             </div>
 
@@ -560,8 +598,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
           {/* Details Summary Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[var(--color-bg-dark)] text-[var(--color-text-primary)] p-5 rounded-2xl border border-[var(--color-line)]">
             <div>
-              <div className="text-[10px] font-display font-bold text-[var(--color-saffron)] uppercase tracking-wider">Applicant Name</div>
-              <div className="text-base font-body font-bold text-[var(--color-text-primary)]">{fullName}</div>
+              <div className="text-[10px] font-display font-bold text-[var(--color-saffron)] uppercase tracking-wider">Applicant Name & Gender</div>
+              <div className="text-base font-body font-bold text-[var(--color-text-primary)]">{fullName} ({gender})</div>
             </div>
             <div>
               <div className="text-[10px] font-display font-bold text-[var(--color-saffron)] uppercase tracking-wider">Email & Phone</div>
@@ -571,6 +609,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
               <div className="text-[10px] font-display font-bold text-[var(--color-saffron)] uppercase tracking-wider">College & Department</div>
               <div className="text-sm font-body font-bold text-[var(--color-text-primary)]">{college}</div>
               <div className="text-xs font-body text-[var(--color-text-muted)]">{department} ({year})</div>
+              <div className="text-xs font-body text-[var(--color-text-muted)]">Reg No: {registrationNumber}</div>
             </div>
             <div>
               <div className="text-[10px] font-display font-bold text-indigo-600 uppercase tracking-wider">Domain Preferences</div>

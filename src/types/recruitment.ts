@@ -63,6 +63,7 @@ export interface Applicant {
   id: string;
   application_id: string;
   full_name: string;
+  gender: string;
   email: string;
   phone: string;
   college: string;

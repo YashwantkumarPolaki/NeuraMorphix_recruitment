@@ -33,6 +33,7 @@ interface StartupAssessmentFormProps {
 
 type PersonalDetails = {
   fullName: string;
+  gender: string;
   email: string;
   phone: string;
   college: string;
@@ -46,6 +47,7 @@ type PersonalDetails = {
 
 const EMPTY_PERSONAL: PersonalDetails = {
   fullName: '',
+  gender: '',
   email: '',
   phone: '',
   college: 'SRM Institute of Science and Technology, Kattankulathur',
@@ -122,6 +124,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
   const validatePersonalDetails = (): string | null => {
     if (
       !personal.fullName.trim() ||
+      !personal.gender.trim() ||
       !personal.email.trim() ||
       !personal.phone.trim() ||
       !personal.college.trim() ||
@@ -216,6 +219,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
         id: `app-${Date.now()}`,
         application_id: appId,
         full_name: personal.fullName.trim(),
+        gender: personal.gender.trim(),
         email: personal.email.trim(),
         phone: personal.phone.trim(),
         college: personal.college.trim(),
@@ -439,6 +443,24 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
                 onChange={(e) => setPersonal({ ...personal, fullName: e.target.value })}
                 className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)]"
               />
+            </div>
+
+            <div>
+              <label className="block text-xs font-display font-bold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
+                Gender <span className="text-rose-500">*</span>
+              </label>
+              <select
+                required
+                value={personal.gender}
+                onChange={(e) => setPersonal({ ...personal, gender: e.target.value })}
+                className="w-full px-4 py-3 rounded-xl glass-input text-sm text-[var(--color-text-primary)] cursor-pointer"
+              >
+                <option value="" disabled className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Select Gender</option>
+                <option value="Male" className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Male</option>
+                <option value="Female" className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Female</option>
+                <option value="Other" className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Other</option>
+                <option value="Prefer not to say" className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)]">Prefer not to say</option>
+              </select>
             </div>
 
             <div>
@@ -686,6 +708,7 @@ export const StartupAssessmentForm: React.FC<StartupAssessmentFormProps> = ({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-body">
               <div><strong>Name:</strong> {personal.fullName}</div>
+              <div><strong>Gender:</strong> {personal.gender}</div>
               <div><strong>Email:</strong> {personal.email}</div>
               <div><strong>Phone:</strong> {personal.phone}</div>
               <div><strong>College:</strong> {personal.college}</div>

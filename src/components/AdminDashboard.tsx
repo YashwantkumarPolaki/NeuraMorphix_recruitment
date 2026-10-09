@@ -1172,6 +1172,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
               <div className="space-y-4">
                 <div className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-line)] space-y-2">
                   <h4 className="font-bold text-[var(--color-saffron)] uppercase text-[10px]">Contact Information</h4>
+                  <div>Gender: <strong className="text-[var(--color-text-primary)]">{selectedApplicant.gender}</strong></div>
                   <div>Email: <strong className="text-[var(--color-text-primary)]">{selectedApplicant.email}</strong></div>
                   <div>Phone: <strong className="text-[var(--color-text-primary)]">{selectedApplicant.phone}</strong></div>
                   <div>Application Date: <strong className="text-[var(--color-text-primary)]">{new Date(selectedApplicant.created_at).toLocaleDateString()}</strong></div>
